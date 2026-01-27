@@ -1,4 +1,7 @@
 
+using Harfien.DataAccess;
+using Microsoft.EntityFrameworkCore;
+
 namespace Harfien.Api
 {
     public class Program
@@ -6,6 +9,12 @@ namespace Harfien.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            
+            
+            builder.Services.AddDbContext<HarfienDbContext>(options =>
+            options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
 
             // Add services to the container.
 
