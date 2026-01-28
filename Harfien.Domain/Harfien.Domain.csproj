@@ -9,7 +9,9 @@
   <ItemGroup>
 
 
+
     <Folder Include="Entities\" />
+
 
     <Folder Include="Shared\Services\" />
     <Folder Include="Shared\Repositories\" />
