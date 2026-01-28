@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Entities
 {
-    internal class Governorated
+    public class Governorate
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
+
 }
