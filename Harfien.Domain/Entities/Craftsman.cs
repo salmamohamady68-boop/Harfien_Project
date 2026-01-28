@@ -1,0 +1,27 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Harfien.Domain.Entities
+{
+    public class Craftsman
+    {
+        public int Id { get; set; }
+
+        public int NationalId { get; set; }
+         public string Bio { get; set; }=string.Empty;
+
+        public bool IsVerified { get; set; } = false;
+        public double Rating { get; set; } = 0;
+
+
+        [ForeignKey(nameof(UserId))]
+        public string UserId { get; set; }    
+        public ApplicationUser User { get; set; }
+
+    }
+}

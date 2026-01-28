@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\" />
-    <Folder Include="Entities\" />
     <Folder Include="Shared\Services\" />
     <Folder Include="Shared\Repositories\" />
     <Folder Include="Shared\Services\" />
     <Folder Include="Shared\Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.23" />
   </ItemGroup>
 
 </Project>
