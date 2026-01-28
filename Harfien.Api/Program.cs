@@ -1,6 +1,5 @@
 
-using Harfien.DataAccess;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace Harfien.Api
 {
@@ -19,9 +18,15 @@ namespace Harfien.Api
             // Add services to the container.
 
             builder.Services.AddControllers();
+    //        builder.Services.AddDbContext<HarfienDbContext>(options =>
+    //options.UseSqlServer(
+    //    builder.Configuration.GetConnectionString("DefaultConnection")));
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+        
+
 
             var app = builder.Build();
 
