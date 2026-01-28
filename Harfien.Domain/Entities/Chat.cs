@@ -1,12 +1,21 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Harfien.Domain.Entities
+namespace ProjectTrainer.Models
 {
-    internal class Chat
+
+
+    public class Chat
     {
+        [Key]
+        public int ChatId { get; set; }
+
+        public int orderId { get; set; }
+        public Order Order { get; set; }
+
+        public ICollection<ChatMessage> Messages { get; set; }
     }
+
+
 }
