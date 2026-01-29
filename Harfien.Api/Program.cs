@@ -1,5 +1,7 @@
-
-
+﻿using Harfien.DataAccess;
+using Harfien.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Harfien.Api
 {
@@ -8,39 +10,32 @@ namespace Harfien.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            
-            
+
+            // DbContext
             builder.Services.AddDbContext<HarfienDbContext>(options =>
-            options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    ));
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection")
+                ));
 
-            // Add services to the container.
+            // Identity
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<HarfienDbContext>()
+                .AddDefaultTokenProviders();
 
+            // Controllers
             builder.Services.AddControllers();
-    //        builder.Services.AddDbContext<HarfienDbContext>(options =>
-    //options.UseSqlServer(
-    //    builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-        
-
+          
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+          
 
             app.UseHttpsRedirection();
 
+            // 🔐 Authentication & Authorization
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

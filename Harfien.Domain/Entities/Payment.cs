@@ -1,8 +1,7 @@
-﻿
-
+﻿using Harfien.Domain.Entites;
 using Harfien.Domain.Enums;
 
-namespace Harfien.Domain.Entites
+namespace Harfien.Domain.Entities
 {
     public class Payment
     {

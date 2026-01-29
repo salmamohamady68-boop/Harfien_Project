@@ -1,4 +1,5 @@
-﻿using ProjectTrainer.Models;
+﻿using Harfien.Domain.Entities;
+using ProjectTrainer.Models;
 using System.ComponentModel.DataAnnotations;
 
 public class ChatMessage

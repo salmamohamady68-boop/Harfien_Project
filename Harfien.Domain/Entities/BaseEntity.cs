@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Domain.Entites
+namespace Harfien.Domain.Entities
 {
     public abstract class BaseEntity
     {

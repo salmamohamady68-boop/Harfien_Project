@@ -18,6 +18,6 @@ namespace Harfien.Domain.Entities
         public bool IsRead { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public User User { get; set; }
+        public ApplicationUser ApplicationUsers { get; set; }
     }
 }

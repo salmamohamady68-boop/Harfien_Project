@@ -1,4 +1,5 @@
-﻿using Harfien.Domain.Enums;
+﻿using Harfien.Domain.Entites;
+using Harfien.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace Harfien.Domain.Entities
         public DateTime CreatedAt { get; set; }
 
         public Wallet Wallet { get; set; }
-        public order Order { get; set; }
+        public Order Order { get; set; }
         
 
     }
