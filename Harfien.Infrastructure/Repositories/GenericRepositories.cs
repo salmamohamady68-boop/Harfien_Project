@@ -1,9 +1,8 @@
-﻿using Harfien.DataAccess;
+﻿using Harfien.DataAccess; // عشان يلاقي HarfienDbContext
 using Harfien.Domain.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-
-namespace HomeFinish.Infrastructure.Repositories
+namespace Harfien.Infrastructure.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
