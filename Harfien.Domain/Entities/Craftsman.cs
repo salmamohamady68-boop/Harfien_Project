@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Harfien.Domain.Entites;
 
 namespace Harfien.Domain.Entities
 {
@@ -22,6 +23,9 @@ namespace Harfien.Domain.Entities
         [ForeignKey(nameof(UserId))]
         public string UserId { get; set; }    
         public ApplicationUser User { get; set; }
+
+        public ICollection< Service> CraftsmanServices { get; set; }
+        public ICollection<Order> Orders { get; set; }
 
     }
 }
