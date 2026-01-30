@@ -17,9 +17,7 @@ using Microsoft.AspNetCore.Identity;
         public decimal WalletBalance { get; set; } = 0;
         public bool IsActive { get; set; } = true;
 
-
-
-     
-
+        public int AreaId { get; set; }
+        public Area Area { get; set; }
     }
 }

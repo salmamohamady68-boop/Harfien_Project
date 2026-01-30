@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Entities
 {
-    public class city
+    public class City : BaseEntity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
-        public int GovernorateId { get; set; }
-        public Governorate Governorate { get; set; }
+        public ICollection<Area> Areas { get; set; }
     }
 }

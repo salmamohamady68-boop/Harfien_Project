@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Entities
 {
-    public class Complaint
+    public class Complaint : BaseEntity
     {
-        public int Id { get; set; }
         public int ReporterId { get; set; } // Client or Craftsman who is reporting the issue
         public string Description { get; set; }
         public string? EvidenceAttachmentUrl { get; set; } // link to image/video evidence

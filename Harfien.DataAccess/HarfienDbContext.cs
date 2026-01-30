@@ -23,6 +23,10 @@ namespace Harfien.DataAccess
             public DbSet<Craftsman> Craftsmen { get; set; } = null!;
             public DbSet<Order> Orders { get; set; } = null!;
             public DbSet<Payment> Payments { get; set; } = null!;
+            public DbSet<City> Cities { get; set; } = null!;
+            public DbSet<Area> Areas { get; set; } = null!;
+            public DbSet<Complaint> Complaints { get; set; } = null!;
+            public DbSet<Review> Reviews { get; set; } = null!;
 
             protected override void OnModelCreating(ModelBuilder builder)
             {
