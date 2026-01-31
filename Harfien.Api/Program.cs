@@ -1,6 +1,7 @@
 ﻿using Harfien.DataAccess;
 using Harfien.Domain.Entities;
-using Harfien.Domain.Shared.Repositories;
+using Harfien.Domain.Interfaces;
+using Harfien.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Harfien.Infrastructure.Repositories;
@@ -22,17 +23,13 @@ namespace Harfien.Api
             // Identity
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<HarfienDbContext>()
-                .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders();
+
+            builder.Services.AddScoped<IWalletRepository, WalletRepository>();
+            builder.Services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
+            builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
 
 
-
-            #region repos
-            builder.Services.AddScoped<IClientRepository, ClientRepository>();
-            builder.Services.AddScoped<ICraftsmanRepository, CraftsmanRepository>();
-            builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            #endregion
             // Controllers
             builder.Services.AddControllers();
 

@@ -1,6 +1,6 @@
-﻿
+
 using Harfien.Domain.Entites;
-using Harfien.Domain.Entities; // هنا كل الكلاسات: ApplicationUser, Client, Craftsman, Service, Order, Payment, ServiceCategory
+using Harfien.Domain.Entities; 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,8 +23,16 @@ namespace Harfien.DataAccess
             public DbSet<Craftsman> Craftsmen { get; set; } = null!;
             public DbSet<Order> Orders { get; set; } = null!;
             public DbSet<Payment> Payments { get; set; } = null!;
+            public DbSet<City> Cities { get; set; } = null!;
+            public DbSet<Area> Areas { get; set; } = null!;
+            public DbSet<Complaint> Complaints { get; set; } = null!;
+            public DbSet<Review> Reviews { get; set; } = null!;
+
         #endregion
-        protected override void OnModelCreating(ModelBuilder builder)
+        
+
+            protected override void OnModelCreating(ModelBuilder builder)
+
             {
                 base.OnModelCreating(builder);
 
