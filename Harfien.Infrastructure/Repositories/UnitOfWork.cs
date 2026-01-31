@@ -8,9 +8,25 @@ using Harfien.Domain.Shared.Repositories;
 
 namespace Harfien.Infrastructure.Repositories
 {
-    public class UnitOfWork(HarfienDbContext _context) : IUnitOfWork
+    public class UnitOfWork  : IUnitOfWork
 
     {
+        private readonly HarfienDbContext _context;
+
+
+        public UnitOfWork( HarfienDbContext context,
+            IClientRepository clients,
+            ICraftsmanRepository craftsmen,
+            IApplicationUserRepository users)
+        {
+            _context = context;
+            Clients = clients;
+            Craftsmen = craftsmen;
+            Users = users;
+        }
+        public IClientRepository Clients { get; }
+        public ICraftsmanRepository Craftsmen { get; }
+        public IApplicationUserRepository Users { get; }
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();

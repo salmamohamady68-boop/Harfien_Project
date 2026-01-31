@@ -4,6 +4,7 @@ using Harfien.Domain.Shared.Repositories;
 using Harfien.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Harfien.Infrastructure.Repositories;
 
 namespace Harfien.Api
 {
