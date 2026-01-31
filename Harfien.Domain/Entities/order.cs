@@ -2,6 +2,7 @@
 using Harfien.Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,10 +11,10 @@ namespace Harfien.Domain.Entites
 {
     public class Order : BaseEntity
     {
-
+        [ForeignKey("ClientId")]
         public int ClientId { get; set; }
         public ApplicationUser Client { get; set; } = null!;
-
+        [ForeignKey("CraftsmanId")]
         public int CraftsmanId { get; set; }
         public ApplicationUser Craftsman { get; set; } = null!;
 

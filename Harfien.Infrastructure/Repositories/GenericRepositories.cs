@@ -4,16 +4,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Harfien.Infrastructure.Repositories
 {
-    public class GenericRepository<T>(HarfienDbContext _context) : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        //protected readonly HarfienDbContext _context;
-        //protected readonly DbSet<T> _dbSet;
+        protected readonly HarfienDbContext _context;
+        protected readonly DbSet<T> _dbSet;
 
-        //public GenericRepository(HarfienDbContext context)
-        //{
-        //    _context = context;
-        //    _dbSet = _context.Set<T>();
-        //}
+        public GenericRepository(HarfienDbContext context)
+        {
+           _context = context;
+           
+        }
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
@@ -40,9 +40,9 @@ namespace Harfien.Infrastructure.Repositories
             _context.Set<T>().Remove(entity);
         }
 
-        //public async Task SaveAsync()
-        //{
-        //    await _context.SaveChangesAsync();
-        //}
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

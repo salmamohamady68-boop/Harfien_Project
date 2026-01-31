@@ -23,7 +23,7 @@ namespace Harfien.Infrastructure.Repositories
         {
             return await _context.Craftsmen
                 .Include(c => c.CraftsmanServices)
-                .Where(c => c.CraftsmanServices.Any(s => s.ServiceId == serviceId))
+                .Where(c => c.CraftsmanServices.Any(s => s.Id == serviceId))
                 .ToListAsync();
         }
 

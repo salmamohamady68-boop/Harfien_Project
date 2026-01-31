@@ -11,7 +11,7 @@ namespace Harfien.Domain.Entities
 {
     public class WalletTransaction: BaseEntity
     {
-        public int Id { get; set; }
+       
         public int WalletId { get; set; }
         public int? OrderId { get; set; }
 
@@ -21,7 +21,7 @@ namespace Harfien.Domain.Entities
         public string Reference { get; set; }
 
         public Enums.TransactionStatus Status { get; set; }
-        public DateTime CreatedAt { get; set; }
+       
 
         public Wallet Wallet { get; set; }
         public Order Order { get; set; }

@@ -9,9 +9,9 @@ using Harfien.Domain.Entites;
 
 namespace Harfien.Domain.Entities
 {
-    public class Craftsman
+    public class Craftsman:BaseEntity
     {
-        public int Id { get; set; }
+      
 
         public int NationalId { get; set; }
          public string Bio { get; set; }=string.Empty;

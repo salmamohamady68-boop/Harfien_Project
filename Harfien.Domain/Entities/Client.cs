@@ -9,9 +9,9 @@ using Harfien.Domain.Entites;
 
 namespace Harfien.Domain.Entities
 {
-    public class Client
+    public class Client:BaseEntity
     {
-        public int Id { get; set; }
+       
 
 
         [ForeignKey(nameof(UserId))]
@@ -19,7 +19,7 @@ namespace Harfien.Domain.Entities
 
         public ApplicationUser User { get; set; } 
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+       
 
         public ICollection<Order> Orders { get; set; }
         public ICollection<SubscriptionPlanDetails> Subscriptions { get; set; }

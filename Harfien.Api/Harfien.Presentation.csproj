@@ -14,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Harfien.DataAccess\Harfien.DataAccess.csproj" />
+	  <ProjectReference Include="..\Harfien.Application\Harfien.Application.csproj" />
 	  <ProjectReference Include="..\Harfien.Infrastructure\Harfien.Infrastructure.csproj" />
 	</ItemGroup>
 

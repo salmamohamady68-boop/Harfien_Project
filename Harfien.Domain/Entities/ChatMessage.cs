@@ -9,12 +9,10 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Entities
 {
-    public class ChatMessage
+    public class ChatMessage:BaseEntity
     {
 
        
-
-
         public string MessageText { get; set; }
 
         public int SenderId { get; set; }
