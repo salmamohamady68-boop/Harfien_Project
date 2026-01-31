@@ -2,10 +2,10 @@
 using ProjectTrainer.Models;
 using System.ComponentModel.DataAnnotations;
 
-public class ChatMessage
+public class ChatMessage: BaseEntity
 {
     [Key]
-    public int Id { get; set; }
+    
 
     [Required]
     public string MessageText { get; set; }

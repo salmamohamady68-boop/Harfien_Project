@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Entities
 {
-    public class ServiceCategory
+    public class ServiceCategory: BaseEntity
 
     {
-        public int ServiceCategoryId { get; set; }
+        
         public string Type { get; set; }
         public string Description { get; set; }
 
-        public ICollection<Service> Services { get; set; } = new List<Service>(); 
+        public ICollection<Service> Services { get; set; } = new List<Service>();
+        public string Name { get; set; }
     }
 }

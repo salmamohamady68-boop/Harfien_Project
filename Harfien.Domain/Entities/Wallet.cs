@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Entities
 {
-    public class Wallet
+    public class Wallet: BaseEntity
     {
-        public int Id { get; set; }
+        
         public decimal Balance { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
