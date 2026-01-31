@@ -14,10 +14,18 @@ using Microsoft.AspNetCore.Identity;
         public Gender? Gender { get; set; }
         public string? ProfileImage { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public decimal WalletBalance { get; set; } = 0;
         public bool IsActive { get; set; } = true;
+
+        public Wallet Wallet { get; set; }
+
+        public ICollection<Notification> Notifications { get; set; }
+        public ICollection<ChatMessage> SentMessages { get; set; }
+
+
+
 
         public int AreaId { get; set; }
         public Area Area { get; set; }
+
     }
 }

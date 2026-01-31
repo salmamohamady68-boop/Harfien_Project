@@ -1,6 +1,6 @@
-﻿
+
 using Harfien.Domain.Entites;
-using Harfien.Domain.Entities; // هنا كل الكلاسات: ApplicationUser, Client, Craftsman, Service, Order, Payment, ServiceCategory
+using Harfien.Domain.Entities; 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,8 +16,8 @@ namespace Harfien.DataAccess
             {
             }
 
-            // DbSets
-            public DbSet<Service> Services { get; set; } = null!;
+        #region   DbSets
+        public DbSet<Service> Services { get; set; } = null!;
             public DbSet<ServiceCategory> ServiceCategories { get; set; } = null!;
             public DbSet<Client> Clients { get; set; } = null!;
             public DbSet<Craftsman> Craftsmen { get; set; } = null!;
@@ -28,7 +28,11 @@ namespace Harfien.DataAccess
             public DbSet<Complaint> Complaints { get; set; } = null!;
             public DbSet<Review> Reviews { get; set; } = null!;
 
+        #endregion
+        
+
             protected override void OnModelCreating(ModelBuilder builder)
+
             {
                 base.OnModelCreating(builder);
 
@@ -59,8 +63,22 @@ namespace Harfien.DataAccess
                        .WithMany(c => c.Services)
                        .HasForeignKey(s => s.ServiceCategoryId)
                        .OnDelete(DeleteBehavior.Cascade);
-            }
+                builder.Entity<Wallet>()
+                    .HasOne(w => w.User)
+                    .WithOne(u => u.Wallet)
+                    .HasForeignKey<Wallet>(w => w.UserId);
+               builder.Entity<Notification>()
+                    .HasOne(n => n.ApplicationUsers)
+                    .WithMany(u => u.Notifications)
+                    .HasForeignKey(n => n.UserId);
+               builder.Entity<ChatMessage>()
+                  .HasOne(m => m.Sender)
+                  .WithMany(u => u.SentMessages)
+                  .HasForeignKey(m => m.SenderId);
+
+             
         }
+    }
     }
 
 

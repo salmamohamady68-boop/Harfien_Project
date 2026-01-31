@@ -4,45 +4,45 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Harfien.Infrastructure.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T>(HarfienDbContext _context) : IGenericRepository<T> where T : class
     {
-        protected readonly HarfienDbContext _context;
-        protected readonly DbSet<T> _dbSet;
+        //protected readonly HarfienDbContext _context;
+        //protected readonly DbSet<T> _dbSet;
 
-        public GenericRepository(HarfienDbContext context)
-        {
-            _context = context;
-            _dbSet = _context.Set<T>();
-        }
+        //public GenericRepository(HarfienDbContext context)
+        //{
+        //    _context = context;
+        //    _dbSet = _context.Set<T>();
+        //}
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _dbSet.ToListAsync();
+            return await _context.Set<T>().ToListAsync();
         }
 
         public async Task<T?> GetByIdAsync(int id)
         {
-            return await _dbSet.FindAsync(id);
+            return await _context.Set<T>().FindAsync(id);
         }
 
         public async Task AddAsync(T entity)
         {
-            await _dbSet.AddAsync(entity);
+            await _context.Set<T>().AddAsync(entity);
         }
 
         public void Update(T entity)
         {
-            _dbSet.Update(entity);
+            _context.Set<T>().Update(entity);
         }
 
         public void Delete(T entity)
         {
-            _dbSet.Remove(entity);
+            _context.Set<T>().Remove(entity);
         }
 
-        public async Task SaveAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
+        //public async Task SaveAsync()
+        //{
+        //    await _context.SaveChangesAsync();
+        //}
     }
 }
