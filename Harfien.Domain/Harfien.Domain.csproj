@@ -7,8 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Entities\IChatMessageRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Shared\Services\" />
     <Folder Include="Shared\Repositories\" />
+    <Folder Include="Shared\Services\" />
+    <Folder Include="Shared\Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Entities\IChatMessageRepository.cs" />
   </ItemGroup>
 
 </Project>
