@@ -49,12 +49,12 @@ namespace Harfien.DataAccess
                        .HasForeignKey<Craftsman>(c => c.UserId)
                        .OnDelete(DeleteBehavior.Cascade);
 
-                // ربط Order بالـ Payment
-                builder.Entity<Order>()
-                       .HasOne(o => o.Payment)
-                       .WithOne(p => p.Order)
-                       .HasForeignKey<Payment>(p => p.OrderId)
-                       .OnDelete(DeleteBehavior.Cascade);
+            // ربط Order بالـ Payment
+            builder.Entity<Order>()
+                   .HasOne(o => o.Payment)
+                   .WithOne(p => p.Order)
+                   .HasForeignKey<Payment>(p => p.OrderId);
+                        
 
                 // ربط Service بالـ ServiceCategory
                 builder.Entity<Service>()

@@ -13,10 +13,10 @@ namespace Harfien.Domain.Entites
     {
         [ForeignKey("ClientId")]
         public int ClientId { get; set; }
-        public ApplicationUser Client { get; set; } = null!;
+        public Client Client { get; set; } = null!;
         [ForeignKey("CraftsmanId")]
         public int CraftsmanId { get; set; }
-        public ApplicationUser Craftsman { get; set; } = null!;
+        public Craftsman Craftsman { get; set; } = null!;
 
         public int ServiceId { get; set; }
         public Service Service { get; set; } = null!;

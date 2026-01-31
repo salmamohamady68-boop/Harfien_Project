@@ -439,9 +439,7 @@ namespace Harfien.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClientId = table.Column<int>(type: "int", nullable: false),
-                    ClientId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CraftsmanId = table.Column<int>(type: "int", nullable: false),
-                    CraftsmanId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ServiceId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ScheduledAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -453,27 +451,16 @@ namespace Harfien.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_AspNetUsers_ClientId1",
-                        column: x => x.ClientId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Orders_AspNetUsers_CraftsmanId1",
-                        column: x => x.CraftsmanId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Orders_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_Craftsmen_CraftsmanId",
                         column: x => x.CraftsmanId,
                         principalTable: "Craftsmen",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id"
+                       );
                     table.ForeignKey(
                         name: "FK_Orders_Services_ServiceId",
                         column: x => x.ServiceId,
@@ -673,19 +660,9 @@ namespace Harfien.Infrastructure.Migrations
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_ClientId1",
-                table: "Orders",
-                column: "ClientId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Orders_CraftsmanId",
                 table: "Orders",
                 column: "CraftsmanId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_CraftsmanId1",
-                table: "Orders",
-                column: "CraftsmanId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_ServiceId",

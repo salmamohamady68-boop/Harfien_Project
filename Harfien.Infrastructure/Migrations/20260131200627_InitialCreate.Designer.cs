@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Harfien.Infrastructure.Migrations
 {
     [DbContext(typeof(HarfienDbContext))]
-    [Migration("20260131195130_InitialCreate")]
+    [Migration("20260131200627_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -39,14 +39,8 @@ namespace Harfien.Infrastructure.Migrations
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ClientId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("CraftsmanId")
                         .HasColumnType("int");
-
-                    b.Property<string>("CraftsmanId1")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -68,11 +62,7 @@ namespace Harfien.Infrastructure.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("ClientId1");
-
                     b.HasIndex("CraftsmanId");
-
-                    b.HasIndex("CraftsmanId1");
 
                     b.HasIndex("ServiceId");
 
@@ -814,25 +804,17 @@ namespace Harfien.Infrastructure.Migrations
 
             modelBuilder.Entity("Harfien.Domain.Entites.Order", b =>
                 {
-                    b.HasOne("Harfien.Domain.Entities.Client", null)
+                    b.HasOne("Harfien.Domain.Entities.Client", "Client")
                         .WithMany("Orders")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Harfien.Domain.Entities.ApplicationUser", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId1");
-
-                    b.HasOne("Harfien.Domain.Entities.Craftsman", null)
+                    b.HasOne("Harfien.Domain.Entities.Craftsman", "Craftsman")
                         .WithMany("Orders")
                         .HasForeignKey("CraftsmanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Harfien.Domain.Entities.ApplicationUser", "Craftsman")
-                        .WithMany()
-                        .HasForeignKey("CraftsmanId1");
 
                     b.HasOne("Harfien.Domain.Entities.Service", "Service")
                         .WithMany("Orders")
