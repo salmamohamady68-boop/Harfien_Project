@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Entities
 {
-    public class Service
+    public class Service: BaseEntity
     {
-        public int ServiceId { get; set; }
+       
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }

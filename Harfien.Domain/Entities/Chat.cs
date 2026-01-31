@@ -1,4 +1,5 @@
 ﻿using Harfien.Domain.Entites;
+using Harfien.Domain.Entities;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,10 +8,10 @@ namespace ProjectTrainer.Models
 {
 
 
-    public class Chat
+    public class Chat:BaseEntity
     {
         [Key]
-        public int ChatId { get; set; }
+        
 
         public int orderId { get; set; }
         public Order Order { get; set; }

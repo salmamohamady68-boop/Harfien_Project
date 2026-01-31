@@ -9,7 +9,7 @@ using System.Transactions;
 
 namespace Harfien.Domain.Entities
 {
-    public class WalletTransaction
+    public class WalletTransaction: BaseEntity
     {
         public int Id { get; set; }
         public int WalletId { get; set; }
