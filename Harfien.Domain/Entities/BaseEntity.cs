@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Entities
 {
-
-    public class City : BaseEntity
+    public abstract class BaseEntity
     {
-        public string Name { get; set; }
-        public ICollection<Area> Areas { get; set; }
+        public int Id { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     }
 }

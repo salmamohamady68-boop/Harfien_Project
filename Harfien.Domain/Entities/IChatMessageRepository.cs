@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Entities
 {
+
     public class ChatMessageRepository
     : GenericRepository<ChatMessage>, IChatMessageRepository
     {

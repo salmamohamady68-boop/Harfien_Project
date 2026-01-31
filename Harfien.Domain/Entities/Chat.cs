@@ -1,5 +1,5 @@
-<<<<<<< HEAD
-﻿using System;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace Harfien.Domain.Entities
 
 
 
-        public class Chat
+        public class Chat:BaseEntity
         {
             [Key]
             public int ChatId { get; set; }
@@ -28,26 +28,3 @@ namespace Harfien.Domain.Entities
 
 
 
-=======
-﻿using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ProjectTrainer.Models
-{
-
-
-    public class Chat
-    {
-        [Key]
-        public int ChatId { get; set; }
-
-        public int orderId { get; set; }
-        public Order Order { get; set; }
-
-        public ICollection<ChatMessage> Messages { get; set; }
-    }
-
-
-}
->>>>>>> a58fe802e03bde75675fa60695467788172c18b2

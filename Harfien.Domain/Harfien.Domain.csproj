@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,24 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
-    <Compile Remove="Entities\IChatMessageRepository.cs" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Shared\Services\" />
-    <Folder Include="Shared\Repositories\" />
-=======
-    
+
+
+
     <Folder Include="Entities\" />
->>>>>>> a58fe802e03bde75675fa60695467788172c18b2
+
+
+
     <Folder Include="Shared\Services\" />
-    <Folder Include="Shared\Repositories\" />
    
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Entities\IChatMessageRepository.cs" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.23" />
   </ItemGroup>
 
 </Project>
+

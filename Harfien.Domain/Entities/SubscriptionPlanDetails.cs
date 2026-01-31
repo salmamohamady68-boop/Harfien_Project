@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Entities
 {
-    public class SubscriptionPlanDetails
+
+    public class SubscriptionPlanDetails: BaseEntity
     {
-        public int Id { get; set; }
         
+
         public string FeatureName { get; set; }
         public string FeatureDescription { get; set; }
         public int SubscriptionPlanId { get; set; }
