@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Entities
 {
-    public class Review
+    public class Review : BaseEntity
     {
-        public int Id { get; set; }
         // Explicit IDs for faster querying of a Craftsman's profile
         public int ClientId { get; set; } // The Reviewer
         public int CraftsmanId { get; set; } // The Target
@@ -18,7 +17,6 @@ namespace Harfien.Domain.Entities
         // Range: 1 - 5
         public int Rating { get; set; }
         public string? Comment { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         // Navigation Properties
         // will give error for now as order is not defined yet
         public int OrderId { get; set; }
