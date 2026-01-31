@@ -1,7 +1,9 @@
 ﻿using Harfien.DataAccess;
 using Harfien.Domain.Entities;
+using Harfien.Domain.Shared.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Harfien.Infrastructure.Repositories;
 
 namespace Harfien.Api
 {
@@ -22,6 +24,15 @@ namespace Harfien.Api
                 .AddEntityFrameworkStores<HarfienDbContext>()
                 .AddDefaultTokenProviders();
 
+
+
+            #region repos
+            builder.Services.AddScoped<IClientRepository, ClientRepository>();
+            builder.Services.AddScoped<ICraftsmanRepository, CraftsmanRepository>();
+            builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            #endregion
             // Controllers
             builder.Services.AddControllers();
 
