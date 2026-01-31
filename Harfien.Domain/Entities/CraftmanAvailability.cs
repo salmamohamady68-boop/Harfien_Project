@@ -6,19 +6,18 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Entities
 {
-    public class CraftsmanAvailability
+    public class CraftsmanAvailability  :BaseEntity
     {
-        public int Id { get; set; }
+
 
         public int CraftsmanId { get; set; }
-        public Craftsman Craftsman { get; set; }
+        public ApplicationUser Craftsman { get; set; } = null!;
 
-        public DayOfWeek DayOfWeek { get; set; }
-
+        public DayOfWeek Day { get; set; }
         public TimeSpan From { get; set; }
         public TimeSpan To { get; set; }
 
-        public bool IsAvailable { get; set; } = true;
+        public bool IsAvailable { get; set; }
     }
 
 }

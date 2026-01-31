@@ -10,12 +10,22 @@ namespace Harfien.Domain.Entites
 {
     public class Order : BaseEntity
     {
+
+        public int ClientId { get; set; }
+        public ApplicationUser Client { get; set; } = null!;
+
+        public int CraftsmanId { get; set; }
+        public ApplicationUser Craftsman { get; set; } = null!;
+
+        public int ServiceId { get; set; }
+        public Service Service { get; set; } = null!;
+
+        public string Description { get; set; } = null!;
+        public DateTime ScheduledAt { get; set; }
+
         public OrderStatus Status { get; set; }
+        public decimal Amount { get; set; }
 
-        public Guid ServiceId { get; set; }   // FK
-        public Guid UserId { get; set; }      // FK
-
-        // Navigation
-        public Payment? Payment { get; set; }
+        public Payment Payment { get; set; } = null!;
     }
 }
