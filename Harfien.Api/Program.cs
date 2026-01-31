@@ -1,6 +1,6 @@
 ﻿using Harfien.DataAccess;
 using Harfien.Domain.Entities;
-using Harfien.Domain.Interfaces;
+using Harfien.Domain.Shared.Repositories;
 using Harfien.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
