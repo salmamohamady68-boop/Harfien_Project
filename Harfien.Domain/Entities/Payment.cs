@@ -3,17 +3,15 @@ using Harfien.Domain.Enums;
 
 namespace Harfien.Domain.Entities
 {
-    public class Payment
+    public class Payment :BaseEntity
     {
-        public DateTime PaymentDate { get; set; }
+
+        public int OrderId { get; set; }
+        public Order Order { get; set; } = null!;
 
         public decimal Amount { get; set; }
-
         public PaymentStatus Status { get; set; }
 
-        public Guid OrderId { get; set; }   // FK
-
-        // Navigation
-        public Order Order { get; set; }
+        public string TransactionRef { get; set; } = null!;
     }
 }
