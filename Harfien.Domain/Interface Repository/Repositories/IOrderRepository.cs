@@ -1,13 +1,12 @@
 ﻿using Harfien.Domain.Entites;
 using Harfien.Domain.Enums;
-using Harfien.Domain.Shared.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Domain.Interfaces
+namespace Harfien.Domain.Shared.Repositories
 {
     public interface IOrderRepository : IGenericRepository<Order>
     {

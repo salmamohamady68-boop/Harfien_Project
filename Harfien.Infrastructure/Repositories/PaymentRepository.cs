@@ -1,7 +1,7 @@
 ﻿using Harfien.DataAccess;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Enums;
-using Harfien.Domain.Interfaces;
+using Harfien.Domain.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

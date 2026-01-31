@@ -1,13 +1,12 @@
 ﻿using Harfien.Domain.Entites;
 using Harfien.Domain.Entities;
-using Harfien.Domain.Shared.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Domain.Interfaces
+namespace Harfien.Domain.Shared.Repositories
 {
     // Renamed the interface to avoid the CS0101 conflict
     public interface IAvailabilityRepository : IGenericRepository<CraftsmanAvailability>
