@@ -1,4 +1,3 @@
-
 using Harfien.Domain.Entites;
 using Harfien.Domain.Entities; 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -80,5 +79,6 @@ namespace Harfien.DataAccess
         }
     }
     }
+
 
 

@@ -17,3 +17,4 @@ namespace Harfien.Domain.Entities
         public string Name { get; set; }
     }
 }
+        

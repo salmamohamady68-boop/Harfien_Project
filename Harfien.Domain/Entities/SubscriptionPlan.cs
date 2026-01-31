@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Entities
 {
+
     public class SubscriptionPlan: BaseEntity
     {
-       
+
         public string Name { get; set; }
        
         public decimal Price { get; set; }
