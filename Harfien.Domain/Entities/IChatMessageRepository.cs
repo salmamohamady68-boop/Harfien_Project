@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Entities
 {
-	public interface IChatMessageRepository
+
+    public class ChatMessageRepository
+    : GenericRepository<ChatMessage>, IChatMessageRepository
     {
-		
-			Task<IEnumerable<ChatMessage>> GetAllAsync();
-			Task<ChatMessage?> GetByIdAsync(int id);
-			Task InsertAsync(ChatMessage message);
-			void Update(ChatMessage message);
-			Task DeleteAsync(int id);
-		
-	}
+        public ChatMessageRepository(HarfienDbContext context)
+            : base(context)
+        {
+        }
+
+       
+    }
 }

@@ -1,23 +1,32 @@
-﻿using Harfien.Domain.Entities;
-using ProjectTrainer.Models;
+
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public class ChatMessage: BaseEntity
+namespace Harfien.Domain.Entities
 {
-    [Key]
-    
+    public class ChatMessage
+    {
 
-    [Required]
-    public string MessageText { get; set; }
+       
 
-    [Required]
-    public string SenderId { get; set; }
-    public ApplicationUser Sender { get; set; }
 
-    public int ChatId { get; set; }
-    public Chat Chat { get; set; }
+        public string MessageText { get; set; }
 
-    public DateTime SentAt { get; set; } = DateTime.UtcNow;
+        public int SenderId { get; set; }
+        public ApplicationUser Sender { get; set; }
 
-    public bool IsRead { get; set; } = false;
+        // Foreign Key
+       [ForeignKey("ChatId")]
+        public int ChatId { get; set; }
+        public Chat Chat { get; set; }
+        public DateTime SentAt { get; set; } = DateTime.UtcNow;
+
+        public bool IsRead { get; set; } = false;
+
+    }
 }
