@@ -7,14 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <Compile Remove="Entities\IChatMessageRepository.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Shared\Services\" />
     <Folder Include="Shared\Repositories\" />
+=======
+    
+    <Folder Include="Entities\" />
+>>>>>>> a58fe802e03bde75675fa60695467788172c18b2
     <Folder Include="Shared\Services\" />
     <Folder Include="Shared\Repositories\" />
+   
   </ItemGroup>
 
   <ItemGroup>
