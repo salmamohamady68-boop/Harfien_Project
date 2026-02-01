@@ -9,6 +9,7 @@ namespace Harfien.Domain.Entities
     public class SubscriptionPlan
     {
         public int Id { get; set; }
+<<<<<<< HEAD
 
         public string Name { get; set; } = null!;
         public decimal Price { get; set; }
@@ -17,5 +18,16 @@ namespace Harfien.Domain.Entities
         public string? Description { get; set; }
         public bool IsActive { get; set; } = true;
 
+=======
+        public string Name { get; set; }
+       
+        public decimal Price { get; set; }
+        public int DurationInDays { get; set; }
+
+        public bool IsActive { get; set; } = true;
+
+        public ICollection<SubscriptionPlanDetails> SubscriptionPlanDetails { get; set; }
+
+>>>>>>> 1b5b882a5660e58a14e95d885311d721597741ff
     }
 }
