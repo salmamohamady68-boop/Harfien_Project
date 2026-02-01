@@ -12,9 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Services\" />
-    <Folder Include="Repositories\" />
     <Folder Include="Services\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>
