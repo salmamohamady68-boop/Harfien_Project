@@ -3,6 +3,7 @@ using Harfien.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Reflection.Emit;
 
 namespace Harfien.DataAccess
 {
@@ -35,22 +36,22 @@ namespace Harfien.DataAccess
             {
                 base.OnModelCreating(builder);
 
-                // ربط Client بالـ User
-                builder.Entity<Client>()
-                       .HasOne(c => c.User)
-                       .WithOne()
-                       .HasForeignKey<Client>(c => c.UserId)
-                       .OnDelete(DeleteBehavior.Cascade);
+            // Order ↔ Client
+            builder.Entity<Order>()
+                .HasOne(o => o.Client)
+                .WithMany(u => u.ClientOrders)
+                .HasForeignKey(o => o.ClientId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-                // ربط Craftsman بالـ User
-                builder.Entity<Craftsman>()
-                       .HasOne(c => c.User)
-                       .WithOne()
-                       .HasForeignKey<Craftsman>(c => c.UserId)
-                       .OnDelete(DeleteBehavior.Cascade);
+            // Order ↔ Craftsman
+            builder.Entity<Order>()
+                .HasOne(o => o.Craftsman)
+                .WithMany(u => u.CraftsmanOrders)
+                .HasForeignKey(o => o.CraftsmanId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-                // ربط Order بالـ Payment
-                builder.Entity<Order>()
+            // ربط Order بالـ Payment
+            builder.Entity<Order>()
                        .HasOne(o => o.Payment)
                        .WithOne(p => p.Order)
                        .HasForeignKey<Payment>(p => p.OrderId)

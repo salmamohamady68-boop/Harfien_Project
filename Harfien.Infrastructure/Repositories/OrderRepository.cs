@@ -25,18 +25,18 @@ namespace Harfien.Infrastructure.Repositories
                 .FirstOrDefaultAsync(o => o.Id == id);
         }
 
-        public async Task<IEnumerable<Order>> GetByClientIdAsync(int clientId)
+        public async Task<IEnumerable<Order>> GetByClientIdAsync(string clientId)
         {
             return await _dbSet
                 .Include(o => o.Craftsman)
                 .Include(o => o.Service)
                 .Include(o => o.Payment)
-                .Where(o => o.ClientId == clientId)
+                .Where(o => o.ClientId == clientId) 
                 .OrderByDescending(o => o.Id)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Order>> GetByCraftsmanIdAsync(int craftsmanId)
+        public async Task<IEnumerable<Order>> GetByCraftsmanIdAsync(string craftsmanId)
         {
             return await _dbSet
                 .Include(o => o.Client)
@@ -68,7 +68,7 @@ namespace Harfien.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<bool> IsOrderBelongsToClientAsync(int orderId, int clientId)
+        public async Task<bool> IsOrderBelongsToClientAsync(int orderId, string clientId)
         {
             return await _dbSet
                 .AnyAsync(o => o.Id == orderId && o.ClientId == clientId);
