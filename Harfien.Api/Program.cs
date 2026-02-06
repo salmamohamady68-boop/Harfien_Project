@@ -4,7 +4,14 @@ using Harfien.Domain.Shared.Repositories;
 using Harfien.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Harfien.Infrastructure.Repositories;
+using Microsoft.Data.SqlClient;
+using AutoMapper;
+using Harfien.Application.Mappings;
+using Harfien.Application.Interfaces;
+using Harfien.Application.Services;
+
+
+
 
 namespace Harfien.Api
 {
@@ -19,7 +26,7 @@ namespace Harfien.Api
                 options.UseSqlServer(
                     builder.Configuration.GetConnectionString("DefaultConnection")
                 ));
-
+            
             // Identity
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<HarfienDbContext>()
@@ -29,16 +36,29 @@ namespace Harfien.Api
             builder.Services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
             builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
 
+            builder.Services.AddAutoMapper(
+                             (sp, cfg) =>
+                             {
+                                 cfg.AllowNullCollections = true;
+
+                             },
+                             typeof(Application.AssemblyReference).Assembly
+                         ); 
+            
+            builder.Services.AddScoped<IServiceService, ServiceService>();
+            builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 
             // Controllers
             builder.Services.AddControllers();
+            
+            
 
-          
+
+
 
             var app = builder.Build();
 
-          
-
+            
             app.UseHttpsRedirection();
 
             // 🔐 Authentication & Authorization
