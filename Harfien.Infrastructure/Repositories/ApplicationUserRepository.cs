@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Harfien.Application.Dtos;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Shared.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -13,21 +14,36 @@ namespace Harfien.Infrastructure.Repositories
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
+
         public ApplicationUserRepository(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
 
-        public async Task<ApplicationUser?> GetByEmailAsync(string email)
+        public Task<string> AddRoleAsync(AddRoleModel model)
         {
-            return await _userManager.FindByEmailAsync(email);
+            throw new NotImplementedException();
         }
 
-        public async Task<ApplicationUser?> GetByUserIdAsync(string userId)
+        public Task<ApplicationUser> GetTokenAsync(TokenRequestModel model)
         {
-            return await _userManager.FindByIdAsync(userId);
+            throw new NotImplementedException();
         }
 
+        public Task<ApplicationUser> RefreshTokenAsync(string token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApplicationUser> RegisterAsync(RegisterModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> RevokTokenAsync(string token)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }
