@@ -36,7 +36,7 @@ namespace Harfien.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Order>> GetByCraftsmanIdAsync(int craftsmanId)
+        public async Task<IEnumerable<Order>> GetByCraftsmanIdAsync(string craftsmanId)
         {
             return await _dbSet
                 .Include(o => o.Client)

@@ -4,6 +4,7 @@ using Harfien.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Harfien.Infrastructure.Migrations
 {
     [DbContext(typeof(HarfienDbContext))]
-    partial class HarfienDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260203133508_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,14 @@ namespace Harfien.Infrastructure.Migrations
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CraftsmanId")
+                    b.Property<string>("ClientId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CraftsmanId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("CraftsmanId1")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -59,7 +69,11 @@ namespace Harfien.Infrastructure.Migrations
 
                     b.HasIndex("ClientId");
 
+                    b.HasIndex("ClientId1");
+
                     b.HasIndex("CraftsmanId");
+
+                    b.HasIndex("CraftsmanId1");
 
                     b.HasIndex("ServiceId");
 
@@ -98,7 +112,7 @@ namespace Harfien.Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("Fullname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -125,12 +139,6 @@ namespace Harfien.Infrastructure.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PasswordResetSession")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("PasswordResetSessionExpiry")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -139,12 +147,6 @@ namespace Harfien.Infrastructure.Migrations
 
                     b.Property<string>("ProfileImage")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ResetCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ResetCodeExpiry")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -179,8 +181,8 @@ namespace Harfien.Infrastructure.Migrations
                             Id = "ADMIN_ID",
                             AccessFailedCount = 0,
                             Address = "Cairo",
-                            ConcurrencyStamp = "e58f7f4e-4ae7-46a7-af52-5a12043e2eb3",
-                            CreatedAt = new DateTime(2026, 2, 5, 16, 31, 44, 244, DateTimeKind.Utc).AddTicks(183),
+                            ConcurrencyStamp = "c06c7e77-11d7-4c81-bf31-cffe21639031",
+                            CreatedAt = new DateTime(2026, 2, 3, 13, 35, 4, 896, DateTimeKind.Utc).AddTicks(8054),
                             Email = "Admin@gmail.com",
                             EmailConfirmed = true,
                             Fullname = "Nourhan Shaban",
@@ -188,10 +190,10 @@ namespace Harfien.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECwdd4LX3i0bHi2LFfmlijeqglR4Ad9E0iSVwkeRTpXqlAQ7W/2cHSIb9mjoDEvniQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEO4thzCYn3NMM3A/VD+yNDZ9E0cIDuhvYUlTv9OPTXSjTSNWR8/loBspc+F327b5QA==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "12abbfa9-657b-4652-acff-f64ff5e5a96a",
+                            SecurityStamp = "0a838cd3-f1a6-450d-b644-d872efec6513",
                             TwoFactorEnabled = false,
                             UserName = "Admin@gamil.com"
                         });
@@ -379,9 +381,6 @@ namespace Harfien.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsVerified")
                         .HasColumnType("bit");
 
@@ -394,9 +393,6 @@ namespace Harfien.Infrastructure.Migrations
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("YearsOfExperience")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -485,8 +481,9 @@ namespace Harfien.Infrastructure.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CraftsmanId")
-                        .HasColumnType("int");
+                    b.Property<string>("CraftsmanId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -846,7 +843,7 @@ namespace Harfien.Infrastructure.Migrations
                             UserId = "ADMIN_ID",
                             RoleId = "1"
                         });
-    
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
@@ -869,17 +866,25 @@ namespace Harfien.Infrastructure.Migrations
 
             modelBuilder.Entity("Harfien.Domain.Entites.Order", b =>
                 {
-                    b.HasOne("Harfien.Domain.Entities.Client", "Client")
+                    b.HasOne("Harfien.Domain.Entities.Client", null)
                         .WithMany("Orders")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Harfien.Domain.Entities.Craftsman", "Craftsman")
-                        .WithMany("Orders")
+                    b.HasOne("Harfien.Domain.Entities.ApplicationUser", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId1");
+
+                    b.HasOne("Harfien.Domain.Entities.ApplicationUser", "Craftsman")
+                        .WithMany()
                         .HasForeignKey("CraftsmanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Harfien.Domain.Entities.Craftsman", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("CraftsmanId1");
 
                     b.HasOne("Harfien.Domain.Entities.Service", "Service")
                         .WithMany("Orders")
@@ -938,7 +943,7 @@ namespace Harfien.Infrastructure.Migrations
                     b.HasOne("Harfien.Domain.Entities.ApplicationUser", "User")
                         .WithOne()
                         .HasForeignKey("Harfien.Domain.Entities.Client", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -960,7 +965,7 @@ namespace Harfien.Infrastructure.Migrations
                     b.HasOne("Harfien.Domain.Entities.ApplicationUser", "User")
                         .WithOne()
                         .HasForeignKey("Harfien.Domain.Entities.Craftsman", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -982,7 +987,7 @@ namespace Harfien.Infrastructure.Migrations
                     b.HasOne("Harfien.Domain.Entites.Order", "Order")
                         .WithOne("Payment")
                         .HasForeignKey("Harfien.Domain.Entities.Payment", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -1010,7 +1015,7 @@ namespace Harfien.Infrastructure.Migrations
                     b.HasOne("Harfien.Domain.Entities.ServiceCategory", "ServiceCategory")
                         .WithMany("Services")
                         .HasForeignKey("ServiceCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Craftsman");
@@ -1124,8 +1129,7 @@ namespace Harfien.Infrastructure.Migrations
 
                     b.Navigation("SentMessages");
 
-                    b.Navigation("Wallet")
-                        .IsRequired();
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Harfien.Domain.Entities.Area", b =>

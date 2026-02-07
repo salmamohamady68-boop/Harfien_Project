@@ -1,3 +1,11 @@
+using Harfien.Application.Autherization;
+using Harfien.DataAccess;
+using Harfien.Domain.Entities;
+using Harfien.Domain.Interface_Repository.Repositories;
+using Harfien.Domain.Shared.Repositories;
+using Harfien.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Harfien.DataAccess;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Interface_Repository.Services;
@@ -6,11 +14,12 @@ using Harfien.Infrastructure.Repositories;
 using Harfien.Application.Interfaces;
 using Harfien.Application.Services;
 using Harfien.Application.Mappings;
-
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Text;
 using Microsoft.OpenApi.Models;
 
 using AutoMapper;
@@ -46,6 +55,45 @@ namespace Harfien.Api
             })
             .AddEntityFrameworkStores<HarfienDbContext>()
             .AddDefaultTokenProviders();
+            //jwt
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+                };
+            });
+
+            //Authurization
+            builder.Services.AddAuthorization();
+            builder.Services.AddSingleton<IAuthorizationPolicyProvider, DynamicPolicyProvider>();
+            builder.Services.AddSingleton<IAuthorizationHandler, DynamicRoleHanlder>();
+
+            //Services
+            builder.Services.AddScoped<IWalletRepository, WalletRepository>();
+            builder.Services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
+            builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
+            //swagger
+            builder.Services.AddSwaggerGen();
+
+            //ForgetPassword
+            builder.Services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromHours(10));
+            builder.Services.AddScoped<IEmailService, EmailSender>();
+            builder.Services.AddMemoryCache();
+
+
+
 
             // =========================
             // Repositories & Services
@@ -163,6 +211,9 @@ namespace Harfien.Api
                 app.UseSwaggerUI();
             }
 
+            // 🔐 Authentication & Authorization
+            app.UseSwagger();
+            app.UseSwaggerUI();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();

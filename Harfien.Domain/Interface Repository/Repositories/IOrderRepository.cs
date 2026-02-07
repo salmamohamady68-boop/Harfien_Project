@@ -13,7 +13,7 @@ namespace Harfien.Domain.Shared.Repositories
         Task<Order?> GetByIdWithDetailsAsync(int id);
 
         Task<IEnumerable<Order>> GetByClientIdAsync(int clientId);
-        Task<IEnumerable<Order>> GetByCraftsmanIdAsync(int craftsmanId);
+        Task<IEnumerable<Order>> GetByCraftsmanIdAsync(string craftsmanId);
 
         Task<IEnumerable<Order>> GetByStatusAsync(OrderStatus status);
         Task<IEnumerable<Order>> GetAllWithDetailsAsync();
