@@ -1,4 +1,4 @@
-﻿using Harfien.DataAccess; // عشان يلاقي HarfienDbContext
+﻿using Harfien.DataAccess; 
 using Harfien.Domain.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 

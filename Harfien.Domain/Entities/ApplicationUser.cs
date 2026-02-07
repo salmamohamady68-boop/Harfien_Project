@@ -24,7 +24,7 @@ using Microsoft.AspNetCore.Identity;
 
 
 
-        public int AreaId { get; set; }
+        public int? AreaId { get; set; }
         public Area Area { get; set; }
 
     }
