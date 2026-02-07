@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Harfien.Domain\Harfien.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.0.0" />
+  </ItemGroup>
+
 </Project>

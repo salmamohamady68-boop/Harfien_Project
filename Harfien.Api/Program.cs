@@ -1,21 +1,26 @@
-﻿using Harfien.DataAccess;
+using Harfien.DataAccess;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Interface_Repository.Services;
 using Harfien.Domain.Shared.Repositories;
 using Harfien.Infrastructure.Repositories;
+using Harfien.Application.Interfaces;
+using Harfien.Application.Services;
+using Harfien.Application.Mappings;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
 
+using AutoMapper;
+using System.Text;
 
 namespace Harfien.Api
 {
     public class Program
     {
-        public static async Task Main(string[] args) // async عشان نعمل Role Initialization
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -23,8 +28,9 @@ namespace Harfien.Api
             // DbContext
             // =========================
             builder.Services.AddDbContext<HarfienDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-            );
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection")
+                ));
 
             // =========================
             // Identity
@@ -47,15 +53,22 @@ namespace Harfien.Api
             builder.Services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
             builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
             builder.Services.AddScoped<ICraftsmanRepository, CraftsmanRepository>();
+            builder.Services.AddScoped<IClientRepository, ClientRepository>();
+            builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-            builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
-            builder.Services.AddScoped<IClientRepository, ClientRepository>();
+
+            builder.Services.AddScoped<IServiceService, ServiceService>();
+            builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 
             // =========================
-            // Controllers
+            // AutoMapper
             // =========================
-            builder.Services.AddControllers();
+            builder.Services.AddAutoMapper(cfg =>
+            {
+                cfg.AllowNullCollections = true;
+            }, typeof(AssemblyReference).Assembly);
 
             // =========================
             // JWT Authentication
@@ -82,11 +95,15 @@ namespace Harfien.Api
             });
 
             // =========================
+            // Controllers
+            // =========================
+            builder.Services.AddControllers();
+
+            // =========================
             // Swagger
             // =========================
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(
-                o =>
+            builder.Services.AddSwaggerGen(o =>
             {
                 o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -95,8 +112,22 @@ namespace Harfien.Api
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
-                    Description = "Enter the JWT"
+                    Description = "Enter JWT like: Bearer {token}"
+                });
 
+                o.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
                 });
             });
 
@@ -111,7 +142,7 @@ namespace Harfien.Api
             using (var scope = app.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                string[] roles = new[] { "CLIENT", "CRAFTSMAN", "ADMIN" };
+                string[] roles = { "CLIENT", "CRAFTSMAN", "ADMIN" };
 
                 foreach (var role in roles)
                 {
@@ -140,3 +171,4 @@ namespace Harfien.Api
         }
     }
 }
+
