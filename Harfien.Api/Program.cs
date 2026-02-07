@@ -1,10 +1,11 @@
-﻿using Harfien.DataAccess;
+﻿using Harfien.Application.Services;
+using Harfien.DataAccess;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Shared.Repositories;
 using Harfien.Infrastructure.Repositories;
+using Harfien.Application.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Harfien.Infrastructure.Repositories;
 
 namespace Harfien.Api
 {
@@ -25,9 +26,18 @@ namespace Harfien.Api
                 .AddEntityFrameworkStores<HarfienDbContext>()
             .AddDefaultTokenProviders();
 
+
+            // Repositories
             builder.Services.AddScoped<IWalletRepository, WalletRepository>();
             builder.Services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
             builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+
+
+            //services
+
+            builder.Services.AddScoped<IReviewService, ReviewService>();
 
 
             // Controllers

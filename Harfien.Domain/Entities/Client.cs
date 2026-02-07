@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Harfien.Domain.Entites;
+using Harfien.Domain.Entities;
 
 namespace Harfien.Domain.Entities
 {

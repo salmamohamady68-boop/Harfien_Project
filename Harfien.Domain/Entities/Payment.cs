@@ -1,4 +1,4 @@
-﻿using Harfien.Domain.Entites;
+﻿using Harfien.Domain.Entities;
 using Harfien.Domain.Enums;
 
 namespace Harfien.Domain.Entities

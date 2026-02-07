@@ -1,4 +1,4 @@
-﻿using Harfien.Domain.Entites;
+﻿using Harfien.Domain.Entities;
 using Harfien.Domain.Enums;
 using System;
 using System.Collections.Generic;
