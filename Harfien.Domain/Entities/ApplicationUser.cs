@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 {
     public class ApplicationUser:IdentityUser
     {
-        public string Fullname { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public string? Zone { get; set; }
         public DateTime? DateOfBirth { get; set; }
@@ -28,8 +28,7 @@ using Microsoft.AspNetCore.Identity;
 
 
       
-        public int? AreaId { get; set; }
-        public Area Area { get; set; }
+        
 
     }
 }

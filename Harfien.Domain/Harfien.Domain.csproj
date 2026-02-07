@@ -23,10 +23,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.23" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Harfien.Application\Harfien.Application.csproj" />
-  </ItemGroup>
 	
 
 </Project>

@@ -1,4 +1,4 @@
-using Harfien.Application.Autherization;
+﻿using Harfien.Application.Autherization;
 using Harfien.DataAccess;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Interface_Repository.Repositories;
@@ -6,24 +6,14 @@ using Harfien.Domain.Shared.Repositories;
 using Harfien.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Harfien.DataAccess;
-using Harfien.Domain.Entities;
 using Harfien.Domain.Interface_Repository.Services;
-using Harfien.Domain.Shared.Repositories;
-using Harfien.Infrastructure.Repositories;
 using Harfien.Application.Interfaces;
 using Harfien.Application.Services;
-using Harfien.Application.Mappings;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Text;
 using Microsoft.OpenApi.Models;
-
-using AutoMapper;
-using System.Text;
 using System.Reflection.Metadata;
 
 namespace Harfien.Api
@@ -223,4 +213,3 @@ namespace Harfien.Api
         }
     }
 }
-

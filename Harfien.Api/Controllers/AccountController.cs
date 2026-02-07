@@ -51,7 +51,7 @@ namespace Harfien.Presentation.Controllers
                 Email = model.Email, 
                 PhoneNumber = model.phoneNumber ,
                 Address = model.Address,
-                Fullname = model.Fullname,
+                FullName = model.Fullname,
                 AreaId = model.AreaId,
                 Zone = model.Zone,
             };

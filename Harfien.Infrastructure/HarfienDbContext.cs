@@ -103,7 +103,7 @@ namespace Harfien.DataAccess
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
                 LockoutEnabled = false,
-                Fullname = "Nourhan Shaban",
+                FullName = "Admin",
                 Address = "Cairo",
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
@@ -113,7 +113,7 @@ namespace Harfien.DataAccess
 
 
             //Make HashPassword For Admin Account
-            adminUser.PasswordHash = hasher.HashPassword(adminUser, "Nourhanshaban"); 
+            adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin123456"); 
 
             builder.Entity<ApplicationUser>().HasData(adminUser);
 

@@ -14,5 +14,6 @@ namespace Harfien.Domain.Interface_Repository.Services
         Task RegisterCraftsmanAsync(RegisterCraftsmanDto dto);
         Task<string> LoginAsync(loginDto dto);
         Task<string> ApproveCraftsmanAsync(int craftsmanId);
+
     }
 }

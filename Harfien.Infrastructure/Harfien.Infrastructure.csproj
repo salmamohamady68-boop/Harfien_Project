@@ -20,7 +20,6 @@
 		</PackageReference>
 	</ItemGroup>
   <ItemGroup>
-    <Folder Include="Migrations\" />
     <Folder Include="Services\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
@@ -36,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Harfien.Application\Harfien.Application.csproj" />
     <ProjectReference Include="..\Harfien.Domain\Harfien.Domain.csproj" />
   </ItemGroup>
 

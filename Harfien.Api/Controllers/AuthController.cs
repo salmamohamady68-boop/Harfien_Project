@@ -5,6 +5,7 @@ using Harfien.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Harfien.Domain.Interface_Repository.Services;
 
 namespace Harfien.Presentation.Controllers
 {
@@ -66,37 +67,37 @@ namespace Harfien.Presentation.Controllers
         // ==========================
         // Confirm Password
         // ==========================
-        [HttpPost("confirm-password")]
-        public async Task<IActionResult> ConfirmPassword([FromBody] ConfirmPasswordDto request)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
-                return Unauthorized();
+        //[HttpPost("confirm-password")]
+        //public async Task<IActionResult> ConfirmPassword([FromBody] ConfirmPasswordDto request)
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    if (userId == null)
+        //        return Unauthorized();
 
-            var result = await _authService.ConfirmPasswordAsync(userId, request.Password);
+        //    var result = await _authService.ConfirmPasswordAsync(userId, request.Password);
 
-            if (!result)
-                return BadRequest(new { message = "Password is incorrect" });
+        //    if (!result)
+        //        return BadRequest(new { message = "Password is incorrect" });
 
-            return Ok(new { message = "Password confirmed successfully" });
-        }
+        //    return Ok(new { message = "Password confirmed successfully" });
+        //}
 
         // ==========================
         // Verify Reset Code
         // ==========================
-        [HttpPost("verify-reset-code")]
-        public async Task<IActionResult> VerifyResetCode([FromBody] VerifyResetCodeDto request)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
-                return Unauthorized();
+        //[HttpPost("verify-reset-code")]
+        //public async Task<IActionResult> VerifyResetCode([FromBody] VerifyResetCodeDto request)
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    if (userId == null)
+        //        return Unauthorized();
 
-            var result = await _authService.VerifyResetCodeAsync(userId, request.ResetCode);
+        //    var result = await _authService.VerifyResetCodeAsync(userId, request.ResetCode);
 
-            if (!result)
-                return BadRequest(new { message = "Invalid or expired reset code" });
+        //    if (!result)
+        //        return BadRequest(new { message = "Invalid or expired reset code" });
 
-            return Ok(new { message = "Reset code verified successfully" });
-        }
+        //    return Ok(new { message = "Reset code verified successfully" });
+        //}
     }
 }
