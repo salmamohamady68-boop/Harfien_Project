@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 
 using AutoMapper;
 using System.Text;
+using System.Reflection.Metadata;
 
 namespace Harfien.Api
 {
