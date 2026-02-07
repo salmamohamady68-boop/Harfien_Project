@@ -4,6 +4,7 @@ using Harfien.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Harfien.Infrastructure.Migrations
 {
     [DbContext(typeof(HarfienDbContext))]
-    partial class HarfienDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260202192910_EditApplicationUser")]
+    partial class EditApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,12 +128,6 @@ namespace Harfien.Infrastructure.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PasswordResetSession")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("PasswordResetSessionExpiry")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -139,12 +136,6 @@ namespace Harfien.Infrastructure.Migrations
 
                     b.Property<string>("ProfileImage")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ResetCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ResetCodeExpiry")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -172,29 +163,6 @@ namespace Harfien.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "ADMIN_ID",
-                            AccessFailedCount = 0,
-                            Address = "Cairo",
-                            ConcurrencyStamp = "e58f7f4e-4ae7-46a7-af52-5a12043e2eb3",
-                            CreatedAt = new DateTime(2026, 2, 5, 16, 31, 44, 244, DateTimeKind.Utc).AddTicks(183),
-                            Email = "Admin@gmail.com",
-                            EmailConfirmed = true,
-                            Fullname = "Nourhan Shaban",
-                            IsActive = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@GMAIL.COM",
-                            NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECwdd4LX3i0bHi2LFfmlijeqglR4Ad9E0iSVwkeRTpXqlAQ7W/2cHSIb9mjoDEvniQ==",
-                            PhoneNumber = "1234567890",
-                            PhoneNumberConfirmed = true,
-                            SecurityStamp = "12abbfa9-657b-4652-acff-f64ff5e5a96a",
-                            TwoFactorEnabled = false,
-                            UserName = "Admin@gamil.com"
-                        });
                 });
 
             modelBuilder.Entity("Harfien.Domain.Entities.Area", b =>
@@ -379,9 +347,6 @@ namespace Harfien.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsVerified")
                         .HasColumnType("bit");
 
@@ -394,9 +359,6 @@ namespace Harfien.Infrastructure.Migrations
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("YearsOfExperience")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -732,26 +694,6 @@ namespace Harfien.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "2",
-                            Name = "Carftsman",
-                            NormalizedName = "CRAFTSMAN"
-                        },
-                        new
-                        {
-                            Id = "3",
-                            Name = "Client",
-                            NormalizedName = "CLIENT"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -839,14 +781,7 @@ namespace Harfien.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "ADMIN_ID",
-                            RoleId = "1"
-                        });
-    
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
