@@ -33,6 +33,18 @@ namespace Harfien.Infrastructure.Repositories
                 .Include(c => c.CraftsmanServices)
                 .FirstOrDefaultAsync(c => c.Id == craftsmanId);
         }
+        public async Task<Craftsman?> GetByUserIdAsync(string userId)
+        {
+            return await _context.Craftsmen
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+        }
+
+   
+        public async Task UpdateAsync(Craftsman craftsman)
+        {
+            _context.Craftsmen.Update(craftsman);
+            await _context.SaveChangesAsync();
+        }
     }
 
 }
