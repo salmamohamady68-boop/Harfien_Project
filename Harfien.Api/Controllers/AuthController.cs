@@ -64,40 +64,6 @@ namespace Harfien.Presentation.Controllers
             return Ok(new { token });
         }
 
-        // ==========================
-        // Confirm Password
-        // ==========================
-        //[HttpPost("confirm-password")]
-        //public async Task<IActionResult> ConfirmPassword([FromBody] ConfirmPasswordDto request)
-        //{
-        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    if (userId == null)
-        //        return Unauthorized();
-
-        //    var result = await _authService.ConfirmPasswordAsync(userId, request.Password);
-
-        //    if (!result)
-        //        return BadRequest(new { message = "Password is incorrect" });
-
-        //    return Ok(new { message = "Password confirmed successfully" });
-        //}
-
-        // ==========================
-        // Verify Reset Code
-        // ==========================
-        //[HttpPost("verify-reset-code")]
-        //public async Task<IActionResult> VerifyResetCode([FromBody] VerifyResetCodeDto request)
-        //{
-        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    if (userId == null)
-        //        return Unauthorized();
-
-        //    var result = await _authService.VerifyResetCodeAsync(userId, request.ResetCode);
-
-        //    if (!result)
-        //        return BadRequest(new { message = "Invalid or expired reset code" });
-
-        //    return Ok(new { message = "Reset code verified successfully" });
-        //}
+        
     }
 }

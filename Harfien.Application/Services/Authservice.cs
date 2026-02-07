@@ -11,7 +11,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Infrastructure.Services
+namespace Harfien.Application.Services
 {
     public class AuthService : IAuthservice
     {

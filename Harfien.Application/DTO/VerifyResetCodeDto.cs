@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Harfien.Application.DTO
 {
-    internal class VerifyResetCodeDto
+    public class VerifyResetCodeDto
     {
         
         public string ResetCode { get; set; }
