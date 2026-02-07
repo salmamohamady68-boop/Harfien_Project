@@ -19,11 +19,12 @@ namespace Harfien.Presentation.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "CLIENT")] //i havent checked it.
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> Create([FromBody] CreateReviewDto dto)
         {
             // getting UserID from JWT Token
-             var userId = int.Parse(User.FindFirst("uid")?.Value);
+             //var userId = int.Parse(User.FindFirst("uid")?.Value);
+             var userId = int.Parse(User.FindFirst("NameIdentifier")?.Value);idk
             //var userId = 10; // Mocking logged in user
 
             try
@@ -35,6 +36,13 @@ namespace Harfien.Presentation.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("craftsman/{craftsmanId}")]
+        public async Task<IActionResult> GetCraftsmanReviews(int craftsmanId)
+        {
+            var reviews = await _reviewService.GetReviewsByCraftsmanIdAsync(craftsmanId);
+            return Ok(reviews);
         }
     }
 }

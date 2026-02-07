@@ -7,9 +7,13 @@ using Harfien.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Harfien.Infrastructure.Repositories;
-
 using AutoMapper;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Reflection.Metadata;
+using Microsoft.OpenApi.Models;
+using Harfien.Application.Interfaces;
 
 namespace Harfien.Api
 {

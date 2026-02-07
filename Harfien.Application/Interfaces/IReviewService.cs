@@ -10,5 +10,6 @@ namespace Harfien.Application.Interfaces
     public interface IReviewService
     {
         Task<ReviewDto> AddReviewAsync(CreateReviewDto dto, int currentUserId);
+        Task<List<ReviewDto>> GetReviewsByCraftsmanIdAsync(int craftsmanId);
     }
 }
