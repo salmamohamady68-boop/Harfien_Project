@@ -19,7 +19,7 @@ namespace Harfien.Presentation.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Client")] //i havent checked it.
+        [Authorize(Roles = "CLIENT")] //i havent checked it.
         public async Task<IActionResult> Create([FromBody] CreateReviewDto dto)
         {
             // getting UserID from JWT Token

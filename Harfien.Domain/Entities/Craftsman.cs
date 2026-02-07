@@ -26,6 +26,9 @@ namespace Harfien.Domain.Entities
 
         public ICollection< Service> CraftsmanServices { get; set; }
         public ICollection<Order> Orders { get; set; }
+        public int YearsOfExperience { get; set; }
+        public bool IsApproved { get; set; } = false;
 
     }
+
 }
