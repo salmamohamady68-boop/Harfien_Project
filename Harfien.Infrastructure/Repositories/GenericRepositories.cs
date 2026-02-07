@@ -11,8 +11,8 @@ namespace Harfien.Infrastructure.Repositories
 
         public GenericRepository(HarfienDbContext context)
         {
-           _context = context;
-           
+            _context = context;
+            _dbSet = _context.Set<T>();
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()

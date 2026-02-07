@@ -15,7 +15,7 @@ namespace Harfien.Domain.Entities
        
         public string MessageText { get; set; }
 
-        public int SenderId { get; set; }
+        public string SenderId { get; set; }
         public ApplicationUser Sender { get; set; }
 
         // Foreign Key

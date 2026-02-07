@@ -12,11 +12,11 @@ namespace Harfien.Domain.Entites
     public class Order : BaseEntity
     {
         [ForeignKey("ClientId")]
-        public string ClientId { get; set; }
-        public ApplicationUser Client { get; set; } = null!;
+        public int ClientId { get; set; }
+        public Client Client { get; set; } = null!;
         [ForeignKey("CraftsmanId")]
-        public string CraftsmanId { get; set; }
-        public ApplicationUser Craftsman { get; set; } = null!;
+        public int CraftsmanId { get; set; }
+        public Craftsman Craftsman { get; set; } = null!;
 
         public int ServiceId { get; set; }
         public Service Service { get; set; } = null!;
