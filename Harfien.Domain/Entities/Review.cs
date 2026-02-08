@@ -12,7 +12,7 @@ namespace Harfien.Domain.Entities
     {
         // Explicit IDs for faster querying of a Craftsman's profile
         public int ClientId { get; set; } // The Reviewer
-        public int CraftsmanId { get; set; } // The Target
+        public string CraftsmanId { get; set; } // The Target
         // Use int for easier math (Average Rating)
         // Range: 1 - 5
         public int Rating { get; set; }
