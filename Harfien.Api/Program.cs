@@ -93,6 +93,8 @@ namespace Harfien.Api
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
             builder.Services.AddScoped<IServiceService, ServiceService>();
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
 
             // =========================
             // AutoMapper
@@ -101,6 +103,8 @@ namespace Harfien.Api
             {
                 cfg.AllowNullCollections = true;
             }, typeof(AssemblyReference).Assembly);
+          //  builder.Services.AddAutoMapper(typeof(OrderProfile));
+
             // =========================
             // Forget Password
             // =========================

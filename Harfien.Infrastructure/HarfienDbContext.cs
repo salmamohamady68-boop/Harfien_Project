@@ -51,15 +51,50 @@ namespace Harfien.DataAccess
                        .HasForeignKey<Craftsman>(c => c.UserId)
                        .OnDelete(DeleteBehavior.NoAction);
 
-            // ربط Order بالـ Payment
             builder.Entity<Order>()
-                   .HasOne(o => o.Payment)
-                   .WithOne(p => p.Order)
-                   .HasForeignKey<Payment>(p => p.OrderId);
-                        
+           .HasOne(o => o.Client)
+           .WithMany(c => c.Orders)
+           .HasForeignKey(o => o.ClientId)
+           .OnDelete(DeleteBehavior.NoAction);
 
-                // ربط Service بالـ ServiceCategory
-                builder.Entity<Service>()
+            builder.Entity<Order>()
+                .HasOne(o => o.Craftsman)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(o => o.CraftsmanId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Order>()
+                .HasOne(o => o.Service)
+                .WithMany(s => s.Orders) // عندك ICollection<Order> بالفعل
+                .HasForeignKey(o => o.ServiceId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+            builder.Entity<Order>()
+                // ربط Order بالـ Payment
+                .HasOne(o => o.Payment)
+                .WithOne(p => p.Order)
+                .HasForeignKey<Payment>(p => p.OrderId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Order>()
+                // تحديد الـ decimal precision للـ Amount
+                .Property(o => o.Amount)
+                .HasPrecision(18, 2);  // أو HasColumnType("decimal(18,2)")
+
+
+
+            //// ربط Order بالـ Payment
+            //builder.Entity<Order>()
+            //       .HasOne(o => o.Payment)
+            //       .WithOne(p => p.Order)
+            //       .HasForeignKey<Payment>(p => p.OrderId);
+
+
+
+
+            // ربط Service بالـ ServiceCategory
+            builder.Entity<Service>()
                        .HasOne(s => s.ServiceCategory)
                        .WithMany(c => c.Services)
                        .HasForeignKey(s => s.ServiceCategoryId)
@@ -142,6 +177,7 @@ namespace Harfien.DataAccess
                     //,
                     //new Area { Id = 6, CityId = 5, Name ="Olaya" }
                     );
+
 
         }
     }
