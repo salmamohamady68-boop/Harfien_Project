@@ -1,4 +1,4 @@
-﻿using Harfien.Application.DTOs.ServiceCategory;
+﻿using Harfien.Application.DTO.ServiceCategory;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Shared.Repositories;

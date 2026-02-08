@@ -1,5 +1,5 @@
-﻿using Harfien.Domain.Entities;
-using Harfien.Domain.Interface_Repository.Services;
+﻿using Harfien.Application.Interfaces;
+using Harfien.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

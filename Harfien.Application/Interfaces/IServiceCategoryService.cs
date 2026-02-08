@@ -1,4 +1,4 @@
-﻿using Harfien.Application.DTOs.ServiceCategory;
+﻿using Harfien.Application.DTO.ServiceCategory;
 using System;
 using System.Collections.Generic;
 using System.Linq;

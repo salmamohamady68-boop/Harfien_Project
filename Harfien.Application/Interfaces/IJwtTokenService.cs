@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Domain.Interface_Repository.Services
+namespace Harfien.Application.Interfaces
 {
     public interface IJwtTokenService
     {

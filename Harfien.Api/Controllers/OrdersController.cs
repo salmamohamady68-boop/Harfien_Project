@@ -1,4 +1,4 @@
-﻿using Harfien.Application.DTOs;
+﻿using Harfien.Application.DTO;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;

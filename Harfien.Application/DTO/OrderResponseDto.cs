@@ -1,7 +1,7 @@
 ﻿using Harfien.Domain.Enums;
 
 
-namespace Harfien.Application.DTOs
+namespace Harfien.Application.DTO
 {
     public class OrderResponseDto
     {

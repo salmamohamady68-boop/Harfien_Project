@@ -17,17 +17,15 @@ namespace Harfien.Infrastructure.Repositories
 
         public UnitOfWork( HarfienDbContext context,
             IClientRepository clients,
-            ICraftsmanRepository craftsmen,
-            IApplicationUserRepository users)
+            ICraftsmanRepository craftsmen)
         {
             _context = context;
             Clients = clients;
             Craftsmen = craftsmen;
-            Users = users;
         }
         public IClientRepository Clients { get; }
         public ICraftsmanRepository Craftsmen { get; }
-        public IApplicationUserRepository Users { get; }
+      
 
         public IServiceCategoryRepository ServiceCategories
         {

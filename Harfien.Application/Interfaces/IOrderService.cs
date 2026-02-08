@@ -1,4 +1,4 @@
-﻿using Harfien.Application.DTOs;
+﻿using Harfien.Application.DTO;
 using Harfien.Domain.Enums;
 
 namespace Harfien.Application.Interfaces

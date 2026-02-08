@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Application.DTOs
+namespace Harfien.Application.DTO
 {
     public class ReviewDto
     {

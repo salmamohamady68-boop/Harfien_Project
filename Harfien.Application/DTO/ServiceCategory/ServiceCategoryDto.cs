@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Application.DTOs.ServiceCategory
+namespace Harfien.Application.DTO.ServiceCategory
 {
-    public class AddServiceCategoryDto
+    public class ServiceCategoryDto
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public string Description { get; set; }
