@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Harfien.Infrastructure.Repositories
 {
-    internal class ReviewRepository : GenericRepository<Review>, IReviewRepository
+    public class ReviewRepository : GenericRepository<Review>, IReviewRepository
     {
         public ReviewRepository(HarfienDbContext context) : base(context) { }
         public async Task<List<Review>> GetAllByCraftsmanIdAsync(int craftsmanId)

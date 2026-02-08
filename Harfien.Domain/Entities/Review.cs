@@ -10,8 +10,8 @@ namespace Harfien.Domain.Entities
 {
     public class Review : BaseEntity
     {
-        
-        
+
+
         public int Rating { get; set; } // Use int for easier math (Average Rating) // Range: 1 - 5
         public string? Comment { get; set; }
         public int OrderId { get; set; }

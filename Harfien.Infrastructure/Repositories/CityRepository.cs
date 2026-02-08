@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Harfien.Infrastructure.Repositories
 {
-    internal class CityRepository : ICityRepository
+    public class CityRepository : ICityRepository
     {
         private readonly HarfienDbContext _context;
         private readonly DbSet<City> _dbSet;
