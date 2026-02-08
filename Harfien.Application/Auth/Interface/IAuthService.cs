@@ -1,10 +1,4 @@
-﻿using Harfien.Application.Dtos.Auth;
-using Harfien.Application.Dtos.AuthDtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Harfien.Application.DTO;
 
 namespace Harfien.Domain.Interface_Repository.Services
 {
@@ -14,6 +8,12 @@ namespace Harfien.Domain.Interface_Repository.Services
         Task RegisterCraftsmanAsync(RegisterCraftsmanDto dto);
         Task<string> LoginAsync(loginDto dto);
         Task<string> ApproveCraftsmanAsync(int craftsmanId);
+        Task<(bool Success, string Message)> ForgetPasswordAsync(ForgetPassword forgetPassword);
+        Task<string?> VerifyResetCode(VerifyResetCode dto);
+        Task<string?> ResetPassword(ResetPassword dto);
+        Task<bool> ConfirmPasswordAsync(string userId, string password);
+        Task<bool> VerifyResetCodeAsync(string userId, string resetCode);
+
 
     }
 }

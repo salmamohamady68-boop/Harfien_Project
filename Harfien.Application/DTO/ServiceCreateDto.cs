@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 using Harfien.Domain.Entites;
 using Harfien.Domain.Entities;
 
-namespace Harfien.Application.DTOs
+namespace Harfien.Application.DTO
 {
-    public class ServiceUpdateDto
+    public class ServiceCreateDto
     {
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
 
         public int CraftsmanProfileId { get; set; }
-         
+       
         public int ServiceCategoryId { get; set; }
-         
+        
     }
 }

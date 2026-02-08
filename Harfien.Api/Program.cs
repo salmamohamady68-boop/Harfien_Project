@@ -1,6 +1,5 @@
 ﻿using Harfien.Application.Autherization;
 using Harfien.Application.Interfaces;
-using Harfien.Application.Mappings;
 using Harfien.Application.Services;
 using Harfien.DataAccess;
 using Harfien.Domain.Entities;
@@ -11,9 +10,7 @@ using Harfien.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection.Metadata;
@@ -87,7 +84,6 @@ namespace Harfien.Api
             builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
             builder.Services.AddScoped<ICraftsmanRepository, CraftsmanRepository>();
             builder.Services.AddScoped<IClientRepository, ClientRepository>();
-            builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
@@ -119,33 +115,33 @@ namespace Harfien.Api
             // Swagger
             // =========================
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(o =>
-            {
-                o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT",
-                    In = ParameterLocation.Header,
-                    Description = "Enter JWT like: Bearer {token}"
-                });
+            builder.Services.AddSwaggerGen(); // o =>
+            //{
+            //    o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            //    {
+            //        Name = "Authorization",
+            //        Type = SecuritySchemeType.ApiKey,
+            //        Scheme = "Bearer",
+            //        BearerFormat = "JWT",
+            //        In = ParameterLocation.Header,
+            //        Description = "Enter JWT like: Bearer {token}"
+            //    });
 
-                o.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
-                });
-            });
+            //    o.AddSecurityRequirement(new OpenApiSecurityRequirement
+            //    {
+            //        {
+            //            new OpenApiSecurityScheme
+            //            {
+            //                Reference = new OpenApiReference
+            //                {
+            //                    Type = ReferenceType.SecurityScheme,
+            //                    Id = "Bearer"
+            //                }
+            //            },
+            //            Array.Empty<string>()
+            //        }
+            //    });
+            //});
 
             var app = builder.Build();
 

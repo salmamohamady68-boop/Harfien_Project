@@ -1,11 +1,11 @@
-using Harfien.Application.Dtos.Auth;
-using Harfien.Application.Dtos.AuthDtos;
 using Harfien.Application.DTO;
-using Harfien.Application.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using Harfien.Domain.Entities;
 using Harfien.Domain.Interface_Repository.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using System.Security.Claims;
 
 namespace Harfien.Presentation.Controllers
 {
@@ -14,10 +14,15 @@ namespace Harfien.Presentation.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMemoryCache _cache;
 
-        public AuthController(IAuthService authService)
+
+        public AuthController(IAuthService authService, UserManager<ApplicationUser> userManager, IMemoryCache cache)
         {
             _authService = authService;
+            _userManager = userManager;
+            _cache = cache;
         }
 
         // ==========================
@@ -64,6 +69,99 @@ namespace Harfien.Presentation.Controllers
             return Ok(new { token });
         }
 
-        
+        [HttpPost("confirm-password")]
+        [Authorize] // ·«“„ ÌﬂÊ‰ «·„” Œœ„ „”Ã· œŒÊ·
+        public async Task<IActionResult> ConfirmPassword([FromBody] ConfirmPasswordDto request)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+                return Unauthorized();
+
+            var result = await _authService.ConfirmPasswordAsync(userId, request.Password);
+
+            if (!result)
+                return BadRequest(new { message = "Password is incorrect" });
+
+            return Ok(new { message = "Password confirmed successfully" });
+        }
+
+        // ==========================
+        // Verify Reset Code
+        // ==========================
+        [HttpPost("verify-reset-code")]
+        public async Task<IActionResult> VerifyResetCode([FromBody] VerifyResetCodeDto request)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+                return Unauthorized();
+
+            var result = await _authService.VerifyResetCodeAsync(userId, request.ResetCode);
+
+            if (!result)
+                return BadRequest(new { message = "Invalid or expired reset code" });
+
+            return Ok(new { message = "Reset code verified successfully" });
+        }
+
+
+
+
+
+        // ==========================
+        // Forget Password
+        // ==========================
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgetPassword model)
+        {
+            var result = await _authService.ForgetPasswordAsync(model);
+
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+
+            return Ok(new { message = result.Message });
+        }
+
+
+        // ==========================
+        // verify Code
+        // ==========================
+
+        [HttpPost("verify-code")]
+        public async Task<IActionResult> VerifyCode(VerifyResetCode dto)
+        {
+            var result = await _authService.VerifyResetCode(dto);
+
+            if (result == null)
+                return BadRequest("Invalid or expired code");
+
+            return Ok(result);
+        }
+
+        // ==========================
+        // ResetPassword
+        // ==========================
+
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPassword dto)
+        {
+            var result = await _authService.ResetPassword(dto);
+
+            if (result != "Password reset successfully")
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+
+
+
+
+
+
+
+
+
     }
 }

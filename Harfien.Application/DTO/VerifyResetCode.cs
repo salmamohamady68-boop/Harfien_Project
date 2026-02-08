@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Domain.Dtos
+namespace Harfien.Application.DTO
 {
     public class VerifyResetCode
     {
-        
-           // public string Email { get; set; }
             public string Code { get; set; }
     }
 }

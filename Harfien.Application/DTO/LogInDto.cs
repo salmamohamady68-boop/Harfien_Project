@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Harfien.Application.Dtos.Auth
+namespace Harfien.Application.DTO
 {
     public class loginDto
     {

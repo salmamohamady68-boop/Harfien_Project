@@ -56,10 +56,16 @@ namespace Harfien.DataAccess
                    .HasOne(o => o.Payment)
                    .WithOne(p => p.Order)
                    .HasForeignKey<Payment>(p => p.OrderId);
-                        
+            builder.Entity<Order>()
+                 .HasOne(o => o.Service)
+                    .WithMany(s => s.Orders)
+            .HasForeignKey(o => o.ServiceId)
+                 .OnDelete(DeleteBehavior.NoAction);
 
-                // ربط Service بالـ ServiceCategory
-                builder.Entity<Service>()
+
+
+            // ربط Service بالـ ServiceCategory
+            builder.Entity<Service>()
                        .HasOne(s => s.ServiceCategory)
                        .WithMany(c => c.Services)
                        .HasForeignKey(s => s.ServiceCategoryId)

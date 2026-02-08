@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Domain.Dtos
+namespace Harfien.Application.DTO
 {
     public class ForgetPassword
     {
