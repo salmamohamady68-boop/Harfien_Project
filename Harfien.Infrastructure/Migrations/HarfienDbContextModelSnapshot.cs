@@ -135,8 +135,8 @@ namespace Harfien.Infrastructure.Migrations
                             Id = "ADMIN_ID",
                             AccessFailedCount = 0,
                             Address = "Cairo",
-                            ConcurrencyStamp = "d3cc7692-89c8-4615-8e03-0e92301664a2",
-                            CreatedAt = new DateTime(2026, 2, 7, 4, 0, 20, 575, DateTimeKind.Utc).AddTicks(6586),
+                            ConcurrencyStamp = "ecfae8c5-5821-47e1-832a-b0a46b03a748",
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "Admin@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Admin",
@@ -144,10 +144,10 @@ namespace Harfien.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHWyHP8+eTf0gvV8p3c7l+WxOnunacxQQRHifz38ikmjQQ8feVzDaNPpsyK8H9QNtg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENYzxSA7RlLURmRZXvWY5uPAdaD3Dfs5F+zqR+pgD3F0fI4XbAzVX9/iGWQBfntTgA==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "96b33725-45fb-40b1-a274-473b47cf8328",
+                            SecurityStamp = "645436d7-146d-46e2-a5b0-34f0cd862bd9",
                             TwoFactorEnabled = false,
                             UserName = "Admin@gamil.com"
                         });
@@ -467,6 +467,7 @@ namespace Harfien.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ClientId")
@@ -549,9 +550,8 @@ namespace Harfien.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("CraftsmanId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CraftsmanId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -1021,19 +1021,19 @@ namespace Harfien.Infrastructure.Migrations
                     b.HasOne("Harfien.Domain.Entities.Client", "Client")
                         .WithMany("Orders")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Harfien.Domain.Entities.Craftsman", "Craftsman")
                         .WithMany("Orders")
                         .HasForeignKey("CraftsmanId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Harfien.Domain.Entities.Service", "Service")
                         .WithMany("Orders")
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -1048,7 +1048,7 @@ namespace Harfien.Infrastructure.Migrations
                     b.HasOne("Harfien.Domain.Entities.Order", "Order")
                         .WithOne("Payment")
                         .HasForeignKey("Harfien.Domain.Entities.Payment", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Order");

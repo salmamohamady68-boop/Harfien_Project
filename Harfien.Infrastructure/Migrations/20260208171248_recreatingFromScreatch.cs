@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Harfien.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitalCreateNew : Migration
+    public partial class recreatingFromScreatch : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -448,7 +448,7 @@ namespace Harfien.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ScheduledAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -458,20 +458,17 @@ namespace Harfien.Infrastructure.Migrations
                         name: "FK_Orders_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_Craftsmen_CraftsmanId",
                         column: x => x.CraftsmanId,
                         principalTable: "Craftsmen",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_Services_ServiceId",
                         column: x => x.ServiceId,
                         principalTable: "Services",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -519,8 +516,7 @@ namespace Harfien.Infrastructure.Migrations
                         name: "FK_Payments_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -529,11 +525,11 @@ namespace Harfien.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientId = table.Column<int>(type: "int", nullable: false),
-                    CraftsmanId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Rating = table.Column<int>(type: "int", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Comment = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     OrderId = table.Column<int>(type: "int", nullable: false),
+                    ClientId = table.Column<int>(type: "int", nullable: false),
+                    CraftsmanId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -544,7 +540,7 @@ namespace Harfien.Infrastructure.Migrations
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -591,17 +587,17 @@ namespace Harfien.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "AreaId", "ConcurrencyStamp", "CreatedAt", "DateOfBirth", "Email", "EmailConfirmed", "FullName", "Gender", "IsActive", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PasswordResetSession", "PasswordResetSessionExpiry", "PhoneNumber", "PhoneNumberConfirmed", "ProfileImage", "ResetCode", "ResetCodeExpiry", "SecurityStamp", "TwoFactorEnabled", "UserName", "Zone" },
-                values: new object[] { "ADMIN_ID", 0, "Cairo", null, "d3cc7692-89c8-4615-8e03-0e92301664a2", new DateTime(2026, 2, 7, 4, 0, 20, 575, DateTimeKind.Utc).AddTicks(6586), null, "Admin@gmail.com", true, "Admin", null, true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEHWyHP8+eTf0gvV8p3c7l+WxOnunacxQQRHifz38ikmjQQ8feVzDaNPpsyK8H9QNtg==", null, null, "1234567890", true, null, null, null, "96b33725-45fb-40b1-a274-473b47cf8328", false, "Admin@gamil.com", null });
+                values: new object[] { "ADMIN_ID", 0, "Cairo", null, "ecfae8c5-5821-47e1-832a-b0a46b03a748", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "Admin@gmail.com", true, "Admin", null, true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAENYzxSA7RlLURmRZXvWY5uPAdaD3Dfs5F+zqR+pgD3F0fI4XbAzVX9/iGWQBfntTgA==", null, null, "1234567890", true, null, null, null, "645436d7-146d-46e2-a5b0-34f0cd862bd9", false, "Admin@gamil.com", null });
 
             migrationBuilder.InsertData(
                 table: "Cities",
                 columns: new[] { "Id", "CreatedAt", "Name" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2026, 2, 7, 4, 0, 20, 862, DateTimeKind.Utc).AddTicks(3820), "Cairo" },
-                    { 2, new DateTime(2026, 2, 7, 4, 0, 20, 862, DateTimeKind.Utc).AddTicks(3831), "Giza" },
-                    { 3, new DateTime(2026, 2, 7, 4, 0, 20, 862, DateTimeKind.Utc).AddTicks(3834), "Alexanderia" },
-                    { 4, new DateTime(2026, 2, 7, 4, 0, 20, 862, DateTimeKind.Utc).AddTicks(3837), "Aswan" }
+                    { 1, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cairo" },
+                    { 2, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Giza" },
+                    { 3, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Alexanderia" },
+                    { 4, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Aswan" }
                 });
 
             migrationBuilder.InsertData(
@@ -609,11 +605,11 @@ namespace Harfien.Infrastructure.Migrations
                 columns: new[] { "Id", "CityId", "CreatedAt", "Name" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2026, 2, 7, 4, 0, 20, 862, DateTimeKind.Utc).AddTicks(3976), "Maadi" },
-                    { 2, 1, new DateTime(2026, 2, 7, 4, 0, 20, 862, DateTimeKind.Utc).AddTicks(3981), "Helwan" },
-                    { 3, 1, new DateTime(2026, 2, 7, 4, 0, 20, 862, DateTimeKind.Utc).AddTicks(3983), "Ramses" },
-                    { 4, 2, new DateTime(2026, 2, 7, 4, 0, 20, 862, DateTimeKind.Utc).AddTicks(3986), "El Omarania" },
-                    { 5, 3, new DateTime(2026, 2, 7, 4, 0, 20, 862, DateTimeKind.Utc).AddTicks(3989), "Naga Elarab" }
+                    { 1, 1, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Maadi" },
+                    { 2, 1, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Helwan" },
+                    { 3, 1, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Ramses" },
+                    { 4, 2, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "El Omarania" },
+                    { 5, 3, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Naga Elarab" }
                 });
 
             migrationBuilder.InsertData(
@@ -726,7 +722,8 @@ namespace Harfien.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_OrderId",
                 table: "Reviews",
-                column: "OrderId");
+                column: "OrderId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Services_CraftsmanId",

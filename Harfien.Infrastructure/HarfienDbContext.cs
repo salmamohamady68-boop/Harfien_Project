@@ -51,19 +51,54 @@ namespace Harfien.DataAccess
                    .HasForeignKey<Craftsman>(c => c.UserId)
                    .OnDelete(DeleteBehavior.NoAction);
 
-            // ربط Order بالـ Payment
             builder.Entity<Order>()
-                   .HasOne(o => o.Payment)
-                   .WithOne(p => p.Order)
-                   .HasForeignKey<Payment>(p => p.OrderId);
+           .HasOne(o => o.Client)
+           .WithMany(c => c.Orders)
+           .HasForeignKey(o => o.ClientId)
+           .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Order>()
+                .HasOne(o => o.Craftsman)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(o => o.CraftsmanId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Order>()
+                .HasOne(o => o.Service)
+                .WithMany(s => s.Orders) // عندك ICollection<Order> بالفعل
+                .HasForeignKey(o => o.ServiceId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+            builder.Entity<Order>()
+                // ربط Order بالـ Payment
+                .HasOne(o => o.Payment)
+                .WithOne(p => p.Order)
+                .HasForeignKey<Payment>(p => p.OrderId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Order>()
+                // تحديد الـ decimal precision للـ Amount
+                .Property(o => o.Amount)
+                .HasPrecision(18, 2);  // أو HasColumnType("decimal(18,2)")
+
+
+
+            //// ربط Order بالـ Payment
+            //builder.Entity<Order>()
+            //       .HasOne(o => o.Payment)
+            //       .WithOne(p => p.Order)
+            //       .HasForeignKey<Payment>(p => p.OrderId);
+
+
 
 
             // ربط Service بالـ ServiceCategory
             builder.Entity<Service>()
-                   .HasOne(s => s.ServiceCategory)
-                   .WithMany(c => c.Services)
-                   .HasForeignKey(s => s.ServiceCategoryId)
-                   .OnDelete(DeleteBehavior.NoAction);
+                       .HasOne(s => s.ServiceCategory)
+                       .WithMany(c => c.Services)
+                       .HasForeignKey(s => s.ServiceCategoryId)
+                       .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Wallet>()
                 .HasOne(w => w.User)
                 .WithOne(u => u.Wallet)
@@ -76,6 +111,7 @@ namespace Harfien.DataAccess
                .HasOne(m => m.Sender)
                .WithMany(u => u.SentMessages)
                .HasForeignKey(m => m.SenderId);
+
 
 
             var fixedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -125,27 +161,8 @@ namespace Harfien.DataAccess
                     UserId = "ADMIN_ID",
                 }
                 );
-
-
-
-            //// ... manual mappings ...
-
-            //// --- FIX FOR DECIMALS (Global Rule) ---
-            //// This finds ALL decimal properties in your entire project and sets them to (18, 2)
-            //var decimalProperties = builder.Model
-            //    .GetEntityTypes()
-            //    .SelectMany(t => t.GetProperties())
-            //    .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?));
-
-            //foreach (var property in decimalProperties)
-            //{
-            //    property.SetPrecision(18); // Total digits
-            //    property.SetScale(2);      // Digits after the dot (e.g. 100.00)
-            //}
-
         }
     }
 }
-
 
 
