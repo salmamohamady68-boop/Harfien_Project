@@ -11,6 +11,8 @@ namespace Harfien.Domain.Shared.Repositories
     {
         Task<IEnumerable<Craftsman>> GetAvailableByServiceAsync(int serviceId);
         Task<Craftsman?> GetWithServicesAsync(int craftsmanId);
+        Task<Craftsman?> GetByUserIdAsync(string userId);
+        Task UpdateAsync(Craftsman craftsman);
     }
 
 }
