@@ -8,11 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Harfien.Infrastructure.Migrations
 {
     /// <inheritdoc />
-<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.cs
-    public partial class InitialCreate : Migration
-========
-    public partial class recreatingFromScreatch : Migration
->>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.cs
+    public partial class recreatedMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -453,11 +449,8 @@ namespace Harfien.Infrastructure.Migrations
                     ScheduledAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.cs
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ApplicationUserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
-========
->>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.cs
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -606,28 +599,17 @@ namespace Harfien.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "AreaId", "ConcurrencyStamp", "CreatedAt", "DateOfBirth", "Email", "EmailConfirmed", "FullName", "Gender", "IsActive", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PasswordResetSession", "PasswordResetSessionExpiry", "PhoneNumber", "PhoneNumberConfirmed", "ProfileImage", "ResetCode", "ResetCodeExpiry", "SecurityStamp", "TwoFactorEnabled", "UserName", "Zone" },
-<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.cs
-                values: new object[] { "ADMIN_ID", 0, "Cairo", null, "b3a68f56-e624-461d-99cf-000862f640d7", new DateTime(2026, 2, 8, 14, 54, 30, 50, DateTimeKind.Utc).AddTicks(4573), null, "Admin@gmail.com", true, "Admin", null, true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEByUVrLWj2LF0zNn3ZtIx0ehyDFKade48wyr9Dwmk+ouFfRGAnJGSosJBAafSej1mw==", null, null, "1234567890", true, null, null, null, "97c7e7f0-0301-4a42-ade1-58e26ce4cd42", false, "Admin@gamil.com", null });
-========
-                values: new object[] { "ADMIN_ID", 0, "Cairo", null, "ecfae8c5-5821-47e1-832a-b0a46b03a748", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "Admin@gmail.com", true, "Admin", null, true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAENYzxSA7RlLURmRZXvWY5uPAdaD3Dfs5F+zqR+pgD3F0fI4XbAzVX9/iGWQBfntTgA==", null, null, "1234567890", true, null, null, null, "645436d7-146d-46e2-a5b0-34f0cd862bd9", false, "Admin@gamil.com", null });
->>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.cs
+                values: new object[] { "ADMIN_ID", 0, "Cairo", null, "a539c068-8c4d-432b-9edf-14ad84ed7178", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "Admin@gmail.com", true, "Admin", null, true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAENsjahAt8AbW4isHk1WgpG8l/hvJUWPUcNWAN2ZVnr9ObM70PFe/M1NtYpPLhAenew==", null, null, "1234567890", true, null, null, null, "025de596-3e50-4f74-909a-6c110db87629", false, "Admin@gamil.com", null });
 
             migrationBuilder.InsertData(
                 table: "Cities",
                 columns: new[] { "Id", "CreatedAt", "Name" },
                 values: new object[,]
                 {
-<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.cs
-                    { 1, new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9336), "Cairo" },
-                    { 2, new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9339), "Giza" },
-                    { 3, new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9340), "Alexanderia" },
-                    { 4, new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9340), "Aswan" }
-========
                     { 1, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cairo" },
                     { 2, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Giza" },
                     { 3, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Alexanderia" },
                     { 4, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Aswan" }
->>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.cs
                 });
 
             migrationBuilder.InsertData(
@@ -635,19 +617,11 @@ namespace Harfien.Infrastructure.Migrations
                 columns: new[] { "Id", "CityId", "CreatedAt", "Name" },
                 values: new object[,]
                 {
-<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.cs
-                    { 1, 1, new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9369), "Maadi" },
-                    { 2, 1, new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9521), "Helwan" },
-                    { 3, 1, new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9522), "Ramses" },
-                    { 4, 2, new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9523), "El Omarania" },
-                    { 5, 3, new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9523), "Naga Elarab" }
-========
                     { 1, 1, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Maadi" },
                     { 2, 1, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Helwan" },
                     { 3, 1, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Ramses" },
                     { 4, 2, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "El Omarania" },
                     { 5, 3, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Naga Elarab" }
->>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.cs
                 });
 
             migrationBuilder.InsertData(

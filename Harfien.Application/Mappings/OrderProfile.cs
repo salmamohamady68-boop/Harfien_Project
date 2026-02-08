@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Harfien.Application.DTOs;
-using Harfien.Domain.Entites;
+using Harfien.Domain.Entities;
 
 namespace Harfien.Application.Mappings
 {
