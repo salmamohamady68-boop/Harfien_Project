@@ -1,4 +1,5 @@
-﻿using Harfien.Application.Autherization;
+﻿using AutoMapper;
+using Harfien.Application.Autherization;
 using Harfien.Application.Interfaces;
 using Harfien.Application.Mappings;
 using Harfien.Application.Services;
@@ -93,7 +94,7 @@ namespace Harfien.Api
             builder.Services.AddSingleton<IAuthorizationHandler, DynamicRoleHanlder>();
 
             // =========================
-            // Repositories & Services
+            // Repositories
             // =========================
             builder.Services.AddScoped<IWalletRepository, WalletRepository>();
             builder.Services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
@@ -101,13 +102,20 @@ namespace Harfien.Api
             builder.Services.AddScoped<ICraftsmanRepository, CraftsmanRepository>();
             builder.Services.AddScoped<IClientRepository, ClientRepository>();
             builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+            builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+
+            // =========================
+            //services
+            // =========================
 
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
             builder.Services.AddScoped<IServiceService, ServiceService>();
-            builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
-            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
 
             // =========================
             // AutoMapper

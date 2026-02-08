@@ -12,8 +12,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Harfien.Infrastructure.Migrations
 {
     [DbContext(typeof(HarfienDbContext))]
+<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.Designer.cs
     [Migration("20260208145437_InitialCreate")]
     partial class InitialCreate
+========
+    [Migration("20260208171248_recreatingFromScreatch")]
+    partial class recreatingFromScreatch
+>>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +30,7 @@ namespace Harfien.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.Designer.cs
             modelBuilder.Entity("Harfien.Domain.Entites.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -80,6 +86,8 @@ namespace Harfien.Infrastructure.Migrations
                     b.ToTable("Orders");
                 });
 
+========
+>>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.Designer.cs
             modelBuilder.Entity("Harfien.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -193,8 +201,13 @@ namespace Harfien.Infrastructure.Migrations
                             Id = "ADMIN_ID",
                             AccessFailedCount = 0,
                             Address = "Cairo",
+<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.Designer.cs
                             ConcurrencyStamp = "b3a68f56-e624-461d-99cf-000862f640d7",
                             CreatedAt = new DateTime(2026, 2, 8, 14, 54, 30, 50, DateTimeKind.Utc).AddTicks(4573),
+========
+                            ConcurrencyStamp = "ecfae8c5-5821-47e1-832a-b0a46b03a748",
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+>>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.Designer.cs
                             Email = "Admin@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Admin",
@@ -202,10 +215,17 @@ namespace Harfien.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
+<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.Designer.cs
                             PasswordHash = "AQAAAAIAAYagAAAAEByUVrLWj2LF0zNn3ZtIx0ehyDFKade48wyr9Dwmk+ouFfRGAnJGSosJBAafSej1mw==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "97c7e7f0-0301-4a42-ade1-58e26ce4cd42",
+========
+                            PasswordHash = "AQAAAAIAAYagAAAAENYzxSA7RlLURmRZXvWY5uPAdaD3Dfs5F+zqR+pgD3F0fI4XbAzVX9/iGWQBfntTgA==",
+                            PhoneNumber = "1234567890",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "645436d7-146d-46e2-a5b0-34f0cd862bd9",
+>>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.Designer.cs
                             TwoFactorEnabled = false,
                             UserName = "Admin@gamil.com"
                         });
@@ -240,35 +260,55 @@ namespace Harfien.Infrastructure.Migrations
                         {
                             Id = 1,
                             CityId = 1,
+<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.Designer.cs
                             CreatedAt = new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9369),
+========
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+>>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.Designer.cs
                             Name = "Maadi"
                         },
                         new
                         {
                             Id = 2,
                             CityId = 1,
+<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.Designer.cs
                             CreatedAt = new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9521),
+========
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+>>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.Designer.cs
                             Name = "Helwan"
                         },
                         new
                         {
                             Id = 3,
                             CityId = 1,
+<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.Designer.cs
                             CreatedAt = new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9522),
+========
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+>>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.Designer.cs
                             Name = "Ramses"
                         },
                         new
                         {
                             Id = 4,
                             CityId = 2,
+<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.Designer.cs
                             CreatedAt = new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9523),
+========
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+>>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.Designer.cs
                             Name = "El Omarania"
                         },
                         new
                         {
                             Id = 5,
                             CityId = 3,
+<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.Designer.cs
                             CreatedAt = new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9523),
+========
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+>>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.Designer.cs
                             Name = "Naga Elarab"
                         });
                 });
@@ -355,25 +395,41 @@ namespace Harfien.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.Designer.cs
                             CreatedAt = new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9336),
+========
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+>>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.Designer.cs
                             Name = "Cairo"
                         },
                         new
                         {
                             Id = 2,
+<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.Designer.cs
                             CreatedAt = new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9339),
+========
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+>>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.Designer.cs
                             Name = "Giza"
                         },
                         new
                         {
                             Id = 3,
+<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.Designer.cs
                             CreatedAt = new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9340),
+========
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+>>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.Designer.cs
                             Name = "Alexanderia"
                         },
                         new
                         {
                             Id = 4,
+<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.Designer.cs
                             CreatedAt = new DateTime(2026, 2, 8, 14, 54, 30, 107, DateTimeKind.Utc).AddTicks(9340),
+========
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+>>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.Designer.cs
                             Name = "Aswan"
                         });
                 });
@@ -516,6 +572,51 @@ namespace Harfien.Infrastructure.Migrations
                     b.ToTable("Notification");
                 });
 
+            modelBuilder.Entity("Harfien.Domain.Entities.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CraftsmanId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ScheduledAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("CraftsmanId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("Orders");
+                });
+
             modelBuilder.Entity("Harfien.Domain.Entities.Payment", b =>
                 {
                     b.Property<int>("Id")
@@ -560,11 +661,11 @@ namespace Harfien.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("CraftsmanId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CraftsmanId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -577,7 +678,8 @@ namespace Harfien.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("OrderId")
+                        .IsUnique();
 
                     b.ToTable("Reviews");
                 });
@@ -945,6 +1047,7 @@ namespace Harfien.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+<<<<<<<< HEAD:Harfien.Infrastructure/Migrations/20260208145437_InitialCreate.Designer.cs
             modelBuilder.Entity("Harfien.Domain.Entites.Order", b =>
                 {
                     b.HasOne("Harfien.Domain.Entities.ApplicationUser", null)
@@ -980,6 +1083,8 @@ namespace Harfien.Infrastructure.Migrations
                     b.Navigation("Service");
                 });
 
+========
+>>>>>>>> anas:Harfien.Infrastructure/Migrations/20260208171248_recreatingFromScreatch.Designer.cs
             modelBuilder.Entity("Harfien.Domain.Entities.ApplicationUser", b =>
                 {
                     b.HasOne("Harfien.Domain.Entities.Area", "Area")
@@ -1032,7 +1137,7 @@ namespace Harfien.Infrastructure.Migrations
 
             modelBuilder.Entity("Harfien.Domain.Entities.Complaint", b =>
                 {
-                    b.HasOne("Harfien.Domain.Entites.Order", "Order")
+                    b.HasOne("Harfien.Domain.Entities.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1063,9 +1168,36 @@ namespace Harfien.Infrastructure.Migrations
                     b.Navigation("ApplicationUsers");
                 });
 
+            modelBuilder.Entity("Harfien.Domain.Entities.Order", b =>
+                {
+                    b.HasOne("Harfien.Domain.Entities.Client", "Client")
+                        .WithMany("Orders")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Harfien.Domain.Entities.Craftsman", "Craftsman")
+                        .WithMany("Orders")
+                        .HasForeignKey("CraftsmanId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Harfien.Domain.Entities.Service", "Service")
+                        .WithMany("Orders")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Craftsman");
+
+                    b.Navigation("Service");
+                });
+
             modelBuilder.Entity("Harfien.Domain.Entities.Payment", b =>
                 {
-                    b.HasOne("Harfien.Domain.Entites.Order", "Order")
+                    b.HasOne("Harfien.Domain.Entities.Order", "Order")
                         .WithOne("Payment")
                         .HasForeignKey("Harfien.Domain.Entities.Payment", "OrderId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -1076,10 +1208,10 @@ namespace Harfien.Infrastructure.Migrations
 
             modelBuilder.Entity("Harfien.Domain.Entities.Review", b =>
                 {
-                    b.HasOne("Harfien.Domain.Entites.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("Harfien.Domain.Entities.Order", "Order")
+                        .WithOne()
+                        .HasForeignKey("Harfien.Domain.Entities.Review", "OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -1132,7 +1264,7 @@ namespace Harfien.Infrastructure.Migrations
 
             modelBuilder.Entity("Harfien.Domain.Entities.WalletTransaction", b =>
                 {
-                    b.HasOne("Harfien.Domain.Entites.Order", "Order")
+                    b.HasOne("Harfien.Domain.Entities.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId");
 
@@ -1198,12 +1330,6 @@ namespace Harfien.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Harfien.Domain.Entites.Order", b =>
-                {
-                    b.Navigation("Payment")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Harfien.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("ClientOrders");
@@ -1244,6 +1370,12 @@ namespace Harfien.Infrastructure.Migrations
                     b.Navigation("CraftsmanServices");
 
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("Harfien.Domain.Entities.Order", b =>
+                {
+                    b.Navigation("Payment")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Harfien.Domain.Entities.Service", b =>
