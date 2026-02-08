@@ -9,5 +9,7 @@ namespace Harfien.Domain.Shared.Repositories
     public interface IUnitOfWork
     {
         Task SaveAsync();
+        IServiceCategoryRepository ServiceCategories { get; }
+
     }
 }

@@ -5,6 +5,8 @@ using Harfien.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Harfien.Infrastructure.Repositories;
+using Harfien.Application.Interfaces;
+using Harfien.Application.Services;
 
 namespace Harfien.Api
 {
@@ -25,15 +27,27 @@ namespace Harfien.Api
                 .AddEntityFrameworkStores<HarfienDbContext>()
             .AddDefaultTokenProviders();
 
+            builder.Services.AddScoped<IClientRepository, ClientRepository>();
+            builder.Services.AddScoped<ICraftsmanRepository, CraftsmanRepository>();
+            builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+
+
             builder.Services.AddScoped<IWalletRepository, WalletRepository>();
             builder.Services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
             builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
 
 
             // Controllers
             builder.Services.AddControllers();
 
-          
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+
+
+
 
             var app = builder.Build();
 
@@ -46,6 +60,8 @@ namespace Harfien.Api
             app.UseAuthorization();
 
             app.MapControllers();
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.Run();
         }
