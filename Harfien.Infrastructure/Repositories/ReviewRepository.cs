@@ -17,5 +17,10 @@ namespace Harfien.Infrastructure.Repositories
                 .Where(r => r.CraftsmanId == craftsmanId)
                 .ToListAsync();
         }
+
+        public async Task<bool> HasReviewForOrderAsync(int orderId)
+        {
+            return await _dbSet.AnyAsync(r => r.OrderId == orderId);
+        }
     }
 }

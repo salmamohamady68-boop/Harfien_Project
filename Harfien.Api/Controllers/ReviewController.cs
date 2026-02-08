@@ -1,19 +1,18 @@
 ﻿using Harfien.Application.DTOs;
-using Harfien.Application.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Harfien.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Harfien.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReviewsController : ControllerBase
+    public class ReviewController : ControllerBase
     {
         private readonly IReviewService _reviewService;
 
-        public ReviewsController(IReviewService reviewService)
+        public ReviewController(IReviewService reviewService)
         {
             _reviewService = reviewService;
         }
@@ -22,10 +21,9 @@ namespace Harfien.Presentation.Controllers
         [Authorize(Roles = "Client")]
         public async Task<IActionResult> Create([FromBody] CreateReviewDto dto)
         {
-            // getting UserID from JWT Token
-             //var userId = int.Parse(User.FindFirst("uid")?.Value);
-             var userId = int.Parse(User.FindFirst("NameIdentifier")?.Value);idk
-            //var userId = 10; // Mocking logged in user
+           var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+                return Unauthorized();
 
             try
             {

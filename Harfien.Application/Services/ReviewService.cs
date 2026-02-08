@@ -23,21 +23,18 @@ namespace Harfien.Application.Services
             _craftsmanRepository = craftsmanRepository;
         }
 
-        public async Task<ReviewDto> AddReviewAsync(CreateReviewDto dto, int currentUserId)
+        public async Task<ReviewDto> AddReviewAsync(CreateReviewDto dto, String currentUserId)
         {
-            var order = await _orderRepository.GetByIdAsync(dto.OrderId);
+            var order = await _orderRepository.GetByIdAsync(dto.OrderId);////////////
 
             if (order == null) throw new Exception("Order not found.");
 
-            if (order.Client.User.Id != currentUserId) throw new Exception("You are not authorized to review this order.");// need to be fixed
+            if (order.Client.User.Id != currentUserId) throw new Exception("You are not authorized to review this order.");
 
             if (order.Status != OrderStatus.Complete) throw new Exception("You can only review completed orders.");
 
-
-
-            //// Fast, clean, returns specific message
-            //if (await _reviewRepository.HasReviewForOrderAsync(order.Id))
-            //    throw new BusinessException("You already reviewed this order.");
+            if (await _reviewRepository.HasReviewForOrderAsync(order.Id))
+                throw new Exception("You already reviewed this order.");
 
 
 
@@ -78,9 +75,9 @@ namespace Harfien.Application.Services
 
             return new ReviewDto
             {
-                Id = review.Id,
-                Rating = review.Rating,
-                Comment = review.Comment,
+                Id = createdReview.Id,
+                Rating = createdReview.Rating,
+                Comment = createdReview.Comment,
                 ClientName = createdReview.Order?.Client?.User?.FullName ?? "Unknown User"
             };
         }

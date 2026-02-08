@@ -78,7 +78,7 @@ namespace Harfien.DataAccess
                .HasForeignKey(m => m.SenderId);
 
 
-
+            var fixedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             //SeedRoles
             builder.Entity<IdentityRole>().HasData(
                new IdentityRole { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
@@ -105,7 +105,7 @@ namespace Harfien.DataAccess
                 LockoutEnabled = false,
                 FullName = "Admin",
                 Address = "Cairo",
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = fixedDate,
                 IsActive = true,
                 AreaId = null
             };
@@ -125,6 +125,23 @@ namespace Harfien.DataAccess
                     UserId = "ADMIN_ID",
                 }
                 );
+
+
+
+            //// ... manual mappings ...
+
+            //// --- FIX FOR DECIMALS (Global Rule) ---
+            //// This finds ALL decimal properties in your entire project and sets them to (18, 2)
+            //var decimalProperties = builder.Model
+            //    .GetEntityTypes()
+            //    .SelectMany(t => t.GetProperties())
+            //    .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?));
+
+            //foreach (var property in decimalProperties)
+            //{
+            //    property.SetPrecision(18); // Total digits
+            //    property.SetScale(2);      // Digits after the dot (e.g. 100.00)
+            //}
 
         }
     }

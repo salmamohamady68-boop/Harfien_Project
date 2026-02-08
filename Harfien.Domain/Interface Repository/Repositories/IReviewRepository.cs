@@ -5,5 +5,6 @@ namespace Harfien.Domain.Shared.Repositories
     public interface IReviewRepository : IGenericRepository<Review>
     {
         Task<List<Review>> GetAllByCraftsmanIdAsync(int craftsmanId);
+        Task<bool> HasReviewForOrderAsync(int orderId);
     }
 }
