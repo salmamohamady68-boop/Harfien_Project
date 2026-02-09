@@ -1,7 +1,5 @@
-﻿using System.Net;
-using Harfien.Application.DTOs;
+﻿using Harfien.Application.DTO;
 using Harfien.Application.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Harfien.Presentation.Controllers

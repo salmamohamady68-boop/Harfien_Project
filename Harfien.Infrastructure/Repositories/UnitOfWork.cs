@@ -12,21 +12,36 @@ namespace Harfien.Infrastructure.Repositories
 
     {
         private readonly HarfienDbContext _context;
+        private IServiceCategoryRepository _serviceCategories;
 
 
         public UnitOfWork( HarfienDbContext context,
             IClientRepository clients,
-            ICraftsmanRepository craftsmen,
-            IApplicationUserRepository users)
+            ICraftsmanRepository craftsmen)
         {
             _context = context;
             Clients = clients;
             Craftsmen = craftsmen;
-            Users = users;
         }
         public IClientRepository Clients { get; }
         public ICraftsmanRepository Craftsmen { get; }
-        public IApplicationUserRepository Users { get; }
+      
+
+        public IServiceCategoryRepository ServiceCategories
+        {
+            get
+            {
+                if (_serviceCategories == null)
+                {
+                    _serviceCategories = new ServiceCategoryRepository(_context);
+                }
+
+                return _serviceCategories;
+            }
+        }
+
+
+
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();

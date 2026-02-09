@@ -1,4 +1,3 @@
-using Harfien.Domain.Entites;
 using Harfien.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using System;

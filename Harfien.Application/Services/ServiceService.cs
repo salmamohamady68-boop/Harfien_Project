@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using Harfien.Application.DTOs;
+﻿using AutoMapper;
+using Harfien.Application.DTO;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Shared.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace Harfien.Application.Services
 {

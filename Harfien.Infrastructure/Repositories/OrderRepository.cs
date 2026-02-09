@@ -1,5 +1,5 @@
 ﻿using Harfien.DataAccess;
-using Harfien.Domain.Entites;
+using Harfien.Domain.Entities;
 using Harfien.Domain.Enums;
 using Harfien.Domain.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
