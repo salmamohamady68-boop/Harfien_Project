@@ -18,8 +18,14 @@ namespace Harfien.Domain.Entities
         public string SenderId { get; set; }
         public ApplicationUser Sender { get; set; }
 
+
+        // Receiver
+        public string ReceiverId { get; set; }
+        public ApplicationUser Receiver { get; set; }
+
+
         // Foreign Key
-       [ForeignKey("ChatId")]
+        [ForeignKey("ChatId")]
         public int ChatId { get; set; }
         public Chat Chat { get; set; }
         public DateTime SentAt { get; set; } = DateTime.UtcNow;

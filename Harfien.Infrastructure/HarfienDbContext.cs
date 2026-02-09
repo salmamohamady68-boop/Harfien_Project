@@ -28,6 +28,8 @@ namespace Harfien.DataAccess
         public DbSet<Complaint> Complaints { get; set; } = null!;
         public DbSet<Review> Reviews { get; set; } = null!;
 
+        public DbSet<ChatMessage> ChatMessage { get; set; } = null!;
+
         #endregion
 
 
