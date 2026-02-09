@@ -19,8 +19,9 @@ namespace Harfien.Domain.Entities
 
             public int orderId { get; set; }
 
-
-            public ICollection<ChatMessage> Messages { get; set; }
+        public string User1Id { get; set; }
+        public string User2Id { get; set; }
+        public ICollection<ChatMessage> Messages { get; set; }
         }
 
 
