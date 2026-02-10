@@ -14,11 +14,13 @@ namespace Harfien.Application.DTO
         public string Description { get; set; }
         public decimal Price { get; set; }
 
-        public int CraftsmanProfileId { get; set; }
+        public int CraftsmanId { get; set; }
         
         public int ServiceCategoryId { get; set; }
         public string CraftsmanName { get; set; }
         public string ServiceCategoryName { get; set; }
+        public string CraftsmanCity { get; set; }
+
 
 
     }

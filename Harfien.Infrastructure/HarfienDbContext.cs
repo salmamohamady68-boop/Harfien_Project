@@ -114,7 +114,11 @@ namespace Harfien.DataAccess
                .WithMany(u => u.SentMessages)
                .HasForeignKey(m => m.SenderId);
 
-
+            builder.Entity<Service>()
+              .HasOne(s => s.Craftsman)
+              .WithMany(c => c.CraftsmanServices)
+              .HasForeignKey(s => s.CraftsmanId)
+              .OnDelete(DeleteBehavior.NoAction);
 
             var fixedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             //SeedRoles

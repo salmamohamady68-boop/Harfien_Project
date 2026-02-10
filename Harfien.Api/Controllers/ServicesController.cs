@@ -1,5 +1,6 @@
 ﻿using Harfien.Application.DTO;
 using Harfien.Application.Interfaces;
+using Harfien.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Harfien.Presentation.Controllers
@@ -19,8 +20,8 @@ namespace Harfien.Presentation.Controllers
         {
             if (serviceCreateDto is not null)
             {
-                await _serviceService.CreateServiceAsync(serviceCreateDto);
-                return Ok(serviceCreateDto);
+              var service=  await _serviceService.CreateServiceAsync(serviceCreateDto);
+                return Ok(service);
             }
             return BadRequest();
         }
@@ -33,8 +34,49 @@ namespace Harfien.Presentation.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _serviceService.DeleteServiceAsync(id);
-            return NoContent();
+            
+            try
+            {
+                var deleted = await _serviceService.DeleteServiceAsync(id);
+                if (!deleted)
+                    return NotFound(new { message = $"Service with ID {id} not found." });
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                
+                return StatusCode(500, new { message = "An error occurred while deleting the service.", details = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var services = await _serviceService.GetAllServicesAsync();
+            return Ok(services);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var service = await _serviceService.GetServiceByIdAsync(id);
+            if (service == null) return NotFound();
+            return Ok(service);
+        }
+
+        [HttpGet("category/{categoryId}")]
+        public async Task<IActionResult> GetByCategory(int categoryId)
+        {
+            var services = await _serviceService.GetServicesByCategoryAsync(categoryId);
+            return Ok(services);
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetFiltered([FromQuery] ServiceQueryDto query)
+        {
+            var result = await _serviceService.GetFilteredAsync(query);
+            return Ok(result);
         }
     }
 }

@@ -6,13 +6,14 @@ namespace Harfien.Application.Mappings
 {
     public class ServiceProfile:Profile
     {
-      public  ServiceProfile() { 
-            CreateMap<Service,ServiceCreateDto>().ReverseMap();
-            
+      public  ServiceProfile() {
+            CreateMap<ServiceCreateDto, Service>();
+
             CreateMap<Service,ServiceUpdateDto>().ReverseMap();
             CreateMap<Service, ServiceReadDto>()
-           .ForMember(dest => dest.CraftsmanName, opt => opt.MapFrom(src => src.Craftsman.User.UserName))
-           .ForMember(dest => dest.ServiceCategoryName, opt => opt.MapFrom(src => src.ServiceCategory.Name)).ReverseMap();
+           .ForMember(dest => dest.CraftsmanName, opt => opt.MapFrom(src => src.Craftsman.User.FullName))
+           .ForMember(dest => dest.ServiceCategoryName, opt => opt.MapFrom(src => src.ServiceCategory.Name))
+           .ForMember(d => d.CraftsmanCity, o => o.MapFrom(s => s.Craftsman.User.Address));
 
 
         }
