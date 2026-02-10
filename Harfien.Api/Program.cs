@@ -1,6 +1,7 @@
 ﻿using Harfien.Application.Autherization;
 using Harfien.Application.Interfaces;
 using Harfien.Application.Services;
+using Harfien.Application;
 using Harfien.DataAccess;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Interface_Repository.Repositories;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection.Metadata;
@@ -110,11 +112,14 @@ namespace Harfien.Api
             // =========================
             // AutoMapper
             // =========================
+            
+
             builder.Services.AddAutoMapper(cfg =>
             {
                 cfg.AllowNullCollections = true;
-            }, typeof(AssemblyReference).Assembly);
-          //  builder.Services.AddAutoMapper(typeof(OrderProfile));
+                cfg.AllowNullDestinationValues = true;
+            }, typeof(Application.AssemblyReference).Assembly);
+            //  builder.Services.AddAutoMapper(typeof(OrderProfile));
 
             // =========================
             // Forget Password

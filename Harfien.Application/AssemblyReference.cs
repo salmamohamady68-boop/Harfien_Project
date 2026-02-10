@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Harfien.Application
 {
-    public class AssemblyReference
+    public static class AssemblyReference
     {
     }
 }
