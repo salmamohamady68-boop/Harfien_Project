@@ -8,6 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 
+
+using System;
+using System.Transactions;
+
+
 public class AuthService : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager;
@@ -16,6 +21,8 @@ public class AuthService : IAuthService
     private readonly IConfiguration _configuration;
     private readonly IEmailService _emailSender;
     private readonly IMemoryCache _cache;
+    private readonly IUnitOfWork _unitOfWork;
+
 
 
 
@@ -25,7 +32,9 @@ public class AuthService : IAuthService
         IJwtTokenService jwtService,
         IConfiguration configuration,
         IEmailService emailSender,
-        IMemoryCache cache)
+        IMemoryCache cache,
+        IUnitOfWork context
+        )
     {
         _userManager = userManager;
         _craftsmanRepo = craftsmanRepo;
@@ -33,6 +42,8 @@ public class AuthService : IAuthService
         _configuration = configuration;
         _emailSender = emailSender;
         _cache = cache;
+        _unitOfWork = context;
+      
     }
 
     public async Task<string> RegisterClientAsync(RegisterClientDto dto)
@@ -52,35 +63,51 @@ public class AuthService : IAuthService
         return await _jwtService.GenerateTokenAsync(user);
     }
 
-    public async Task RegisterCraftsmanAsync(RegisterCraftsmanDto dto)
+    public async Task<string> RegisterCraftsmanAsync(RegisterCraftsmanDto dto)
     {
+        // تحقق من وجود الإيميل
+        if (await _userManager.FindByEmailAsync(dto.Email) != null)
+            throw new Exception("Email already exists");
+
         var user = new ApplicationUser
         {
-            UserName = dto.PhoneNumber,
+            UserName = dto.Email,
+            Email = dto.Email,
             PhoneNumber = dto.PhoneNumber,
             FullName = dto.FullName,
             AreaId = dto.CityId
         };
 
-        var result = await _userManager.CreateAsync(user, dto.Password);
-        if (!result.Succeeded)
-            throw new Exception("Register failed");
-
-        await _userManager.AddToRoleAsync(user, "Craftsman");
-
-        await _craftsmanRepo.AddAsync(new Craftsman
+        using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
-            UserId = user.Id,
-            YearsOfExperience = dto.YearsOfExperience,
-            IsApproved = false
-        });
+            // حفظ المستخدم في Identity
+            var result = await _userManager.CreateAsync(user, dto.Password);
+            if (!result.Succeeded)
+                throw new Exception(string.Join(",", result.Errors.Select(e => e.Description)));
+
+            await _userManager.AddToRoleAsync(user, "Craftsman");
+
+            // إنشاء سجل الحرفي مع IsApproved = false
+            await _unitOfWork.Craftsmen.AddAsync(new Craftsman
+            {
+                UserId = user.Id,
+                YearsOfExperience = dto.YearsOfExperience,
+                IsApproved = false
+            });
+
+            await _unitOfWork.SaveAsync();
+            scope.Complete();
+        }
+
+        
+        return "Your registration is successful. Your account is pending approval by the admin.";
     }
+
 
     public async Task<string?> LoginAsync(loginDto dto)
     {
-        var user = await _userManager.FindByEmailAsync(dto.Identifier)
-            ?? await _userManager.Users
-                .FirstOrDefaultAsync(u => u.PhoneNumber == dto.Identifier);
+        var user = await _userManager.FindByEmailAsync(dto.Email);
+            
 
         if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
         {
@@ -105,17 +132,23 @@ public class AuthService : IAuthService
 
     public async Task<string> ApproveCraftsmanAsync(int craftsmanId)
     {
+        // جلب الحرفي من قاعدة البيانات
         var craftsman = await _craftsmanRepo.GetByIdAsync(craftsmanId);
         if (craftsman == null)
-            throw new Exception("Not found");
+            return null; // لو الحرفي مش موجود
 
+        // تغيير حالة الحرفي من false لـ true
         craftsman.IsApproved = true;
+
+        // تحديث البيانات في قاعدة البيانات
         await _craftsmanRepo.UpdateAsync(craftsman);
 
-        return await _jwtService.GenerateTokenAsync(craftsman.User);
+        
+        string userId = craftsman.UserId;
+
+        return "Craftsman approved successfully. User can now log in.";
     }
 
-    
     public async Task<(bool Success, string Message)> ForgetPasswordAsync(ForgetPassword forgetPassword)
     {
         var user = await _userManager.FindByEmailAsync(forgetPassword.Email);

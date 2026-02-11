@@ -1,12 +1,13 @@
-﻿using Harfien.Application.Autherization;
+﻿using Harfien.Application;
+using Harfien.Application.Autherization;
 using Harfien.Application.Interfaces;
 using Harfien.Application.Services;
-using Harfien.Application;
 using Harfien.DataAccess;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Interface_Repository.Repositories;
 using Harfien.Domain.Shared.Repositories;
 using Harfien.Infrastructure.Repositories;
+using Harfien.Presentation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -170,21 +171,25 @@ namespace Harfien.Api
             var app = builder.Build();
 
             // =========================
-            // Initialize Roles
+            // Initialize Roles and Seed Admin
             // =========================
             using (var scope = app.Services.CreateScope())
             {
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                string[] roles = { "CLIENT", "CRAFTSMAN", "ADMIN" };
+                var services = scope.ServiceProvider;
 
+                // 1️⃣ إنشاء كل الرولز
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                string[] roles = { "CLIENT", "CRAFTSMAN", "ADMIN" };
                 foreach (var role in roles)
                 {
                     if (!await roleManager.RoleExistsAsync(role))
-                    {
                         await roleManager.CreateAsync(new IdentityRole(role));
-                    }
                 }
+
+                // 2️⃣ إنشاء الـ Admin
+                await AdminSeedData.SeedAdminAsync(services);
             }
+
 
             // =========================
             // Middleware

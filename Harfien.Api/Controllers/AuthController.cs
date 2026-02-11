@@ -2,6 +2,7 @@ using Harfien.Application.DTO;
 using Harfien.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace Harfien.Presentation.Controllers
@@ -57,9 +58,21 @@ namespace Harfien.Presentation.Controllers
         [HttpPost("approve-craftsman/{id}")]
         public async Task<IActionResult> Approve(int id)
         {
-            var token = await _authService.ApproveCraftsmanAsync(id);
-            return Ok(new { token });
+            try
+            {
+                var message = await _authService.ApproveCraftsmanAsync(id);
+
+                if (message == null)
+                    return NotFound(new { error = "Craftsman not found" });
+
+                return Ok(new { message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
+
 
         // ==========================
         // Confirm Password (Admin only)

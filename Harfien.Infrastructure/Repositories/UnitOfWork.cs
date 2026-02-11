@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Harfien.DataAccess;
+using Harfien.Domain.Shared.Repositories;
+using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Harfien.DataAccess;
-using Harfien.Domain.Shared.Repositories;
 
 namespace Harfien.Infrastructure.Repositories
 {
@@ -45,6 +46,10 @@ namespace Harfien.Infrastructure.Repositories
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();
+        }
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
         }
     }
 }

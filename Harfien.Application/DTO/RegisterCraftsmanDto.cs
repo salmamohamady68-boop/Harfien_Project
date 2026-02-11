@@ -11,6 +11,10 @@ namespace Harfien.Application.DTO
         [DataType(DataType.PhoneNumber)]
         [StringLength(50, MinimumLength = 11, ErrorMessage = "the phonenumber must be at least 12 characters long")]
         public string PhoneNumber { get; set; } = null!;
+        [Required(ErrorMessage = "the email is required")]
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage = "the email is not valid")]
+        public string Email { get; set; }
 
         [Required(ErrorMessage = "the password is required")]
         [DataType(DataType.Password)]
