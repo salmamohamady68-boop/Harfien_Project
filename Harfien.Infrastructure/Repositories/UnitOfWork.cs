@@ -14,6 +14,7 @@ namespace Harfien.Infrastructure.Repositories
     {
         private readonly HarfienDbContext _context;
         private IServiceCategoryRepository _serviceCategories;
+        private IComplaintRepository _complaintRepository;
 
 
         public UnitOfWork( HarfienDbContext context,
@@ -38,6 +39,19 @@ namespace Harfien.Infrastructure.Repositories
                 }
 
                 return _serviceCategories;
+            }
+        }
+
+        public IComplaintRepository ComplaintRepository
+        {
+            get
+            {
+                if (_complaintRepository == null)
+                {
+                    _complaintRepository = new ComplaintRepository(_context);
+                }
+
+                return _complaintRepository;
             }
         }
 
