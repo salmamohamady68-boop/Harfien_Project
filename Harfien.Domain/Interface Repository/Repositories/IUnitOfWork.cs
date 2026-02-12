@@ -11,8 +11,11 @@ namespace Harfien.Domain.Shared.Repositories
     {
         Task SaveAsync();
         IServiceCategoryRepository ServiceCategories { get; }
+        IComplaintRepository ComplaintRepository { get; }
+
         Task<IDbContextTransaction> BeginTransactionAsync();
         ICraftsmanRepository Craftsmen { get; }
+        IClientRepository Clients {  get; }
 
     }
 }
