@@ -84,7 +84,17 @@ namespace Harfien.DataAccess
                 .Property(o => o.Amount)
                 .HasPrecision(18, 2);  // أو HasColumnType("decimal(18,2)")
 
+            builder.Entity<ChatMessage>()
+                 .HasOne(m => m.Sender)
+                .WithMany()
+             .HasForeignKey(m => m.SenderId)
+             .OnDelete(DeleteBehavior.NoAction);
 
+            builder.Entity<ChatMessage>()
+                .HasOne(m => m.Receiver)
+                .WithMany()
+                .HasForeignKey(m => m.ReceiverId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             //// ربط Order بالـ Payment
             //builder.Entity<Order>()

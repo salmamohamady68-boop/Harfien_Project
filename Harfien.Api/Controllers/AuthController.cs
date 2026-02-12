@@ -44,11 +44,12 @@ namespace Harfien.Presentation.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(loginDto dto)
         {
-            var token = await _authService.LoginAsync(dto);
-            if (token == null)
-                return Unauthorized(new { message = "Invalid credentials or account not approved" });
+            var result = await _authService.LoginAsync(dto);
 
-            return Ok(new { token });
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            return Ok(result);
         }
 
         // ==========================
