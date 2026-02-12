@@ -604,7 +604,7 @@ namespace Harfien.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "AreaId", "ConcurrencyStamp", "CreatedAt", "DateOfBirth", "Email", "EmailConfirmed", "FullName", "Gender", "IsActive", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PasswordResetSession", "PasswordResetSessionExpiry", "PhoneNumber", "PhoneNumberConfirmed", "ProfileImage", "ResetCode", "ResetCodeExpiry", "SecurityStamp", "TwoFactorEnabled", "UserName", "Zone" },
-                values: new object[] { "ADMIN_ID", 0, "Cairo", null, "bbe12a76-7b09-4b33-9772-ac1308e8932f", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "Admin@gmail.com", true, "Admin", null, true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAENth+esUJykMl/Qt3cruUXN5UHorCE06y4XV+G3+VEZffp0RLtp8MBqc1oMvXxsBXA==", null, null, "1234567890", true, null, null, null, "5bc7d50d-12da-4ae4-9746-b9078c6375f4", false, "Admin@gamil.com", null });
+                values: new object[] { "ADMIN_ID", 0, "Cairo", null, "d1734375-da41-4ae1-bf01-5edbf43a9672", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "Admin@gmail.com", true, "Admin", null, true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEFi844h3i7Nfq8jITQKJa16QIo1hso3JeCshSKjrWsNKOLrtQk+wyOuBM26QLPJsUQ==", null, null, "1234567890", true, null, null, null, "2e98b523-d2e0-449d-abc2-3da210f288e5", false, "Admin@gamil.com", null });
 
             migrationBuilder.InsertData(
                 table: "Cities",

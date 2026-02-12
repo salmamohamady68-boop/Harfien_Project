@@ -1,4 +1,5 @@
-﻿using Harfien.Application.DTO;
+﻿using Harfien.Application.Autherization;
+using Harfien.Application.DTO;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Interface_Repository.Repositories;
@@ -104,31 +105,52 @@ public class AuthService : IAuthService
     }
 
 
-    public async Task<string?> LoginAsync(loginDto dto)
+    public async Task<LoginResponse> LoginAsync(loginDto dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
-            
 
-        if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
+        if (user == null)
         {
-            Console.WriteLine("Login failed: user not found or wrong password");
-            return null;
-        }
-
-        var roles = await _userManager.GetRolesAsync(user);
-        if (roles.Contains("Craftsman"))
-        {
-            var craftsman = await _craftsmanRepo.GetByUserIdAsync(user.Id);
-            if (craftsman != null && !craftsman.IsApproved)
+            return new LoginResponse
             {
-                Console.WriteLine("Login failed: Craftsman not approved yet");
-                return null;
-            }
+                Success = false,
+                Message = "Invalid email or password"
+            };
         }
 
-        // لو كل حاجة تمام تولد التوكن
-        return await _jwtService.GenerateTokenAsync(user);
+        var passwordValid = await _userManager.CheckPasswordAsync(user, dto.Password);
+
+        if (!passwordValid)
+        {
+            return new LoginResponse
+            {
+                Success = false,
+                Message = "Invalid email or password"
+            };
+        }
+
+       
+        var craftsman = await _craftsmanRepo.GetByUserIdAsync(user.Id);
+
+        if (craftsman != null && !craftsman.IsApproved)
+        {
+            return new LoginResponse
+            {
+                Success = false,
+                Message = "Your account is not approved yet"
+            };
+        }
+
+        // Generate JWT
+        var token = await _jwtService.GenerateTokenAsync(user);
+
+        return new LoginResponse
+        {
+            Success = true,
+            Token = token
+        };
     }
+
 
     public async Task<string> ApproveCraftsmanAsync(int craftsmanId)
     {
