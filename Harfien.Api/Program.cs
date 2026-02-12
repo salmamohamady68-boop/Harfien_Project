@@ -98,6 +98,7 @@ namespace Harfien.Api
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+            builder.Services.AddScoped<ICityRepository, CityRepository>();
 
             // =========================
             //services
@@ -109,11 +110,12 @@ namespace Harfien.Api
             
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IReviewService, ReviewService>();
+            builder.Services.AddScoped<ICityService, CityService>();
 
             // =========================
             // AutoMapper
             // =========================
-            
+
 
             builder.Services.AddAutoMapper(cfg =>
             {
