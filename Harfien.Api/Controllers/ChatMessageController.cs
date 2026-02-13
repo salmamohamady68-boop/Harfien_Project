@@ -17,27 +17,17 @@ namespace Harfien.Presentation.Controllers
             _chatMessageService = chatMessageService;
         }
 
-        // POST: api/chatmessage
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Send([FromBody] AddChatMessageDto dto)
         {
             var senderId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (senderId == null)
-                return Unauthorized();
+            if (senderId == null) return Unauthorized();
 
-            try
-            {
-                await _chatMessageService.SendMessageAsync(dto, senderId);
-                return Ok("Message Sent Successfully");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _chatMessageService.SendMessageAsync(dto, senderId);
+            return Ok("Message Sent Successfully");
         }
 
-        // GET: api/chatmessage/chat/1
         [HttpGet("chat/{chatId}")]
         public async Task<IActionResult> GetChatMessages(int chatId)
         {
@@ -46,6 +36,7 @@ namespace Harfien.Presentation.Controllers
         }
     }
 }
+
 
 
 

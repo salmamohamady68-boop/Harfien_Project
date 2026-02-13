@@ -9,6 +9,9 @@ namespace Harfien.Application.DTO
     public class AddChatDto
     {
         public int OrderId { get; set; }
+
+        public string ReceiverId { get; set; }  // User2
+
     }
 
 }

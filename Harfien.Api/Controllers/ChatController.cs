@@ -17,27 +17,17 @@ namespace Harfien.Presentation.Controllers
             _chatService = chatService;
         }
 
-        // POST: api/chat
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Create([FromBody] AddChatDto dto)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
-                return Unauthorized();
+            var senderId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (senderId == null) return Unauthorized();
 
-            try
-            {
-                var chatId = await _chatService.CreateChatAsync(dto, userId);
-                return Ok(chatId);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var chatId = await _chatService.CreateChatAsync(dto, senderId);
+            return Ok(chatId);
         }
 
-        // GET: api/chat/order/5
         [HttpGet("order/{orderId}")]
         public async Task<IActionResult> GetByOrderId(int orderId)
         {
@@ -46,5 +36,6 @@ namespace Harfien.Presentation.Controllers
         }
     }
 }
+
 
 

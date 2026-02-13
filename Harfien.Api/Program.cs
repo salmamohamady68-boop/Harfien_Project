@@ -3,6 +3,7 @@ using Harfien.Application.Interfaces;
 using Harfien.Application.Services;
 using Harfien.DataAccess;
 using Harfien.Domain.Entities;
+using Harfien.Domain.Interface_Repository;
 using Harfien.Domain.Interface_Repository.Repositories;
 using Harfien.Domain.Shared.Repositories;
 using Harfien.Infrastructure.Repositories;
@@ -95,6 +96,20 @@ namespace Harfien.Api
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+
+
+            // =========================
+            // ChatMessageService,IChatService
+            // =========================
+
+            builder.Services.AddScoped<IChatMessageService, ChatMessageService>();
+            builder.Services.AddScoped<IChatService, ChatService>();
+
+            builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
+            builder.Services.AddScoped<IChatRepository, ChatRepository>();
+
+
+
 
             // =========================
             //services
