@@ -13,7 +13,7 @@ namespace Harfien.Application.Mappings
             CreateMap<Service, ServiceReadDto>()
            .ForMember(dest => dest.CraftsmanName, opt => opt.MapFrom(src => src.Craftsman.User.FullName))
            .ForMember(dest => dest.ServiceCategoryName, opt => opt.MapFrom(src => src.ServiceCategory.Name))
-           .ForMember(d => d.CraftsmanCity, o => o.MapFrom(s => s.Craftsman.User.Address));
+           .ForMember(d => d.CraftsmanCity, o => o.MapFrom(s => s.Craftsman.User.Area.Name));
 
 
         }

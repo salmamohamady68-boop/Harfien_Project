@@ -17,7 +17,8 @@ namespace Harfien.Infrastructure.Repositories
         {
             return await _dbSet
                 .Include(s => s.Craftsman)
-                      .ThenInclude(c => c.User)       
+                      .ThenInclude(c => c.User)
+                      .ThenInclude(s => s.Area)
                  .Include(s => s.ServiceCategory)
                  .ToListAsync();
         }
@@ -28,6 +29,7 @@ namespace Harfien.Infrastructure.Repositories
               return await _dbSet
                     .Include(s => s.Craftsman)
                          .ThenInclude(c => c.User)
+                            .ThenInclude(s=>s.Area)
                     .Include(s => s.ServiceCategory)
                     .FirstOrDefaultAsync(s => s.Id == id);
         }
@@ -37,6 +39,7 @@ namespace Harfien.Infrastructure.Repositories
            return await _dbSet.Where(s=>s.ServiceCategoryId== id)
                  .Include(s => s.Craftsman)
                      .ThenInclude(c => c.User)
+                     .ThenInclude(s => s.Area)
                 .Include(s => s.ServiceCategory)
                 .ToListAsync();
         }
@@ -48,6 +51,7 @@ namespace Harfien.Infrastructure.Repositories
                 .Include(s => s.ServiceCategory)
                 .Include(s => s.Craftsman)
                     .ThenInclude(c => c.User)
+                    .ThenInclude(s => s.Area)
                 .AsQueryable();
 
             
