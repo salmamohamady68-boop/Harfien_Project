@@ -31,7 +31,7 @@ namespace Harfien.DataAccess
         public DbSet<ChatMessage> ChatMessage { get; set; } = null!;
 
         #endregion
-
+        public DbSet<Notification> Notifications { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -106,17 +106,19 @@ namespace Harfien.DataAccess
                 .WithOne(u => u.Wallet)
                 .HasForeignKey<Wallet>(w => w.UserId);
             builder.Entity<Notification>()
-                 .HasOne(n => n.ApplicationUsers)
+                 .HasOne(n => n.ApplicationUser)
                  .WithMany(u => u.Notifications)
                  .HasForeignKey(n => n.UserId);
             builder.Entity<ChatMessage>()
                .HasOne(m => m.Sender)
                .WithMany(u => u.SentMessages)
                .HasForeignKey(m => m.SenderId);
+           
+           
 
 
 
-            var fixedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var fixedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             //SeedRoles
             builder.Entity<IdentityRole>().HasData(
                new IdentityRole { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
