@@ -18,6 +18,6 @@ namespace Harfien.Domain.Entities
         public bool IsRead { get; set; }
         
 
-        public ApplicationUser ApplicationUsers { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }

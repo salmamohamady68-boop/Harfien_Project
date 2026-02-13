@@ -50,6 +50,8 @@ namespace Harfien.Api
 
             builder.Services.AddScoped<IClientRepository, ClientRepository>();
             builder.Services.AddScoped<ICraftsmanRepository, CraftsmanRepository>();
+         
+
 
 
             builder.Services.AddScoped<IWalletRepository, WalletRepository>();
@@ -57,7 +59,10 @@ namespace Harfien.Api
             builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
-            builder.Services.AddScoped<IComplaintService, ComplaintService>();  
+ 
+           
+
+            builder.Services.AddScoped<IComplaintService, ComplaintService>();   
             // =========================
             // JWT Authentication (مرة واحدة)
             // =========================
@@ -99,7 +104,12 @@ namespace Harfien.Api
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+
+            builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+
+
             builder.Services.AddScoped<ICityRepository, CityRepository>();
+
 
             // =========================
             //services
@@ -111,7 +121,10 @@ namespace Harfien.Api
             
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IReviewService, ReviewService>();
+
+            builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<ICityService, CityService>();
+
 
             // =========================
             // AutoMapper
