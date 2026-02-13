@@ -1,12 +1,14 @@
 ﻿using Harfien.Application.DTO;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Harfien.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Carftsman")]
     public class ServicesController : ControllerBase
     {
         private readonly IServiceService _serviceService;
