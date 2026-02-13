@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Harfien.DataAccess;
+using Harfien.Domain.Shared.Repositories;
+using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Harfien.DataAccess;
-using Harfien.Domain.Shared.Repositories;
 
 namespace Harfien.Infrastructure.Repositories
 {
@@ -13,6 +14,7 @@ namespace Harfien.Infrastructure.Repositories
     {
         private readonly HarfienDbContext _context;
         private IServiceCategoryRepository _serviceCategories;
+        private IComplaintRepository _complaintRepository;
 
 
         public UnitOfWork( HarfienDbContext context,
@@ -40,11 +42,28 @@ namespace Harfien.Infrastructure.Repositories
             }
         }
 
+        public IComplaintRepository ComplaintRepository
+        {
+            get
+            {
+                if (_complaintRepository == null)
+                {
+                    _complaintRepository = new ComplaintRepository(_context);
+                }
+
+                return _complaintRepository;
+            }
+        }
+
 
 
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();
+        }
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
         }
     }
 }

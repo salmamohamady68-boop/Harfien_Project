@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Harfien.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class recreatedMigrations : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,6 +34,8 @@ namespace Harfien.Infrastructure.Migrations
                     ChatId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     orderId = table.Column<int>(type: "int", nullable: false),
+                    User1Id = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    User2Id = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -267,6 +269,7 @@ namespace Harfien.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MessageText = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SenderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ReceiverId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ChatId = table.Column<int>(type: "int", nullable: false),
                     SentAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsRead = table.Column<bool>(type: "bit", nullable: false),
@@ -276,11 +279,15 @@ namespace Harfien.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_ChatMessage", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_ChatMessage_AspNetUsers_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_ChatMessage_AspNetUsers_SenderId",
                         column: x => x.SenderId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ChatMessage_Chat_ChatId",
                         column: x => x.ChatId,
@@ -415,7 +422,6 @@ namespace Harfien.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CraftsmanProfileId = table.Column<int>(type: "int", nullable: false),
                     CraftsmanId = table.Column<int>(type: "int", nullable: false),
                     ServiceCategoryId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -427,8 +433,7 @@ namespace Harfien.Infrastructure.Migrations
                         name: "FK_Services_Craftsmen_CraftsmanId",
                         column: x => x.CraftsmanId,
                         principalTable: "Craftsmen",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Services_ServiceCategories_ServiceCategoryId",
                         column: x => x.ServiceCategoryId,
@@ -599,7 +604,7 @@ namespace Harfien.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "AreaId", "ConcurrencyStamp", "CreatedAt", "DateOfBirth", "Email", "EmailConfirmed", "FullName", "Gender", "IsActive", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PasswordResetSession", "PasswordResetSessionExpiry", "PhoneNumber", "PhoneNumberConfirmed", "ProfileImage", "ResetCode", "ResetCodeExpiry", "SecurityStamp", "TwoFactorEnabled", "UserName", "Zone" },
-                values: new object[] { "ADMIN_ID", 0, "Cairo", null, "a539c068-8c4d-432b-9edf-14ad84ed7178", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "Admin@gmail.com", true, "Admin", null, true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAENsjahAt8AbW4isHk1WgpG8l/hvJUWPUcNWAN2ZVnr9ObM70PFe/M1NtYpPLhAenew==", null, null, "1234567890", true, null, null, null, "025de596-3e50-4f74-909a-6c110db87629", false, "Admin@gamil.com", null });
+                values: new object[] { "ADMIN_ID", 0, "Cairo", null, "d1734375-da41-4ae1-bf01-5edbf43a9672", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "Admin@gmail.com", true, "Admin", null, true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEFi844h3i7Nfq8jITQKJa16QIo1hso3JeCshSKjrWsNKOLrtQk+wyOuBM26QLPJsUQ==", null, null, "1234567890", true, null, null, null, "2e98b523-d2e0-449d-abc2-3da210f288e5", false, "Admin@gamil.com", null });
 
             migrationBuilder.InsertData(
                 table: "Cities",
@@ -682,6 +687,11 @@ namespace Harfien.Infrastructure.Migrations
                 name: "IX_ChatMessage_ChatId",
                 table: "ChatMessage",
                 column: "ChatId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatMessage_ReceiverId",
+                table: "ChatMessage",
+                column: "ReceiverId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChatMessage_SenderId",

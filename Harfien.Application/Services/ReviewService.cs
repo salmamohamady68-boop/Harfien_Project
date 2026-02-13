@@ -76,7 +76,7 @@ namespace Harfien.Application.Services
                 ClientName = createdReview.Order?.Client?.User?.FullName ?? "Unknown User"
             };
         }
-        public async Task<List<ReviewDto>> GetReviewsByCraftsmanIdAsync(int craftsmanId)
+        public async Task<IEnumerable<ReviewDto>> GetReviewsByCraftsmanIdAsync(int craftsmanId)
         {
             var reviews = await _reviewRepository.GetAllByCraftsmanIdAsync(craftsmanId);
 

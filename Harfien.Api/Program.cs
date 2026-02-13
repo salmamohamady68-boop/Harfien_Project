@@ -1,4 +1,5 @@
-﻿using Harfien.Application.Autherization;
+﻿using Harfien.Application;
+using Harfien.Application.Autherization;
 using Harfien.Application.Interfaces;
 using Harfien.Application.Services;
 using Harfien.DataAccess;
@@ -6,10 +7,12 @@ using Harfien.Domain.Entities;
 using Harfien.Domain.Interface_Repository.Repositories;
 using Harfien.Domain.Shared.Repositories;
 using Harfien.Infrastructure.Repositories;
+using Harfien.Presentation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection.Metadata;
@@ -56,8 +59,10 @@ namespace Harfien.Api
             builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
+ 
            
 
+            builder.Services.AddScoped<IComplaintService, ComplaintService>();   
             // =========================
             // JWT Authentication (مرة واحدة)
             // =========================
@@ -99,7 +104,11 @@ namespace Harfien.Api
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+
             builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+
+
+            builder.Services.AddScoped<ICityRepository, CityRepository>();
 
 
             // =========================
@@ -112,16 +121,22 @@ namespace Harfien.Api
             
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IReviewService, ReviewService>();
+
             builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddScoped<ICityService, CityService>();
+
 
             // =========================
             // AutoMapper
             // =========================
+
+
             builder.Services.AddAutoMapper(cfg =>
             {
                 cfg.AllowNullCollections = true;
-            }, typeof(AssemblyReference).Assembly);
-          //  builder.Services.AddAutoMapper(typeof(OrderProfile));
+                cfg.AllowNullDestinationValues = true;
+            }, typeof(Application.AssemblyReference).Assembly);
+            //  builder.Services.AddAutoMapper(typeof(OrderProfile));
 
             // =========================
             // Forget Password
@@ -172,21 +187,25 @@ namespace Harfien.Api
             var app = builder.Build();
 
             // =========================
-            // Initialize Roles
+            // Initialize Roles and Seed Admin
             // =========================
             using (var scope = app.Services.CreateScope())
             {
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                string[] roles = { "CLIENT", "CRAFTSMAN", "ADMIN" };
+                var services = scope.ServiceProvider;
 
+                // 1️⃣ إنشاء كل الرولز
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                string[] roles = { "CLIENT", "CRAFTSMAN", "ADMIN" };
                 foreach (var role in roles)
                 {
                     if (!await roleManager.RoleExistsAsync(role))
-                    {
                         await roleManager.CreateAsync(new IdentityRole(role));
-                    }
                 }
+
+                // 2️⃣ إنشاء الـ Admin
+                await AdminSeedData.SeedAdminAsync(services);
             }
+
 
             // =========================
             // Middleware

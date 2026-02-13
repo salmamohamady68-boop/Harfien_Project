@@ -1,12 +1,13 @@
-﻿using Harfien.Application.DTO;
+﻿using Harfien.Application.Autherization;
+using Harfien.Application.DTO;
 
 namespace Harfien.Application.Interfaces
 {
     public interface IAuthService
     {
         Task<string> RegisterClientAsync(RegisterClientDto dto);
-        Task RegisterCraftsmanAsync(RegisterCraftsmanDto dto);
-        Task<string> LoginAsync(loginDto dto);
+        Task <string> RegisterCraftsmanAsync(RegisterCraftsmanDto dto);
+        Task<LoginResponse> LoginAsync(loginDto dto);
         Task<string> ApproveCraftsmanAsync(int craftsmanId);
         Task<(bool Success, string Message)> ForgetPasswordAsync(ForgetPassword forgetPassword);
         Task<string?> VerifyResetCode(VerifyResetCode dto);

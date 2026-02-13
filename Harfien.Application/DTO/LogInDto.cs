@@ -4,8 +4,10 @@ namespace Harfien.Application.DTO
 {
     public class loginDto
     {
-        [Required(ErrorMessage = "the Username is required")]
-        public string Identifier { get; set; } = null!;
+        [Required(ErrorMessage = "the Email is required")]
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage = "the email is not valid")]
+        public string Email { get; set; } = null!;
 
         [Required(ErrorMessage = "the password is required")]
         [DataType(DataType.Password)]
