@@ -61,6 +61,11 @@ public class AuthService : IAuthService
             throw new Exception("Register failed");
 
         await _userManager.AddToRoleAsync(user, "Client");
+        var client = new Client
+        {
+            UserId = user.Id,
+            CreatedAt = DateTime.UtcNow
+        };
         return await _jwtService.GenerateTokenAsync(user);
     }
 
