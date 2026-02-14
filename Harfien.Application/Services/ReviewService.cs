@@ -1,4 +1,4 @@
-﻿using Harfien.Application.DTO;
+﻿using Harfien.Application.DTO.Review;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Enums;
@@ -20,24 +20,29 @@ namespace Harfien.Application.Services
 
         public async Task<ReviewDto> AddReviewAsync(CreateReviewDto dto, String currentUserId)
         {
-            var order = await _orderRepository.GetByIdAsync(dto.OrderId);////////////
+            var order = await _orderRepository.GetByIdWithDetailsAsync(dto.OrderId)
+                ?? throw new Exception("Order not found.");
 
-            if (order == null) throw new Exception("Order not found.");
-
-            if (order.Client.User.Id != currentUserId) throw new Exception("You are not authorized to review this order.");
-
-            if (order.Status != OrderStatus.Complete) throw new Exception("You can only review completed orders.");
+            if (order.Client?.User?.Id != currentUserId)
+                throw new Exception("You are not authorized to review this order.");
 
             if (await _reviewRepository.HasReviewForOrderAsync(order.Id))
                 throw new Exception("You already reviewed this order.");
 
+            if (order.Status != OrderStatus.Complete)
+                throw new Exception("You can only review completed orders.");       
 
+            if(order.Craftsman == null)
+                throw new Exception("Craftsman information is missing for this order.");
+
+            if(dto.Rating < 1 || dto.Rating > 5)
+                throw new Exception("Rating must be between 1 and 5.");
 
             var review = new Review
             {
                 OrderId = order.Id,
                 Rating = dto.Rating,
-                Comment = dto.Comment,
+                //Comment = dto.Comment,
                 ClientId = order.ClientId,
                 CraftsmanId = order.CraftsmanId,
                 CreatedAt = DateTime.UtcNow
@@ -72,23 +77,24 @@ namespace Harfien.Application.Services
             {
                 Id = createdReview.Id,
                 Rating = createdReview.Rating,
-                Comment = createdReview.Comment,
+                //Comment = createdReview.Comment,
                 ClientName = createdReview.Order?.Client?.User?.FullName ?? "Unknown User"
             };
         }
-        public async Task<IEnumerable<ReviewDto>> GetReviewsByCraftsmanIdAsync(int craftsmanId)
-        {
-            var reviews = await _reviewRepository.GetAllByCraftsmanIdAsync(craftsmanId);
+        
+        //public async Task<IEnumerable<ReviewDto>> GetReviewsByCraftsmanIdAsync(int craftsmanId)
+        //{
+        //    var reviews = await _reviewRepository.GetAllByCraftsmanIdAsync(craftsmanId);
 
-            // Map Entity to DTO
-            return reviews.Select(r => new ReviewDto
-            {
-                Id = r.Id,
-                ClientName = r.Order?.Client?.User?.FullName ?? "Unknown User",
-                Rating = r.Rating,
-                Comment = r.Comment,
-                CreatedAt = r.CreatedAt
-            }).ToList();
-        }
+        //    // Map Entity to DTO
+        //    return reviews.Select(r => new ReviewDto
+        //    {
+        //        Id = r.Id,
+        //        ClientName = r.Order?.Client?.User?.FullName ?? "Unknown User",
+        //        Rating = r.Rating,
+        //      //Comment = r.Comment,
+        //        CreatedAt = r.CreatedAt
+        //    }).ToList();
+        //}
     }
 }
