@@ -19,7 +19,6 @@ namespace Harfien.Infrastructure.Repositories
             public async Task<Order?> GetByIdWithDetailsAsync(int id)
                 => await _context.Orders
                     .Include(o => o.Client)
-                        .ThenInclude(c => c.User)
                     .Include(o => o.Craftsman)
                     .Include(o => o.Service)
                     .Include(o => o.Payment)

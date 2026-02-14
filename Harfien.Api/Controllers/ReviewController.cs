@@ -1,4 +1,4 @@
-﻿using Harfien.Application.DTO.Review;
+﻿using Harfien.Application.DTO;
 using Harfien.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,11 +36,11 @@ namespace Harfien.Presentation.Controllers
             }
         }
 
-        //[HttpGet("craftsman/{craftsmanId}")]
-        //public async Task<IActionResult> GetCraftsmanReviews(int craftsmanId)
-        //{
-        //    var reviews = await _reviewService.GetReviewsByCraftsmanIdAsync(craftsmanId);
-        //    return Ok(reviews);
-        //}
+        [HttpGet("craftsman/{craftsmanId}")]
+        public async Task<IActionResult> GetCraftsmanReviews(int craftsmanId)
+        {
+            var reviews = await _reviewService.GetReviewsByCraftsmanIdAsync(craftsmanId);
+            return Ok(reviews);
+        }
     }
 }
