@@ -4,6 +4,7 @@ using Harfien.Application.Interfaces;
 using Harfien.Application.Services;
 using Harfien.DataAccess;
 using Harfien.Domain.Entities;
+using Harfien.Domain.Interface_Repository;
 using Harfien.Domain.Interface_Repository.Repositories;
 using Harfien.Domain.Shared.Repositories;
 using Harfien.Infrastructure.Repositories;
@@ -59,8 +60,15 @@ namespace Harfien.Api
             builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
- 
-           
+
+            // chat 
+            builder.Services.AddScoped<IMessageRepositry, MessageRepositry>();
+            builder.Services.AddScoped<IChatService, ChatService>();
+            builder.Services.AddScoped<IChatNotifier, ChatNotifier>();
+            builder.Services.AddSignalR();
+
+
+
 
             builder.Services.AddScoped<IComplaintService, ComplaintService>();   
             // =========================
@@ -222,6 +230,7 @@ namespace Harfien.Api
             app.MapControllers();
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.MapHub<ChatHub>("/chatHub");
 
             await app.RunAsync();
         }

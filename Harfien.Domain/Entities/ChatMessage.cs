@@ -12,22 +12,16 @@ namespace Harfien.Domain.Entities
     public class ChatMessage:BaseEntity
     {
 
-       
-        public string MessageText { get; set; }
+        public int Id { get; set; }
 
         public string SenderId { get; set; }
         public ApplicationUser Sender { get; set; }
 
-
-        // Receiver
         public string ReceiverId { get; set; }
         public ApplicationUser Receiver { get; set; }
 
+        public string Content { get; set; } = string.Empty;
 
-        // Foreign Key
-        [ForeignKey("ChatId")]
-        public int ChatId { get; set; }
-        public Chat Chat { get; set; }
         public DateTime SentAt { get; set; } = DateTime.UtcNow;
 
         public bool IsRead { get; set; } = false;

@@ -1,4 +1,5 @@
 ﻿using Harfien.DataAccess;
+using Harfien.Domain.Entities;
 using Harfien.Domain.Shared.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
@@ -17,9 +18,9 @@ namespace Harfien.Infrastructure.Repositories
         private IComplaintRepository _complaintRepository;
 
 
-        public UnitOfWork( HarfienDbContext context,
-            IClientRepository clients,
+        public UnitOfWork(HarfienDbContext context,IClientRepository clients,
             ICraftsmanRepository craftsmen)
+
         {
             _context = context;
             Clients = clients;
@@ -27,6 +28,7 @@ namespace Harfien.Infrastructure.Repositories
         }
         public IClientRepository Clients { get; }
         public ICraftsmanRepository Craftsmen { get; }
+
       
 
         public IServiceCategoryRepository ServiceCategories
@@ -55,6 +57,7 @@ namespace Harfien.Infrastructure.Repositories
             }
         }
 
+        
 
 
         public async Task SaveAsync()
