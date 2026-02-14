@@ -1,10 +1,10 @@
-﻿using Harfien.Application.DTO;
+﻿using Harfien.Application.DTO.Review;
 
 namespace Harfien.Application.Interfaces
 {
     public interface IReviewService
     {
         Task<ReviewDto> AddReviewAsync(CreateReviewDto dto, String currentUserId);
-        Task<IEnumerable<ReviewDto>> GetReviewsByCraftsmanIdAsync(int craftsmanId);
+        //Task<IEnumerable<ReviewDto>> GetReviewsByCraftsmanIdAsync(int craftsmanId);
     }
 }
