@@ -8,7 +8,7 @@ namespace Harfien.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Carftsman")]
+    [Authorize]
     public class ServicesController : ControllerBase
     {
         private readonly IServiceService _serviceService;
@@ -17,6 +17,7 @@ namespace Harfien.Presentation.Controllers
         {
             _serviceService = serviceService;
         }
+        [Authorize(Roles = "Carftsman")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]ServiceCreateDto serviceCreateDto)
         {
@@ -27,12 +28,14 @@ namespace Harfien.Presentation.Controllers
             }
             return BadRequest();
         }
+        [Authorize(Roles = "Carftsman")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, ServiceUpdateDto dto)
         {
             var result = await _serviceService.UpdateServiceAsync(id, dto);
             return Ok(result);
         }
+        [Authorize(Roles = "Carftsman")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -78,6 +81,17 @@ namespace Harfien.Presentation.Controllers
         public async Task<IActionResult> GetFiltered([FromQuery] ServiceQueryDto query)
         {
             var result = await _serviceService.GetFilteredAsync(query);
+            return Ok(result);
+        }
+        [HttpGet("craftsman/{craftsmanId}")]
+        public async Task<IActionResult> GetByCraftsmanId(
+    int craftsmanId,
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10)
+        {
+            var result = await _serviceService
+                .GetServicesByCraftsmanIdAsync(craftsmanId, pageNumber, pageSize);
+
             return Ok(result);
         }
     }
