@@ -9,7 +9,9 @@ namespace Harfien.Domain.Shared
     public class ServiceQueryDto
     {
         public int? CategoryId { get; set; }
-        public string? City { get; set; }
+        public int? CraftnamId { get; set; }
+
+        public string? Area { get; set; }
         public string? Search { get; set; }
 
         public int PageNumber { get; set; } = 1;

@@ -59,13 +59,16 @@ namespace Harfien.Infrastructure.Repositories
             {
                 services = services.Where(s => s.ServiceCategoryId == query.CategoryId);
             }
-
-            
-            if (!string.IsNullOrEmpty(query.City))
+            if (query.CraftnamId.HasValue)
             {
-                services = services.Where(s => s.Craftsman.User.Address == query.City);
+                services = services.Where(s => s.CraftsmanId == query.CraftnamId);
             }
- 
+
+            if (!string.IsNullOrEmpty(query.Area))
+            {
+                services = services.Where(s => s.Craftsman.User.Area.Name.ToLower() == query.Area.ToLower());
+            }
+
             if (!string.IsNullOrEmpty(query.Search))
             {
                 services = services.Where(s =>
@@ -89,5 +92,34 @@ namespace Harfien.Infrastructure.Repositories
             };
         }
 
+        public async Task<PagedResult<Service>> GetServicesByCraftsmanIdAsync(
+            int craftsmanId,
+            int pageNumber,
+            int pageSize)
+        {
+            var query = _context.Services
+                .Include(s => s.ServiceCategory)
+                .Include(s => s.Craftsman)
+                    .ThenInclude(c => c.User)
+                    .ThenInclude(u => u.Area)
+                .Where(s => s.CraftsmanId == craftsmanId)
+                .AsQueryable();
+
+            var totalCount = await query.CountAsync();
+
+            var services = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                
+                .ToListAsync();
+
+            return new PagedResult<Service>
+            {
+                Items = services,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
     }
 }

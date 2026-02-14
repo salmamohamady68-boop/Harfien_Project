@@ -14,5 +14,9 @@ namespace Harfien.Application.Interfaces
         Task<IEnumerable<ServiceReadDto>> GetServicesByCategoryAsync(int categoryId);
 
         Task<PagedResult<ServiceReadDto>> GetFilteredAsync(ServiceQueryDto query);
+        Task<PagedResult<ServiceReadDto>> GetServicesByCraftsmanIdAsync(int craftsmanId,
+    int pageNumber,
+    int pageSize);
+
     }
 }
