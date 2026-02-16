@@ -12,6 +12,7 @@ namespace Harfien.Domain.Shared.Repositories
     {
         Task<bool> IsAvailableAsync(int craftsmanId, DateTime dateTime);
         Task<IEnumerable<int>> GetAvailableCraftsmenIdsAsync(DateTime dateTime);
+        Task<IEnumerable<CraftsmanAvailability>> GetAllByCraftsmanIdAsync(int craftsmanId);
     }
 
 }

@@ -39,6 +39,11 @@ namespace Harfien.Infrastructure.Repositories
                 .Distinct()
                 .ToListAsync();
         }
+        public async Task<IEnumerable<CraftsmanAvailability>> GetAllByCraftsmanIdAsync(int craftsmanId)
+        {
+            return await _dbSet.Where(a => a.CraftsmanId == craftsmanId).ToListAsync();
+        }
+
     }
 
 }
