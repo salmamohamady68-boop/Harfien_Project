@@ -111,6 +111,7 @@ namespace Harfien.Api
 
 
             builder.Services.AddScoped<ICityRepository, CityRepository>();
+            builder.Services.AddScoped<IAreaRepository, AreaRepository>();
 
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -128,6 +129,7 @@ namespace Harfien.Api
 
             builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<ICityService, CityService>();
+            builder.Services.AddScoped<IAreaService, AreaService>();
 
 
             // =========================

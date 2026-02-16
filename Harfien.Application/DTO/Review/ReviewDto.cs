@@ -11,7 +11,7 @@ namespace Harfien.Application.DTO.Review
         public int Id { get; set; }
         public string ClientName { get; set; }
         public int Rating { get; set; }
-        //public string? Comment { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public string? Comment { get; set; }
+        public DateOnly CreatedAt { get; set; }
     }
 }
