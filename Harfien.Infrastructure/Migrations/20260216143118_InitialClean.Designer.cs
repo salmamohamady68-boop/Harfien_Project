@@ -4,6 +4,7 @@ using Harfien.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Harfien.Infrastructure.Migrations
 {
     [DbContext(typeof(HarfienDbContext))]
-    partial class HarfienDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260216143118_InitialClean")]
+    partial class InitialClean
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,7 +138,7 @@ namespace Harfien.Infrastructure.Migrations
                             Id = "ADMIN_ID",
                             AccessFailedCount = 0,
                             Address = "Cairo",
-                            ConcurrencyStamp = "06a78b48-cb6b-4ed7-836f-bf7d7d9bd6b5",
+                            ConcurrencyStamp = "169c78ea-252f-4f9b-ab72-452a570214f2",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "Admin@gmail.com",
                             EmailConfirmed = true,
@@ -144,10 +147,10 @@ namespace Harfien.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH2pzDRlRnL9gi5jTmAQpgWW2hgEGqOc8wUc0UBtVgW8fYdZVC8YA+hntdzkUk0qfA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOm4kSQAwMLXzhzi70EoKf8WJUh9Bl1M9u4u3B0oEUHXIDR+RGyVNsKH/4rx9enfSA==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "df87c994-fd37-45dc-8503-83edecce0356",
+                            SecurityStamp = "1a843e63-1923-487d-b898-bb66154ab73d",
                             TwoFactorEnabled = false,
                             UserName = "Admin@gmail.com"
                         });
@@ -1065,7 +1068,7 @@ namespace Harfien.Infrastructure.Migrations
             modelBuilder.Entity("Harfien.Domain.Entities.CraftsmanAvailability", b =>
                 {
                     b.HasOne("Harfien.Domain.Entities.Craftsman", "Craftsman")
-                        .WithMany("Availabilities")
+                        .WithMany()
                         .HasForeignKey("CraftsmanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1279,8 +1282,6 @@ namespace Harfien.Infrastructure.Migrations
 
             modelBuilder.Entity("Harfien.Domain.Entities.Craftsman", b =>
                 {
-                    b.Navigation("Availabilities");
-
                     b.Navigation("CraftsmanServices");
 
                     b.Navigation("Orders");

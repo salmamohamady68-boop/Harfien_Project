@@ -11,7 +11,7 @@ namespace Harfien.Domain.Entities
 
 
         public int CraftsmanId { get; set; }
-        public ApplicationUser Craftsman { get; set; } = null!;
+        public Craftsman Craftsman { get; set; } = null!;
 
         public DayOfWeek Day { get; set; }
         public TimeSpan From { get; set; }

@@ -19,13 +19,13 @@ namespace Harfien.Domain.Entities
         public bool IsVerified { get; set; } = false;
         public double Rating { get; set; } = 0;
 
-
         [ForeignKey(nameof(UserId))]
         public string UserId { get; set; }    
         public ApplicationUser User { get; set; }
 
         public ICollection< Service> CraftsmanServices { get; set; }
         public ICollection<Order> Orders { get; set; } = new List<Order>();
+        public ICollection<CraftsmanAvailability> Availabilities { get; set; } = new List<CraftsmanAvailability>();
         public int YearsOfExperience { get; set; }
         public bool IsApproved { get; set; } = false;
 
