@@ -24,7 +24,11 @@ namespace Harfien.Infrastructure.Repositories
             return users.First();
         }
 
-       
+        public async Task<ApplicationUser> GetByIdAsync(string userid)
+        {
+            return await _userManager.FindByIdAsync(userid);
+        }
+
     }
 
 }

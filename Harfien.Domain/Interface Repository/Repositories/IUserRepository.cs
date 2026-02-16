@@ -10,7 +10,7 @@ namespace Harfien.Domain.Interface_Repository.Repositories
     public interface IUserRepository
     {
         Task<ApplicationUser> GetAdminAsync();
-       
+        Task<ApplicationUser> GetByIdAsync(string userid);
 
 
     }

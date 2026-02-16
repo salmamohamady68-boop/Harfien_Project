@@ -32,6 +32,23 @@ namespace Harfien.Infrastructure.Repositories
                 .Where(t => t.OrderId == orderId)
                 .ToListAsync();
         }
+
+        public async Task<List<WalletTransaction>> GetTransactionsByUserIdAsync(string userId, int skip, int take)
+        {
+            return await _dbSet
+                .Where(t => t.Wallet.UserId == userId)
+                .Include(t => t.Order)
+                
+                .OrderByDescending(t => t.CreatedAt)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
+        }
+        public async Task<int> GetTransactionsCountByUserIdAsync(string userId)
+        {
+            return await _dbSet .CountAsync(t => t.Wallet.UserId == userId);
+        }
+
     }
 
 }
