@@ -1,6 +1,7 @@
 ﻿using Harfien.Application;
 using Harfien.Application.Autherization;
 using Harfien.Application.Interfaces;
+using Harfien.Application.Interfaces.payment_interfaces;
 using Harfien.Application.Services;
 using Harfien.DataAccess;
 using Harfien.Domain.Entities;
@@ -59,9 +60,10 @@ namespace Harfien.Api
             builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
- 
-           
 
+          
+            builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+            builder.Services.AddScoped<IWalletRepository, WalletRepository>();
             builder.Services.AddScoped<IComplaintService, ComplaintService>();   
             // =========================
             // JWT Authentication (مرة واحدة)
@@ -110,7 +112,9 @@ namespace Harfien.Api
 
             builder.Services.AddScoped<ICityRepository, CityRepository>();
 
-
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IWalletService, WalletService>();
             // =========================
             //services
             // =========================
