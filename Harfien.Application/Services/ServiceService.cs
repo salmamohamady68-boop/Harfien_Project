@@ -5,6 +5,7 @@ using Harfien.Domain.Entities;
 using Harfien.Domain.Shared;
 using Harfien.Domain.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Harfien.Application.Services
 {
@@ -86,6 +87,19 @@ namespace Harfien.Application.Services
         public async Task<PagedResult<ServiceReadDto>> GetFilteredAsync(ServiceQueryDto query)
         {
             var result = await _serviceRepository.GetFilteredAsync(query);
+
+            return new PagedResult<ServiceReadDto>
+            {
+                Items = _mapper.Map<IEnumerable<ServiceReadDto>>(result.Items),
+                TotalCount = result.TotalCount,
+                PageNumber = result.PageNumber,
+                PageSize = result.PageSize
+            };
+        }
+
+        public async Task<PagedResult<ServiceReadDto>> GetServicesByCraftsmanIdAsync(int craftsmanId, int pageNumber, int pageSize)
+        {
+            var result = await _serviceRepository.GetServicesByCraftsmanIdAsync( craftsmanId,   pageNumber,   pageSize);
 
             return new PagedResult<ServiceReadDto>
             {

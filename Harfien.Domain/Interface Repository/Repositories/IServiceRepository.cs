@@ -9,6 +9,8 @@ namespace Harfien.Domain.Shared.Repositories
         Task<Service?> GetServiceByIdWithCraftData(int id);
         Task<List<Service>> GetServicesByCategory( int id);
         Task<PagedResult<Service>> GetFilteredAsync(ServiceQueryDto query);
+        Task<PagedResult<Service>> GetServicesByCraftsmanIdAsync(int craftsmanId, int pageNumber, int pageSize);
+
 
     }
 }

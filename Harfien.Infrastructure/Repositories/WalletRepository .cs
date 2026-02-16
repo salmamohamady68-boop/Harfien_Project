@@ -25,6 +25,7 @@ namespace Harfien.Infrastructure.Repositories
                 .FirstOrDefaultAsync(w => w.UserId == userId);
         }
 
+
         public async Task<bool> HasSufficientBalanceAsync(string userId, decimal amount)
         {
             var wallet = await _dbSet
@@ -34,6 +35,14 @@ namespace Harfien.Infrastructure.Repositories
 
             return wallet.Balance >= amount;
         }
+        public Task<Wallet?> GetByUserIdWithTransactionsAsync(string userId)
+        {
+           var wallet=_dbSet.Include(w => w.Transactions)
+                .ThenInclude(t=>t.Order)
+                .FirstOrDefaultAsync(w=>w.UserId==userId);
+            return wallet;
+        }
+       
     }
 
 }
