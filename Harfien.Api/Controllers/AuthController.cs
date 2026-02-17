@@ -76,6 +76,29 @@ namespace Harfien.Presentation.Controllers
 
 
         // ==========================
+        // Reject Craftsman (Admin only)
+        // ==========================
+        [Authorize(Roles = "Admin")]
+        [HttpPost("reject-craftsman/{id}")]
+        public async Task<IActionResult> Reject(int id)
+        {
+            try
+            {
+                var message = await _authService.RejectCraftsmanAsync(id);
+
+                if (message == null)
+                    return NotFound(new { error = "Craftsman not found" });
+
+                return Ok(new { message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+
+        // ==========================
         // Confirm Password (Admin only)
         // ==========================
 

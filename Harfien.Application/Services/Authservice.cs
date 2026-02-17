@@ -66,7 +66,9 @@ public class AuthService : IAuthService
             UserId = user.Id,
             CreatedAt = DateTime.UtcNow
         };
-        return await _jwtService.GenerateTokenAsync(user);
+        await _unitOfWork.Clients.AddAsync(client);
+        await _unitOfWork.SaveAsync();
+        return "Registration successful. You can now login.";
     }
 
     public async Task<string> RegisterCraftsmanAsync(RegisterCraftsmanDto dto)
@@ -175,6 +177,25 @@ public class AuthService : IAuthService
 
         return "Craftsman approved successfully. User can now log in.";
     }
+
+
+    public async Task<string> RejectCraftsmanAsync(int craftsmanId)
+    {
+       
+        var craftsman = await _craftsmanRepo.GetByIdAsync(craftsmanId);
+        if (craftsman == null)
+            return null; 
+        craftsman.IsApproved = false;
+
+        
+        await _craftsmanRepo.UpdateAsync(craftsman);
+
+
+        string userId = craftsman.UserId;
+
+        return "Craftsman Reject successfully.";
+    }
+
 
     public async Task<(bool Success, string Message)> ForgetPasswordAsync(ForgetPassword forgetPassword)
     {
