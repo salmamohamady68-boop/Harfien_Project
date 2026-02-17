@@ -2,6 +2,7 @@
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Enums;
+using Harfien.Domain.Shared;
 using Harfien.Domain.Shared.Repositories;
 
 namespace Harfien.Application.Services
@@ -17,11 +18,12 @@ namespace Harfien.Application.Services
             _orderRepository = orderRepository;
             _craftsmanRepository = craftsmanRepository;
         }
-
         public async Task<ReviewDto> AddReviewAsync(CreateReviewDto dto, String currentUserId)
         {
-            var order = await _orderRepository.GetByIdWithDetailsAsync(dto.OrderId)
-                ?? throw new Exception("Order not found.");
+            var order = await _orderRepository.GetByIdWithDetailsAsync(dto.OrderId);
+
+            if (order == null)
+                throw new Exception("Order not found.");
 
             if (order.Client?.User?.Id != currentUserId)
                 throw new Exception("You are not authorized to review this order.");
@@ -30,42 +32,29 @@ namespace Harfien.Application.Services
                 throw new Exception("You already reviewed this order.");
 
             if (order.Status != OrderStatus.Complete)
-                throw new Exception("You can only review completed orders.");       
+                throw new Exception("You can only review completed orders.");
 
-            if(order.Craftsman == null)
+            if (order.Craftsman == null)
                 throw new Exception("Craftsman information is missing for this order.");
 
-            if(dto.Rating < 1 || dto.Rating > 5)
+            if (dto.Rating < 1 || dto.Rating > 5)
                 throw new Exception("Rating must be between 1 and 5.");
 
             var review = new Review
             {
                 OrderId = order.Id,
                 Rating = dto.Rating,
-                //Comment = dto.Comment,
+                Comment = dto.Comment,
                 ClientId = order.ClientId,
                 CraftsmanId = order.CraftsmanId,
                 CreatedAt = DateTime.UtcNow
             };
-
+            //var craftsman = await _craftsmanRepository.GetByIdAsync(order.CraftsmanId);
+            //if (craftsman == null)
+            //    throw new Exception("Craftsman not found.");
+            order.Craftsman.Rating = await CalculateNewCraftsmanRating(oldAvg: order.Craftsman.Rating, newRating: dto.Rating, order);
+            _craftsmanRepository.Update(order.Craftsman);
             await _reviewRepository.AddAsync(review);
-
-            var craftsman = await _craftsmanRepository.GetByIdAsync(order.CraftsmanId);
-            if (craftsman != null)
-            {
-                var currentRating = craftsman.Rating;
-                var existingReviews = await _reviewRepository.GetAllByCraftsmanIdAsync(order.CraftsmanId);
-                int oldCount = existingReviews.Count;
-
-                // Calculate new average: ((OldAvg * OldCount) + NewRating) / (OldCount + 1)
-                double newTotalScore = (currentRating * oldCount) + dto.Rating;
-                double newAverage = newTotalScore / (oldCount + 1);
-
-                craftsman.Rating = Math.Round(newAverage, 2);
-
-                _craftsmanRepository.Update(craftsman);
-            }
-
             // could use unit of work for avoding confusion
             // This saves the Review AND the Craftsman update in a single transaction.
             await _reviewRepository.SaveAsync();
@@ -77,24 +66,56 @@ namespace Harfien.Application.Services
             {
                 Id = createdReview.Id,
                 Rating = createdReview.Rating,
-                //Comment = createdReview.Comment,
-                ClientName = createdReview.Order?.Client?.User?.FullName ?? "Unknown User"
+                Comment = createdReview.Comment,
+                ClientName = createdReview.Order?.Client?.User?.FullName ?? "Unknown User",
+                CreatedAt = DateOnly.FromDateTime(createdReview.CreatedAt)
             };
         }
-        
-        //public async Task<IEnumerable<ReviewDto>> GetReviewsByCraftsmanIdAsync(int craftsmanId)
-        //{
-        //    var reviews = await _reviewRepository.GetAllByCraftsmanIdAsync(craftsmanId);
+        private async Task<double> CalculateNewCraftsmanRating(double oldAvg, double newRating, Order order)
+        {
+            var existingReviews = await _reviewRepository.GetAllByCraftsmanIdAsync(order.CraftsmanId);
+            int oldCount = existingReviews.ToList().Count;
+            double newAverage = ((oldAvg * oldCount) + newRating) / (oldCount + 1);
+            return Math.Round(newAverage, 2);
+        }
 
-        //    // Map Entity to DTO
-        //    return reviews.Select(r => new ReviewDto
-        //    {
-        //        Id = r.Id,
-        //        ClientName = r.Order?.Client?.User?.FullName ?? "Unknown User",
-        //        Rating = r.Rating,
-        //      //Comment = r.Comment,
-        //        CreatedAt = r.CreatedAt
-        //    }).ToList();
-        //}
+        public async Task<IEnumerable<ReviewDto>> GetReviewsByCraftsmanIdAsync(int craftsmanId)
+        {
+            var reviews = await _reviewRepository.GetAllByCraftsmanIdAsync(craftsmanId);
+
+            // Map Entity to DTO
+            return reviews.Select(r => new ReviewDto
+            {
+                Id = r.Id,
+                ClientName = r.Order?.Client?.User?.FullName ?? "Unknown User",
+                Rating = r.Rating,
+                Comment = r.Comment,
+                CreatedAt = DateOnly.FromDateTime(r.CreatedAt)
+            }).ToList();
+        }
+        public async Task<PagedResult<ReviewDto>> GetPagedReviewsByCraftsmanIdAsync(int craftsmanId, int pageNumber, int pageSize)
+        {
+            pageNumber = pageNumber < 1 ? 1 : pageNumber;
+            pageSize = pageSize < 1 ? 5 : pageSize;
+
+            var (reviews, totalCount) = await _reviewRepository.GetPagedByCraftsmanIdAsync(craftsmanId, pageNumber, pageSize);
+
+            var dtos = reviews.Select(r => new ReviewDto
+            {
+                Id = r.Id,
+                ClientName = r.Order?.Client?.User?.FullName ?? "Unknown User",
+                Rating = r.Rating,
+                Comment = r.Comment,
+                CreatedAt = DateOnly.FromDateTime(r.CreatedAt)
+            }).ToList();
+
+            return new PagedResult<ReviewDto>
+            {
+                Items = dtos,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
     }
 }
