@@ -23,10 +23,11 @@ namespace Harfien.Presentation.Controllers
         public async Task<IActionResult> GetMyNotifications()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
+            if (userId == null)
+                return BadRequest("No Have Notification");
             var notifications =
                 await _notificationService.GetUserNotificationsAsync(userId);
-
+           
             return Ok(notifications);
         }
 

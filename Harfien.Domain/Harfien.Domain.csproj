@@ -11,11 +11,6 @@
 
 
 
-    <Folder Include="Entities\" />
-
-
-
-
     <Folder Include="Interface Repository\Services\" />
    
   </ItemGroup>

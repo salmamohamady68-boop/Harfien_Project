@@ -1,16 +1,15 @@
-﻿using Harfien.Application.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Harfien.Application.DTO.Chat;
+using Harfien.Domain.Shared;
 
 namespace Harfien.Application.Interfaces
 {
-  
     public interface IChatService
     {
-        Task<int> CreateChatAsync(AddChatDto dto, string userId);
-        Task<object> GetByOrderIdAsync(int orderId);
+        Task SendMessageAsync(string senderId, SendMessageRequest dto);
+        Task<List<MessageDto>> GetConversationAsync(string user1, string user2);
+
+        Task<List<ChatListDto>> GetChatListAsync(string currentUserId);
+        Task MarkAsReadAsync(string senderId, string receiverId);
+
     }
 }
