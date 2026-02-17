@@ -12,6 +12,8 @@ namespace Harfien.Domain.Shared.Repositories
     {
         Task<IEnumerable<WalletTransaction>> GetByWalletIdAsync(int walletId);
         Task<IEnumerable<WalletTransaction>> GetByOrderIdAsync(int orderId);
+        Task<List<WalletTransaction>> GetTransactionsByUserIdAsync(string userId, int skip, int take);
+        Task<int> GetTransactionsCountByUserIdAsync(string userId);
     }
 
 }

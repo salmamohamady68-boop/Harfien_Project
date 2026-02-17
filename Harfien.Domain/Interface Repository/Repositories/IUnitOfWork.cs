@@ -14,6 +14,9 @@ namespace Harfien.Domain.Shared.Repositories
         IServiceCategoryRepository ServiceCategories { get; }
         IComplaintRepository ComplaintRepository { get; }
 
+        IWalletRepository Wallets {  get; } 
+        IPaymentRepository Payments {  get; }
+
         Task<IDbContextTransaction> BeginTransactionAsync();
         ICraftsmanRepository Craftsmen { get; }
         IClientRepository Clients {  get; }

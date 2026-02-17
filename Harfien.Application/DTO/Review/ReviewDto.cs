@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Application.DTO
+namespace Harfien.Application.DTO.Review
 {
     public class ReviewDto
     {
@@ -12,6 +12,6 @@ namespace Harfien.Application.DTO
         public string ClientName { get; set; }
         public int Rating { get; set; }
         public string? Comment { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateOnly CreatedAt { get; set; }
     }
 }

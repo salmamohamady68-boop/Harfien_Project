@@ -16,6 +16,8 @@ namespace Harfien.Infrastructure.Repositories
         private readonly HarfienDbContext _context;
         private IServiceCategoryRepository _serviceCategories;
         private IComplaintRepository _complaintRepository;
+        private IWalletRepository _walletRepository;
+        private IPaymentRepository _paymentRepository;
 
 
         public UnitOfWork(HarfienDbContext context,IClientRepository clients,
@@ -29,7 +31,26 @@ namespace Harfien.Infrastructure.Repositories
         public IClientRepository Clients { get; }
         public ICraftsmanRepository Craftsmen { get; }
 
-      
+        public IWalletRepository Wallets
+        {
+            get
+            {
+                if (_walletRepository == null)
+                    _walletRepository = new WalletRepository(_context);
+                return _walletRepository;
+            }
+        }
+
+        public IPaymentRepository Payments
+        {
+            get
+            {
+                if (_paymentRepository == null)
+                    _paymentRepository = new PaymentRepository(_context);
+                return _paymentRepository;
+            }
+        }
+
 
         public IServiceCategoryRepository ServiceCategories
         {

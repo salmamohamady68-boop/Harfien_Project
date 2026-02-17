@@ -2,13 +2,9 @@ using Harfien.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Reflection.Emit;
 
 namespace Harfien.DataAccess
 {
-
-
     public class HarfienDbContext : IdentityDbContext<ApplicationUser>
     {
         public HarfienDbContext(DbContextOptions<HarfienDbContext> options)
@@ -16,7 +12,7 @@ namespace Harfien.DataAccess
         {
         }
 
-        #region   DbSets
+        #region DbSets
         public DbSet<Service> Services { get; set; } = null!;
         public DbSet<ServiceCategory> ServiceCategories { get; set; } = null!;
         public DbSet<Client> Clients { get; set; } = null!;
@@ -27,11 +23,11 @@ namespace Harfien.DataAccess
         public DbSet<Area> Areas { get; set; } = null!;
         public DbSet<Complaint> Complaints { get; set; } = null!;
         public DbSet<Review> Reviews { get; set; } = null!;
-
-        public DbSet<ChatMessage> ChatMessage { get; set; } = null!;
-
-        #endregion
+        public DbSet<ChatMessage> ChatMessages { get; set; } = null!;
+        public DbSet<CraftsmanAvailability> CraftsmanAvailabilities { get; set; } = null!;
         public DbSet<Notification> Notifications { get; set; } = null!;
+        public DbSet<Wallet> Wallet { get; set; } = null!;
+        #endregion
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -39,25 +35,41 @@ namespace Harfien.DataAccess
 
             builder.ApplyConfigurationsFromAssembly(typeof(HarfienDbContext).Assembly);
 
-            // ربط Client بالـ User
-            builder.Entity<Client>()
-                   .HasOne(c => c.User)
-                   .WithOne()
-                   .HasForeignKey<Client>(c => c.UserId)
-                   .OnDelete(DeleteBehavior.NoAction);
+            #region User Relations
 
-            // ربط Craftsman بالـ User
+            builder.Entity<Client>()
+                .HasOne(c => c.User)
+                .WithOne()
+                .HasForeignKey<Client>(c => c.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             builder.Entity<Craftsman>()
-                   .HasOne(c => c.User)
-                   .WithOne()
-                   .HasForeignKey<Craftsman>(c => c.UserId)
-                   .OnDelete(DeleteBehavior.NoAction);
+                .HasOne(c => c.User)
+                .WithOne()
+                .HasForeignKey<Craftsman>(c => c.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Wallet>()
+                .HasOne(w => w.User)
+                .WithOne(u => u.Wallet)
+                .HasForeignKey<Wallet>(w => w.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Notification>()
+                .HasOne(n => n.ApplicationUser)
+                .WithMany(u => u.Notifications)
+                .HasForeignKey(n => n.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            #endregion
+
+            #region Order Relations
 
             builder.Entity<Order>()
-           .HasOne(o => o.Client)
-           .WithMany(c => c.Orders)
-           .HasForeignKey(o => o.ClientId)
-           .OnDelete(DeleteBehavior.NoAction);
+                .HasOne(o => o.Client)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(o => o.ClientId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<Order>()
                 .HasOne(o => o.Craftsman)
@@ -67,22 +79,43 @@ namespace Harfien.DataAccess
 
             builder.Entity<Order>()
                 .HasOne(o => o.Service)
-                .WithMany(s => s.Orders) // عندك ICollection<Order> بالفعل
+                .WithMany(s => s.Orders)
                 .HasForeignKey(o => o.ServiceId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-
             builder.Entity<Order>()
-                // ربط Order بالـ Payment
                 .HasOne(o => o.Payment)
                 .WithOne(p => p.Order)
                 .HasForeignKey<Payment>(p => p.OrderId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<Order>()
-                // تحديد الـ decimal precision للـ Amount
                 .Property(o => o.Amount)
-                .HasPrecision(18, 2);  // أو HasColumnType("decimal(18,2)")
+                .HasPrecision(18, 2);
+
+            #endregion
+
+            #region Service Relations
+
+            builder.Entity<Service>()
+                .HasOne(s => s.ServiceCategory)
+                .WithMany(c => c.Services)
+                .HasForeignKey(s => s.ServiceCategoryId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Service>()
+                .HasOne(s => s.Craftsman)
+                .WithMany(c => c.CraftsmanServices)
+                .HasForeignKey(s => s.CraftsmanId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Service>()
+                .Property(s => s.Price)
+                .HasPrecision(18, 2);
+
+            #endregion
+
+            #region Chat
 
             builder.Entity<ChatMessage>(entity =>
             {
@@ -98,21 +131,14 @@ namespace Harfien.DataAccess
                 entity.HasIndex(m => new { m.SenderId, m.ReceiverId });
             });
 
-            //// ربط Order بالـ Payment
-            //builder.Entity<Order>()
-            //       .HasOne(o => o.Payment)
-            //       .WithOne(p => p.Order)
-            //       .HasForeignKey<Payment>(p => p.OrderId);
+            #endregion
 
+            #region Decimal Fixes
 
+            builder.Entity<Payment>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2);
 
-
-            // ربط Service بالـ ServiceCategory
-            builder.Entity<Service>()
-                       .HasOne(s => s.ServiceCategory)
-                       .WithMany(c => c.Services)
-                       .HasForeignKey(s => s.ServiceCategoryId)
-                       .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Wallet>()
                 .HasOne(w => w.User)
                 .WithOne(u => u.Wallet)
@@ -135,30 +161,32 @@ namespace Harfien.DataAccess
                 .OnDelete(DeleteBehavior.Restrict);
 
 
-            builder.Entity<Service>()
-              .HasOne(s => s.Craftsman)
-              .WithMany(c => c.CraftsmanServices)
-              .HasForeignKey(s => s.CraftsmanId)
-              .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<WalletTransaction>()
+                .Property(w => w.Amount)
+                .HasPrecision(18, 2);
 
-        var fixedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            //SeedRoles
+            builder.Entity<SubscriptionPlan>()
+                .Property(s => s.Price)
+                .HasPrecision(18, 2);
+
+            #endregion
+
+            #region Seed Data
+
+            var fixedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
             builder.Entity<IdentityRole>().HasData(
-               new IdentityRole { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
-               new IdentityRole { Id = "2", Name = "Carftsman", NormalizedName = "CRAFTSMAN" },
-               new IdentityRole { Id = "3", Name = "Client", NormalizedName = "CLIENT" }
+                new IdentityRole { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
+                new IdentityRole { Id = "2", Name = "Craftsman", NormalizedName = "CRAFTSMAN" },
+                new IdentityRole { Id = "3", Name = "Client", NormalizedName = "CLIENT" }
+            );
 
-               );
-
-            //Seed Admin Data
             var hasher = new PasswordHasher<ApplicationUser>();
-
-
 
             var adminUser = new ApplicationUser
             {
                 Id = "ADMIN_ID",
-                UserName = "Admin@gamil.com",
+                UserName = "Admin@gmail.com",
                 NormalizedUserName = "ADMIN@GMAIL.COM",
                 Email = "Admin@gmail.com",
                 NormalizedEmail = "ADMIN@GMAIL.COM",
@@ -169,27 +197,21 @@ namespace Harfien.DataAccess
                 FullName = "Admin",
                 Address = "Cairo",
                 CreatedAt = fixedDate,
-                IsActive = true,
-                AreaId = null
+                IsActive = true
             };
 
-
-
-            //Make HashPassword For Admin Account
             adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin123456");
 
             builder.Entity<ApplicationUser>().HasData(adminUser);
 
-            //Assign Role To Admin
             builder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
                     RoleId = "1",
-                    UserId = "ADMIN_ID",
-                }
-                );
+                    UserId = "ADMIN_ID"
+                });
+
+            #endregion
         }
     }
 }
-
-

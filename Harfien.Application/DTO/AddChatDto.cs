@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Harfien.Application.DTO
 {
-    public class CreateReviewDto
+    public class AddChatDto
     {
         public int OrderId { get; set; }
-        public int Rating { get; set; } // 1 to 5
-        public string? Comment { get; set; }
     }
+
 }
