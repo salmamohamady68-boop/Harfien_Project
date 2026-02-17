@@ -65,6 +65,10 @@ namespace Harfien.Api
             builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
             builder.Services.AddScoped<IWalletRepository, WalletRepository>();
             builder.Services.AddScoped<IComplaintService, ComplaintService>();   
+
+
+            builder.Services.AddScoped<IWalletTransactionRepository,WalletTransactionRepository>();
+            builder.Services.AddScoped<IWalletTransactionService, WalletTransactionService>();
             // =========================
             // JWT Authentication (مرة واحدة)
             // =========================

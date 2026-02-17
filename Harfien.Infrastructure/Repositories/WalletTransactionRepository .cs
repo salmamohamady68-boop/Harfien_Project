@@ -44,6 +44,7 @@ namespace Harfien.Infrastructure.Repositories
                 .Take(take)
                 .ToListAsync();
         }
+
         public async Task<int> GetTransactionsCountByUserIdAsync(string userId)
         {
             return await _dbSet .CountAsync(t => t.Wallet.UserId == userId);

@@ -26,7 +26,7 @@ namespace Harfien.DataAccess
         public DbSet<ChatMessage> ChatMessages { get; set; } = null!;
         public DbSet<CraftsmanAvailability> CraftsmanAvailabilities { get; set; } = null!;
         public DbSet<Notification> Notifications { get; set; } = null!;
-        public DbSet<Wallet> Wallets { get; set; } = null!;
+        public DbSet<Wallet> Wallet { get; set; } = null!;
         #endregion
 
         protected override void OnModelCreating(ModelBuilder builder)
