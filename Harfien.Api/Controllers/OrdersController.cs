@@ -22,10 +22,10 @@ namespace Harfien.Presentation.Controllers
         private int GetCurrentUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userIdClaim))
-                throw new UnauthorizedAccessException("User not authenticated");
+            if (!int.TryParse(userIdClaim, out var userId))
+                throw new UnauthorizedAccessException("Invalid user ID");
+            return userId;
 
-            return int.Parse(userIdClaim);
         }
 
         /// <summary>
