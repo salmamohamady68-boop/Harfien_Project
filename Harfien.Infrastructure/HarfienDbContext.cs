@@ -117,17 +117,19 @@ namespace Harfien.DataAccess
 
             #region Chat
 
-            builder.Entity<ChatMessage>()
-                .HasOne(m => m.Sender)
-                .WithMany(u => u.SentMessages)
-                .HasForeignKey(m => m.SenderId)
-                .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<ChatMessage>(entity =>
+            {
+                entity.HasKey(m => m.Id);
 
-            builder.Entity<ChatMessage>()
-                .HasOne(m => m.Receiver)
-                .WithMany()
-                .HasForeignKey(m => m.ReceiverId)
-                .OnDelete(DeleteBehavior.NoAction);
+                entity.Property(m => m.Content)
+                      .IsRequired()
+                      .HasMaxLength(1000);
+
+                entity.Property(m => m.SentAt)
+                      .IsRequired();
+
+                entity.HasIndex(m => new { m.SenderId, m.ReceiverId });
+            });
 
             #endregion
 
@@ -138,8 +140,26 @@ namespace Harfien.DataAccess
                 .HasPrecision(18, 2);
 
             builder.Entity<Wallet>()
-                .Property(w => w.Balance)
-                .HasPrecision(18, 2);
+                .HasOne(w => w.User)
+                .WithOne(u => u.Wallet)
+                .HasForeignKey<Wallet>(w => w.UserId);
+            builder.Entity<Notification>()
+                 .HasOne(n => n.ApplicationUser)
+                 .WithMany(u => u.Notifications)
+                 .HasForeignKey(n => n.UserId);
+
+            builder.Entity<ChatMessage>()
+        .HasOne(m => m.Sender)
+        .WithMany()
+        .HasForeignKey(m => m.SenderId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ChatMessage>()
+                .HasOne(m => m.Receiver)
+                .WithMany()
+                .HasForeignKey(m => m.ReceiverId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             builder.Entity<WalletTransaction>()
                 .Property(w => w.Amount)

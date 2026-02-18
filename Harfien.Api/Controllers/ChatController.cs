@@ -1,3 +1,8 @@
+﻿using Harfien.Application.DTO.Chat;
+using Harfien.Application.Interfaces;
+using Harfien.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 ﻿using Harfien.Application.DTO;
 using Harfien.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +11,7 @@ using System.Security.Claims;
 
 namespace Harfien.Presentation.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ChatController : ControllerBase
@@ -17,34 +23,53 @@ namespace Harfien.Presentation.Controllers
             _chatService = chatService;
         }
 
-        // POST: api/chat
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> Create([FromBody] AddChatDto dto)
+        [HttpPost("send")]
+        public async Task<IActionResult> Send(SendMessageRequest dto)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
+            var senderId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (senderId == null)
                 return Unauthorized();
 
-            try
-            {
-                var chatId = await _chatService.CreateChatAsync(dto, userId);
-                return Ok(chatId);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _chatService.SendMessageAsync(senderId, dto);
+
+            return Ok();
         }
 
-        // GET: api/chat/order/5
-        [HttpGet("order/{orderId}")]
-        public async Task<IActionResult> GetByOrderId(int orderId)
+        [HttpGet("conversation/{receiverId}")]
+        public async Task<IActionResult> GetConversation(string receiverId)
         {
-            var chat = await _chatService.GetByOrderIdAsync(orderId);
-            return Ok(chat);
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (currentUserId == null)
+                return Unauthorized();
+
+            var messages = await _chatService
+                .GetConversationAsync(currentUserId, receiverId);
+
+            return Ok(messages);
         }
+
+        [HttpGet("chat-list")]
+        public async Task<IActionResult> GetChatList()
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var chats = await _chatService.GetChatListAsync(currentUserId);
+
+            return Ok(chats);
+        }
+
+        [HttpPost("mark-read/{senderId}")]
+        public async Task<IActionResult> MarkAsRead(string senderId)
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            await _chatService.MarkAsReadAsync(senderId, currentUserId);
+
+            return Ok();
+        }
+
+
     }
 }
-
-
