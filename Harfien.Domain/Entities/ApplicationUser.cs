@@ -24,8 +24,7 @@ using System;
         public ICollection<Notification>? Notifications { get; set; }
         public ICollection<ChatMessage>? SentMessages { get; set; }
 
-        public ICollection<Order> ClientOrders { get; set; } = new List<Order>();
-        public ICollection<Order> CraftsmanOrders { get; set; } = new List<Order>();
+      
 
 
       

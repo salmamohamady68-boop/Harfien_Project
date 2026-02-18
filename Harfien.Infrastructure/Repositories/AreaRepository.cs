@@ -18,6 +18,12 @@ namespace Harfien.Infrastructure.Repositories
         {
             return await _dbSet.ToListAsync();
         }
+
+        public async Task<IEnumerable<Area>> GetAllByCityIdAsync(int cityId)
+        {
+            return await _dbSet.Where(a => a.CityId == cityId).ToListAsync();
+        }
+
         public async Task<Area?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);

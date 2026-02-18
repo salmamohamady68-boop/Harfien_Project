@@ -1,4 +1,5 @@
-﻿using Harfien.Application.DTO;
+﻿using Harfien.Application.DTO.Review;
+using Harfien.Domain.Shared;
 
 namespace Harfien.Application.Interfaces
 {
@@ -6,5 +7,6 @@ namespace Harfien.Application.Interfaces
     {
         Task<ReviewDto> AddReviewAsync(CreateReviewDto dto, String currentUserId);
         Task<IEnumerable<ReviewDto>> GetReviewsByCraftsmanIdAsync(int craftsmanId);
+        Task<PagedResult<ReviewDto>> GetPagedReviewsByCraftsmanIdAsync(int craftsmanId, int pageNumber, int pageSize);
     }
 }

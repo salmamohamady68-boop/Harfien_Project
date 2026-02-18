@@ -8,7 +8,8 @@ namespace Harfien.Application.Interfaces
         Task<string> RegisterClientAsync(RegisterClientDto dto);
         Task <string> RegisterCraftsmanAsync(RegisterCraftsmanDto dto);
         Task<LoginResponse> LoginAsync(loginDto dto);
-        Task<string> ApproveCraftsmanAsync(int craftsmanId);
+        Task<string> ApproveCraftsmanAsync(int craftsmanId); 
+        Task<string> RejectCraftsmanAsync(int craftsmanId);
         Task<(bool Success, string Message)> ForgetPasswordAsync(ForgetPassword forgetPassword);
         Task<string?> VerifyResetCode(VerifyResetCode dto);
         Task<string?> ResetPassword(ResetPassword dto);

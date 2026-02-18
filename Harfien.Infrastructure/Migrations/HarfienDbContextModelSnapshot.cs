@@ -135,7 +135,7 @@ namespace Harfien.Infrastructure.Migrations
                             Id = "ADMIN_ID",
                             AccessFailedCount = 0,
                             Address = "Cairo",
-                            ConcurrencyStamp = "d1734375-da41-4ae1-bf01-5edbf43a9672",
+                            ConcurrencyStamp = "06a78b48-cb6b-4ed7-836f-bf7d7d9bd6b5",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "Admin@gmail.com",
                             EmailConfirmed = true,
@@ -144,12 +144,12 @@ namespace Harfien.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFi844h3i7Nfq8jITQKJa16QIo1hso3JeCshSKjrWsNKOLrtQk+wyOuBM26QLPJsUQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEH2pzDRlRnL9gi5jTmAQpgWW2hgEGqOc8wUc0UBtVgW8fYdZVC8YA+hntdzkUk0qfA==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "2e98b523-d2e0-449d-abc2-3da210f288e5",
+                            SecurityStamp = "df87c994-fd37-45dc-8503-83edecce0356",
                             TwoFactorEnabled = false,
-                            UserName = "Admin@gamil.com"
+                            UserName = "Admin@gmail.com"
                         });
                 });
 
@@ -215,36 +215,6 @@ namespace Harfien.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Harfien.Domain.Entities.Chat", b =>
-                {
-                    b.Property<int>("ChatId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChatId"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("User1Id")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("User2Id")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("orderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ChatId");
-
-                    b.ToTable("Chat");
-                });
-
             modelBuilder.Entity("Harfien.Domain.Entities.ChatMessage", b =>
                 {
                     b.Property<int>("Id")
@@ -253,18 +223,19 @@ namespace Harfien.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ChatId")
-                        .HasColumnType("int");
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
-
-                    b.Property<string>("MessageText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReceiverId")
                         .IsRequired()
@@ -279,13 +250,13 @@ namespace Harfien.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChatId");
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("ReceiverId");
 
-                    b.HasIndex("SenderId");
+                    b.HasIndex("SenderId", "ReceiverId");
 
-                    b.ToTable("ChatMessage");
+                    b.ToTable("ChatMessages");
                 });
 
             modelBuilder.Entity("Harfien.Domain.Entities.City", b =>
@@ -439,6 +410,39 @@ namespace Harfien.Infrastructure.Migrations
                     b.ToTable("Craftsmen");
                 });
 
+            modelBuilder.Entity("Harfien.Domain.Entities.CraftsmanAvailability", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CraftsmanId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("From")
+                        .HasColumnType("time");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<TimeSpan>("To")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CraftsmanId");
+
+                    b.ToTable("CraftsmanAvailabilities");
+                });
+
             modelBuilder.Entity("Harfien.Domain.Entities.Notification", b =>
                 {
                     b.Property<int>("Id")
@@ -469,7 +473,7 @@ namespace Harfien.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notification");
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Harfien.Domain.Entities.Order", b =>
@@ -483,12 +487,6 @@ namespace Harfien.Infrastructure.Migrations
                     b.Property<decimal>("Amount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ApplicationUserId1")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
@@ -514,10 +512,6 @@ namespace Harfien.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("ApplicationUserId1");
-
                     b.HasIndex("ClientId");
 
                     b.HasIndex("CraftsmanId");
@@ -536,6 +530,7 @@ namespace Harfien.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -617,6 +612,7 @@ namespace Harfien.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ServiceCategoryId")
@@ -681,6 +677,7 @@ namespace Harfien.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -731,6 +728,7 @@ namespace Harfien.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Balance")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -748,7 +746,7 @@ namespace Harfien.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Wallet");
+                    b.ToTable("Wallets");
                 });
 
             modelBuilder.Entity("Harfien.Domain.Entities.WalletTransaction", b =>
@@ -760,6 +758,7 @@ namespace Harfien.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -830,7 +829,7 @@ namespace Harfien.Infrastructure.Migrations
                         new
                         {
                             Id = "2",
-                            Name = "Carftsman",
+                            Name = "Craftsman",
                             NormalizedName = "CRAFTSMAN"
                         },
                         new
@@ -976,25 +975,21 @@ namespace Harfien.Infrastructure.Migrations
 
             modelBuilder.Entity("Harfien.Domain.Entities.ChatMessage", b =>
                 {
-                    b.HasOne("Harfien.Domain.Entities.Chat", "Chat")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Harfien.Domain.Entities.ApplicationUser", null)
+                        .WithMany("SentMessages")
+                        .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("Harfien.Domain.Entities.ApplicationUser", "Receiver")
                         .WithMany()
                         .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Harfien.Domain.Entities.ApplicationUser", "Sender")
-                        .WithMany("SentMessages")
+                        .WithMany()
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Chat");
 
                     b.Navigation("Receiver");
 
@@ -1034,27 +1029,30 @@ namespace Harfien.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Harfien.Domain.Entities.Notification", b =>
+            modelBuilder.Entity("Harfien.Domain.Entities.CraftsmanAvailability", b =>
                 {
-                    b.HasOne("Harfien.Domain.Entities.ApplicationUser", "ApplicationUsers")
-                        .WithMany("Notifications")
-                        .HasForeignKey("UserId")
+                    b.HasOne("Harfien.Domain.Entities.Craftsman", "Craftsman")
+                        .WithMany("Availabilities")
+                        .HasForeignKey("CraftsmanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ApplicationUsers");
+                    b.Navigation("Craftsman");
+                });
+
+            modelBuilder.Entity("Harfien.Domain.Entities.Notification", b =>
+                {
+                    b.HasOne("Harfien.Domain.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("Harfien.Domain.Entities.Order", b =>
                 {
-                    b.HasOne("Harfien.Domain.Entities.ApplicationUser", null)
-                        .WithMany("ClientOrders")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("Harfien.Domain.Entities.ApplicationUser", null)
-                        .WithMany("CraftsmanOrders")
-                        .HasForeignKey("ApplicationUserId1");
-
                     b.HasOne("Harfien.Domain.Entities.Client", "Client")
                         .WithMany("Orders")
                         .HasForeignKey("ClientId")
@@ -1141,7 +1139,7 @@ namespace Harfien.Infrastructure.Migrations
                     b.HasOne("Harfien.Domain.Entities.ApplicationUser", "User")
                         .WithOne("Wallet")
                         .HasForeignKey("Harfien.Domain.Entities.Wallet", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -1217,10 +1215,6 @@ namespace Harfien.Infrastructure.Migrations
 
             modelBuilder.Entity("Harfien.Domain.Entities.ApplicationUser", b =>
                 {
-                    b.Navigation("ClientOrders");
-
-                    b.Navigation("CraftsmanOrders");
-
                     b.Navigation("Notifications");
 
                     b.Navigation("SentMessages");
@@ -1231,11 +1225,6 @@ namespace Harfien.Infrastructure.Migrations
             modelBuilder.Entity("Harfien.Domain.Entities.Area", b =>
                 {
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("Harfien.Domain.Entities.Chat", b =>
-                {
-                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Harfien.Domain.Entities.City", b =>
@@ -1252,6 +1241,8 @@ namespace Harfien.Infrastructure.Migrations
 
             modelBuilder.Entity("Harfien.Domain.Entities.Craftsman", b =>
                 {
+                    b.Navigation("Availabilities");
+
                     b.Navigation("CraftsmanServices");
 
                     b.Navigation("Orders");

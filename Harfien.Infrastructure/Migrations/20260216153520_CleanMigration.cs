@@ -5,7 +5,7 @@
 namespace Harfien.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddResetColumnsToApplicationUser : Migration
+    public partial class CleanMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,7 @@ namespace Harfien.Infrastructure.Migrations
                 keyColumn: "Id",
                 keyValue: "ADMIN_ID",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "4474bdb8-9591-4b90-a46f-86b828a09753", "AQAAAAIAAYagAAAAEDxlTb5/0unSSn9yGWgSsovDrl8WaprZEs62lTPFxhsWAq2t3e/3qT9IlXi15B8FhQ==", "d29a8cda-e482-4b2c-9592-f057b2804d6b" });
+                values: new object[] { "06a78b48-cb6b-4ed7-836f-bf7d7d9bd6b5", "AQAAAAIAAYagAAAAEH2pzDRlRnL9gi5jTmAQpgWW2hgEGqOc8wUc0UBtVgW8fYdZVC8YA+hntdzkUk0qfA==", "df87c994-fd37-45dc-8503-83edecce0356" });
         }
 
         /// <inheritdoc />
@@ -26,7 +26,7 @@ namespace Harfien.Infrastructure.Migrations
                 keyColumn: "Id",
                 keyValue: "ADMIN_ID",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
-                values: new object[] { "bbe12a76-7b09-4b33-9772-ac1308e8932f", "AQAAAAIAAYagAAAAENth+esUJykMl/Qt3cruUXN5UHorCE06y4XV+G3+VEZffp0RLtp8MBqc1oMvXxsBXA==", "5bc7d50d-12da-4ae4-9746-b9078c6375f4" });
+                values: new object[] { "169c78ea-252f-4f9b-ab72-452a570214f2", "AQAAAAIAAYagAAAAEOm4kSQAwMLXzhzi70EoKf8WJUh9Bl1M9u4u3B0oEUHXIDR+RGyVNsKH/4rx9enfSA==", "1a843e63-1923-487d-b898-bb66154ab73d" });
         }
     }
 }

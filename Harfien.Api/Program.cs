@@ -1,9 +1,11 @@
 ﻿using Harfien.Application;
 using Harfien.Application.Autherization;
 using Harfien.Application.Interfaces;
+using Harfien.Application.Interfaces.payment_interfaces;
 using Harfien.Application.Services;
 using Harfien.DataAccess;
 using Harfien.Domain.Entities;
+using Harfien.Domain.Interface_Repository;
 using Harfien.Domain.Interface_Repository.Repositories;
 using Harfien.Domain.Shared.Repositories;
 using Harfien.Infrastructure.Repositories;
@@ -59,10 +61,24 @@ namespace Harfien.Api
             builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
- 
-           
 
+            // chat 
+            builder.Services.AddScoped<IMessageRepositry, MessageRepositry>();
+            builder.Services.AddScoped<IChatService, ChatService>();
+            builder.Services.AddScoped<IChatNotifier, ChatNotifier>();
+            builder.Services.AddSignalR();
+
+
+
+
+          
+            builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+            builder.Services.AddScoped<IWalletRepository, WalletRepository>();
             builder.Services.AddScoped<IComplaintService, ComplaintService>();   
+
+
+            builder.Services.AddScoped<IWalletTransactionRepository,WalletTransactionRepository>();
+            builder.Services.AddScoped<IWalletTransactionService, WalletTransactionService>();
             // =========================
             // JWT Authentication (مرة واحدة)
             // =========================
@@ -104,13 +120,17 @@ namespace Harfien.Api
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+            builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
 
             builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
 
             builder.Services.AddScoped<ICityRepository, CityRepository>();
+            builder.Services.AddScoped<IAreaRepository, AreaRepository>();
 
-
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IWalletService, WalletService>();
             // =========================
             //services
             // =========================
@@ -124,6 +144,8 @@ namespace Harfien.Api
 
             builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<ICityService, CityService>();
+            builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
+            builder.Services.AddScoped<IAreaService, AreaService>();
 
 
             // =========================
@@ -222,6 +244,7 @@ namespace Harfien.Api
             app.MapControllers();
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.MapHub<ChatHub>("/chatHub");
 
             await app.RunAsync();
         }
