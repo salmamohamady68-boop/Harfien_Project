@@ -18,12 +18,12 @@ namespace Harfien.Infrastructure.Repositories
 
         public async Task AddAsync(ChatMessage message)
         {
-            await _context.ChatMessage.AddAsync(message);
+            await _context.ChatMessages.AddAsync(message);
         }
 
         public async Task<List<ChatMessage>> GetConversationAsync(string user1, string user2)
         {
-            return await _context.ChatMessage
+            return await _context.ChatMessages
                 .Where(m =>
                     (m.SenderId == user1 && m.ReceiverId == user2) ||
                     (m.SenderId == user2 && m.ReceiverId == user1))
@@ -39,7 +39,7 @@ namespace Harfien.Infrastructure.Repositories
 
         public async Task<List<ChatListDto>> GetChatListAsync(string currentUserId)
         {
-            var messages = await _context.ChatMessage
+            var messages = await _context.ChatMessages
                 .Where(m => m.SenderId == currentUserId || m.ReceiverId == currentUserId)
                 .ToListAsync();
 
@@ -61,7 +61,7 @@ namespace Harfien.Infrastructure.Repositories
 
         public async Task MarkAsReadAsync(string senderId, string receiverId)
         {
-            var unreadMessages = await _context.ChatMessage
+            var unreadMessages = await _context.ChatMessages
                 .Where(m =>
                     m.SenderId == senderId &&
                     m.ReceiverId == receiverId &&
