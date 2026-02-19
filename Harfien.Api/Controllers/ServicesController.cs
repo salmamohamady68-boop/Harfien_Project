@@ -17,7 +17,7 @@ namespace Harfien.Presentation.Controllers
         {
             _serviceService = serviceService;
         }
-        [Authorize(Roles = "Carftsman")]
+        [Authorize(Roles = "Craftsman")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]ServiceCreateDto serviceCreateDto)
         {
@@ -28,14 +28,14 @@ namespace Harfien.Presentation.Controllers
             }
             return BadRequest();
         }
-        [Authorize(Roles = "Carftsman")]
+        [Authorize(Roles = "Craftsman")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, ServiceUpdateDto dto)
         {
             var result = await _serviceService.UpdateServiceAsync(id, dto);
             return Ok(result);
         }
-        [Authorize(Roles = "Carftsman")]
+        [Authorize(Roles = "Craftsman")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
