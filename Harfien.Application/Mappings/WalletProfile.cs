@@ -29,7 +29,9 @@ namespace Harfien.Application.Mappings
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Amount))
                 .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.Service.Name))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
+                    .ForMember(dest => dest.CraftsmanName, opt => opt.MapFrom(src => src.Craftsman != null ? src.Craftsman.User.FullName : null))
+;
             CreateMap<Wallet, WalletDto>();
                 
         }

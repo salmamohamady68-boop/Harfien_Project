@@ -35,10 +35,13 @@ namespace Harfien.Infrastructure.Repositories
 
         public async Task<List<WalletTransaction>> GetTransactionsByUserIdAsync(string userId, int skip, int take)
         {
-            return await _dbSet
+                    return await _dbSet
                 .Where(t => t.Wallet.UserId == userId)
                 .Include(t => t.Order)
-                
+                    .ThenInclude(o => o.Service)
+                .Include(t => t.Order)
+                    .ThenInclude(o => o.Craftsman)
+                        .ThenInclude(u=>u.User)
                 .OrderByDescending(t => t.CreatedAt)
                 .Skip(skip)
                 .Take(take)

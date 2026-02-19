@@ -10,6 +10,7 @@ using Harfien.Domain.Entities;
 using Harfien.Domain.Interface_Repository.Repositories;
 using Harfien.Domain.Shared;
 using Harfien.Domain.Shared.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Harfien.Application.Services
 {
@@ -131,6 +132,46 @@ namespace Harfien.Application.Services
             return result;
         }
 
+
+
+
+        public async Task<PagedResult<ClientPaymentDto>> GetPaymentsByClientIdAsync(
+    string clientuserId, int pageNumber, int pageSize)
+        {
+           
+
+            var query = _walletRepo.GetPaymentsByClientId(clientuserId);
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(p => p.CreatedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(p => new ClientPaymentDto
+                {
+                    PaymentId = p.Id,
+                    Amount = p.Amount,
+                    Status = p.Status.ToString(),
+                    TransactionRef = p.TransactionRef,
+                    CreatedAt = p.CreatedAt,
+
+                    OrderId = p.Order.Id,
+                    ServiceName = p.Order.Service.Name,
+                    CraftsmanName = p.Order.Craftsman.User.FullName,
+                    ScheduledAt = p.Order.ScheduledAt,
+                    OrderAmount = p.Order.Amount
+                })
+                .ToListAsync();
+
+            return new PagedResult<ClientPaymentDto>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
 
     }
 }
