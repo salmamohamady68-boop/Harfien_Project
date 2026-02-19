@@ -18,5 +18,7 @@ namespace Harfien.Application.Interfaces.payment_interfaces
         Task<bool> DeleteWalletAsync(string userId);
         Task<PagedResult<WalletTransactionDto>> GetTransactionsAsync(
             string userId, int pageNumber, int pageSize);
+      Task<PagedResult<ClientPaymentDto>> GetPaymentsByClientIdAsync(
+   string clientuserId, int pageNumber, int pageSize);
     }
 }

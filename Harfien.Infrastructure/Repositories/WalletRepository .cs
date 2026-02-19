@@ -24,6 +24,18 @@ namespace Harfien.Infrastructure.Repositories
                 .Include(w => w.Transactions)
                 .FirstOrDefaultAsync(w => w.UserId == userId);
         }
+        public IQueryable<Payment> GetPaymentsByClientId(string clientId)
+        {
+            return _context.Payments
+                .Where(p => p.Order.Client.UserId==clientId)
+                .Include(p => p.Order)
+                    .ThenInclude(o => o.Service)
+                .Include(p => p.Order)
+                    .ThenInclude(o => o.Craftsman)
+                        .ThenInclude(c => c.User);
+        }
+
+
 
 
         public async Task<bool> HasSufficientBalanceAsync(string userId, decimal amount)
@@ -37,9 +49,15 @@ namespace Harfien.Infrastructure.Repositories
         }
         public Task<Wallet?> GetByUserIdWithTransactionsAsync(string userId)
         {
-           var wallet=_dbSet.Include(w => w.Transactions)
-                .ThenInclude(t=>t.Order)
-                .FirstOrDefaultAsync(w=>w.UserId==userId);
+            var wallet =  _dbSet
+                     .Include(w => w.Transactions)
+                         .ThenInclude(t => t.Order)
+                             .ThenInclude(o => o.Craftsman)
+                             .ThenInclude(u=>u.User)
+                     .Include(w => w.Transactions)
+                         .ThenInclude(t => t.Order)
+                             .ThenInclude(o => o.Service)
+                     .FirstOrDefaultAsync(w => w.UserId == userId);
             return wallet;
         }
        
