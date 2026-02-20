@@ -245,7 +245,7 @@ namespace Harfien.Api
             app.UseSwagger();
             app.UseSwaggerUI();
             app.MapHub<ChatHub>("/chatHub");
-
+            app.MapHub<NotificationHub>("/notificationHub");
             await app.RunAsync();
         }
     }
