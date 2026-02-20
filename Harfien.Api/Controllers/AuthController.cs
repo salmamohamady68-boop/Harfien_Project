@@ -53,6 +53,23 @@ namespace Harfien.Presentation.Controllers
         }
 
         // ==========================
+        // Logout
+        // ==========================
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+                return Unauthorized(new { message = "User not authenticated" });
+
+            await _authService.LogoutAsync(userId);
+
+            return Ok(new { message = "Logged out successfully" });
+        }
+
+        // ==========================
         // Approve Craftsman (Admin only)
         // ==========================
         [Authorize(Roles = "Admin")]

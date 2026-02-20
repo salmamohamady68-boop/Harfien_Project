@@ -295,4 +295,16 @@ public class AuthService : IAuthService
             resetCode
         );
     }
+
+    public async Task LogoutAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user != null)
+        {
+            // Optional: Invalidate refresh tokens or perform cleanup
+            // For now, invalidate the security stamp to invalidate all tokens
+            await _userManager.UpdateSecurityStampAsync(user);
+        }
+    }
 }
