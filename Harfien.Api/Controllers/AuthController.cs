@@ -12,10 +12,11 @@ namespace Harfien.Presentation.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-
-        public AuthController(IAuthService authService)
+        private readonly IUserProfileService _profileService;
+        public AuthController(IAuthService authService, IUserProfileService profileService)
         {
             _authService = authService;
+            _profileService = profileService;
         }
 
         // ==========================
@@ -189,7 +190,27 @@ namespace Harfien.Presentation.Controllers
         }
 
 
+        [HttpGet("Profile")]
+        public async Task<IActionResult> GetMyProfile()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+                return Unauthorized();
 
+            var result = await _profileService.GetProfileAsync(userId);
+            return Ok(result);
+        }
+
+        [HttpPut("Update-Profile")]
+        public async Task<IActionResult> UpdateProfile(UpdateProfileDto dto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+                return Unauthorized();
+
+            var result = await _profileService.UpdateProfileAsync(userId, dto);
+            return Ok(result);
+        }
 
 
     }

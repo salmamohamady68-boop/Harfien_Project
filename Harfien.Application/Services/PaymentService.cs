@@ -53,7 +53,7 @@ namespace Harfien.Application.Services
                         Message = "Stripe token is required"
                     };
 
-                var order = await _orderRepo.GetByIdWithDetailsAsync(dto.OrderId);
+                var order = await _orderRepo.GetByIdAsync(dto.OrderId);
                 if (order == null)
                     return new PaymentResultDto { Success = false, Message = "Order not found" };
 

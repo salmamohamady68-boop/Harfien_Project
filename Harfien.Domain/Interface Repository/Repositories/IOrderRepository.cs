@@ -10,11 +10,11 @@ namespace Harfien.Domain.Shared.Repositories
 {
     public interface IOrderRepository : IGenericRepository<Order>
     {
-        Task<Order?> GetByIdWithDetailsAsync(int id);
-        Task<IEnumerable<Order>> GetAllWithDetailsAsync();
-        Task<IEnumerable<Order>> GetByClientIdAsync(int clientId);
-        Task<IEnumerable<Order>> GetByCraftsmanIdAsync(int craftsmanId);
-        Task<IEnumerable<Order>> GetByStatusAsync(OrderStatus status);
+        Task AddAsync(Order order);
+        Task<Order?> GetByIdAsync(int id);
+        Task<List<Order>> GetAllAsync();
+        Task UpdateAsync(Order order);
+        Task DeleteAsync(Order order);
     }
 
 }
