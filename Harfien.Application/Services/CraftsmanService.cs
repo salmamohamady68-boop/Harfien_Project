@@ -91,7 +91,7 @@ namespace Harfien.Application.Services
                     }).ToList(),
 
                 CompletedOrdersCount = craftsman.Orders
-                    .Count(o => o.Status == OrderStatus.Complete)
+                    .Count(o => o.Status == OrderStatus.Completed)
             };
         }
 
