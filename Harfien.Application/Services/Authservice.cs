@@ -91,7 +91,10 @@ public class AuthService : IAuthService
             Email = dto.Email,
             PhoneNumber = dto.PhoneNumber,
             FullName = dto.FullName,
-            AreaId = dto.CityId
+            AreaId = dto.AreaId,
+
+
+
         };
 
         // تسجيل المستخدم في Identity
