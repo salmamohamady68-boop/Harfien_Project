@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Harfien.Domain.Entities;
 
-namespace Harfien.Application.DTO
+namespace Harfien.Application.DTO.Service
 {
-    public class ServiceCreateDto
+    public class ServiceUpdateDto
     {
         [Required(ErrorMessage = "Name is required")]
         [MaxLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
@@ -28,6 +28,6 @@ namespace Harfien.Application.DTO
         [Required(ErrorMessage = "ServiceCategoryId is required")]
         [Range(1, int.MaxValue, ErrorMessage = "ServiceCategoryId must be greater than 0")]
         public int ServiceCategoryId { get; set; }
-        
+
     }
 }

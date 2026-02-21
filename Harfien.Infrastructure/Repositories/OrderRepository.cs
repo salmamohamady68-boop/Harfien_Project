@@ -49,6 +49,13 @@ namespace Harfien.Infrastructure.Repositories
                 => await _context.Orders
                     .Where(o => o.Status == status)
                     .ToListAsync();
+        public async Task<bool> ExistsAsync(int craftsmanId, DateTime scheduledAt)
+        {
+            return await _dbSet.AnyAsync(o =>
+                o.CraftsmanId == craftsmanId &&
+                o.ScheduledAt == scheduledAt
+            );
         }
+    }
     
 }

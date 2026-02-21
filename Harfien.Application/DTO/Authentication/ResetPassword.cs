@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Application.DTO
+namespace Harfien.Application.DTO.Authentication
 {
-    public class ForgetPassword
+    public class ResetPassword
     {
-        public string? Email { get; set; }
+        public string NewPassword { get; set; }
     }
 }

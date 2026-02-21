@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Application.DTO
+namespace Harfien.Application.DTO.Authentication
 {
-    public class VerifyResetCodeDto
+    public class VerifyResetCode
     {
         
-        public string ResetCode { get; set; }
+          
+            public string Code { get; set; }
     }
 }

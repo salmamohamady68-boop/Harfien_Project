@@ -1,4 +1,4 @@
-﻿using Harfien.Application.DTO;
+﻿using Harfien.Application.DTO.Complaint;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Enums;
 using System;

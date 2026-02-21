@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Application.DTO
+namespace Harfien.Application.DTO.Order
 {
     public class OrderInfoDto
     {

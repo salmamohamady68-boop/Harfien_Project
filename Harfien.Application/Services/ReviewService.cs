@@ -31,7 +31,7 @@ namespace Harfien.Application.Services
             if (await _reviewRepository.HasReviewForOrderAsync(order.Id))
                 throw new Exception("You already reviewed this order.");
 
-            if (order.Status != OrderStatus.Complete)
+            if (order.Status != OrderStatus.Completed)
                 throw new Exception("You can only review completed orders.");
 
             if (order.Craftsman == null)

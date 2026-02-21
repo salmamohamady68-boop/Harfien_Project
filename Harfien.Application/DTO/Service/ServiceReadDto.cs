@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Harfien.Domain.Entities;
 
-namespace Harfien.Application.DTO
+namespace Harfien.Application.DTO.Service
 {
     public class ServiceReadDto
     {
