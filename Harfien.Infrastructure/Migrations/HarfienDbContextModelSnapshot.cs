@@ -135,7 +135,7 @@ namespace Harfien.Infrastructure.Migrations
                             Id = "ADMIN_ID",
                             AccessFailedCount = 0,
                             Address = "Cairo",
-                            ConcurrencyStamp = "06a78b48-cb6b-4ed7-836f-bf7d7d9bd6b5",
+                            ConcurrencyStamp = "06085720-afac-412e-9027-dad298506737",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "Admin@gmail.com",
                             EmailConfirmed = true,
@@ -144,10 +144,10 @@ namespace Harfien.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH2pzDRlRnL9gi5jTmAQpgWW2hgEGqOc8wUc0UBtVgW8fYdZVC8YA+hntdzkUk0qfA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEInYMAL6SmAVi1PMZyuGo8a46ZnNAp/MPu4KBiRBWqpe8bhIk70gdw1EZuNRaXeUnw==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "df87c994-fd37-45dc-8503-83edecce0356",
+                            SecurityStamp = "e17e14e5-3bdb-48b9-88ed-757bb2a04c12",
                             TwoFactorEnabled = false,
                             UserName = "Admin@gmail.com"
                         });
@@ -728,7 +728,6 @@ namespace Harfien.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Balance")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -746,7 +745,7 @@ namespace Harfien.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Wallets");
+                    b.ToTable("Wallet");
                 });
 
             modelBuilder.Entity("Harfien.Domain.Entities.WalletTransaction", b =>

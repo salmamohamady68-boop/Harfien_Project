@@ -62,6 +62,7 @@ namespace Harfien.Api
             builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
+            builder.Services.AddScoped<ICraftsmanService, CraftsmanService>();
 
             // chat 
             builder.Services.AddScoped<IMessageRepositry, MessageRepositry>();
