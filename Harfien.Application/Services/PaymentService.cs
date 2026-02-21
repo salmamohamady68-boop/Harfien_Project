@@ -1,5 +1,4 @@
 ﻿
-
 using Stripe;
 using Harfien.Application.DTO.Payment;
 using Harfien.Application.Interfaces.payment_interfaces;
@@ -85,7 +84,10 @@ namespace Harfien.Application.Services
                 if (craftsman == null)
                     return new PaymentResultDto { Success = false, Message = "Craftsman not found" };
 
+
                 var craftsmanWallet = await _walletRepo.GetByUserIdAsync(craftsman.UserId);
+                bool isNewCraftsmanWallet = false;
+
                 if (craftsmanWallet == null)
                 {
                     craftsmanWallet = new Wallet
@@ -96,13 +98,17 @@ namespace Harfien.Application.Services
                         Transactions = new List<WalletTransaction>()
                     };
                     await _walletRepo.AddAsync(craftsmanWallet);
+                    isNewCraftsmanWallet = true;
                 }
 
                 var admin = await _userRepo.GetAdminAsync();
                 if (admin == null)
                     return new PaymentResultDto { Success = false, Message = "Admin user not found" };
 
+
                 var adminWallet = await _walletRepo.GetByUserIdAsync(admin.Id);
+                bool isNewAdminWallet = false;
+
                 if (adminWallet == null)
                 {
                     adminWallet = new Wallet
@@ -113,9 +119,8 @@ namespace Harfien.Application.Services
                         Transactions = new List<WalletTransaction>()
                     };
                     await _walletRepo.AddAsync(adminWallet);
+                    isNewAdminWallet = true;
                 }
-
-                // ===== Stripe Validation & Payment =====
 
                 var paymentMethodService = new PaymentMethodService();
                 var paymentMethod = await paymentMethodService.CreateAsync(new PaymentMethodCreateOptions
@@ -134,6 +139,7 @@ namespace Harfien.Application.Services
                         Message = "Failed to create payment method"
                     };
 
+
                 var paymentIntentService = new PaymentIntentService();
                 var paymentIntent = await paymentIntentService.CreateAsync(new PaymentIntentCreateOptions
                 {
@@ -144,30 +150,44 @@ namespace Harfien.Application.Services
                     Confirm = true
                 });
 
+
                 if (paymentIntent == null)
                     return new PaymentResultDto
                     {
                         Success = false,
                         Message = "Payment intent creation failed"
                     };
-                
-                    if (paymentIntent.Status != "succeeded")
-                    return new PaymentResultDto
-                    {
-                        Success = false,
-                        Message = $"Stripe payment failed: {paymentIntent.Status}"
-                    };
 
-                // ===== Split Payment =====
+                if (paymentIntent.Status != "succeeded")
+                    return new PaymentResultDto { Success = false, Message = "Stripe payment failed" };
+
 
                 decimal craftsmanShare = order.Amount * 0.9m;
                 decimal adminShare = order.Amount * 0.1m;
 
+
                 AddTransaction(craftsmanWallet, craftsmanShare, TransactionType.Credit, order.Id, "Order Payment Share");
                 AddTransaction(adminWallet, adminShare, TransactionType.Credit, order.Id, "Platform Commission");
 
-                _walletRepo.Update(craftsmanWallet);
-                _walletRepo.Update(adminWallet);
+
+                if (!isNewCraftsmanWallet)
+                {
+                    _walletRepo.Update(craftsmanWallet);
+                }
+                else
+                {
+                    await _walletRepo.SaveAsync();
+                }
+
+                if (!isNewAdminWallet)
+                {
+                    _walletRepo.Update(adminWallet);
+                }
+                else
+                {
+                    await _walletRepo.SaveAsync();
+                }
+
 
                 var payment = new Payment
                 {
@@ -181,11 +201,10 @@ namespace Harfien.Application.Services
 
                 await _paymentRepo.AddAsync(payment);
                 _orderRepo.Update(order);
-
                 await _paymentRepo.SaveAsync();
-
                 return new PaymentResultDto { Success = true, Message = "Payment successful via card" };
             }
+
             catch (StripeException stripeEx)
             {
                 return new PaymentResultDto
@@ -196,157 +215,9 @@ namespace Harfien.Application.Services
             }
             catch (Exception ex)
             {
-                return new PaymentResultDto
-                {
-                    Success = false,
-                    Message = $"Payment failed: {ex.Message}"
-                };
+                return new PaymentResultDto { Success = false, Message = $"Payment failed: {ex.Message}" };
             }
         }
-
-
-        //public async Task<PaymentResultDto> PayOrderWithCardAsync(CreatePaymentDto dto, string clientId)
-        //{
-        //    try
-        //    {
-                
-        //        var order = await _orderRepo.GetByIdWithDetailsAsync(dto.OrderId);
-        //        if (order == null)
-        //            return new PaymentResultDto { Success = false, Message = "Order not found" };
-
-        //        if (order.ClientId == null)
-        //            return new PaymentResultDto { Success = false, Message = "Order has no client associated" };
-
-        //        var client = await _clientRepo.GetByIdAsync(order.ClientId);
-        //        if (client == null)
-        //            return new PaymentResultDto { Success = false, Message = "Client not found" };
-
-        //        if (client.UserId != clientId)
-        //            return new PaymentResultDto { Success = false, Message = "Unauthorized" };
-
-        //        bool isPaid = order.Payment != null && order.Payment.Status == PaymentStatus.Paid;
-        //        if (isPaid)
-        //            return new PaymentResultDto { Success = false, Message = "Order already paid" };
-
-        //        if (order.CraftsmanId == null)
-        //            return new PaymentResultDto { Success = false, Message = "Order has no craftsman associated" };
-
-        //        var craftsman = await _craftsmanRepo.GetByIdAsync(order.CraftsmanId);
-        //        if (craftsman == null)
-        //            return new PaymentResultDto { Success = false, Message = "Craftsman not found" };
-
-                
-        //        var craftsmanWallet = await _walletRepo.GetByUserIdAsync(craftsman.UserId);
-        //        bool isNewCraftsmanWallet = false;
-
-        //        if (craftsmanWallet == null)
-        //        {
-        //            craftsmanWallet = new Wallet
-        //            {
-        //                UserId = craftsman.UserId,
-        //                Balance = 0,
-        //                IsActive = true,
-        //                Transactions = new List<WalletTransaction>()
-        //            };
-        //            await _walletRepo.AddAsync(craftsmanWallet);
-        //            isNewCraftsmanWallet = true;
-        //        }
-
-        //        var admin = await _userRepo.GetAdminAsync();
-        //        if (admin == null)
-        //            return new PaymentResultDto { Success = false, Message = "Admin user not found" };
-
-               
-        //        var adminWallet = await _walletRepo.GetByUserIdAsync(admin.Id);
-        //        bool isNewAdminWallet = false;
-
-        //        if (adminWallet == null)
-        //        {
-        //            adminWallet = new Wallet
-        //            {
-        //                UserId = admin.Id,
-        //                Balance = 0,
-        //                IsActive = true,
-        //                Transactions = new List<WalletTransaction>()
-        //            };
-        //            await _walletRepo.AddAsync(adminWallet);
-        //            isNewAdminWallet = true;
-        //        }
-
-
-
-              
-        //        var paymentMethodService = new PaymentMethodService();
-        //        var paymentMethod = await paymentMethodService.CreateAsync(new PaymentMethodCreateOptions
-        //        {
-        //            Type = "card",
-        //            Card = new PaymentMethodCardOptions
-        //            {
-        //                Token = dto.stripeToken
-        //            }
-        //        });
-
-        //        var paymentIntentService = new PaymentIntentService();
-        //        var paymentIntent = await paymentIntentService.CreateAsync(new PaymentIntentCreateOptions
-        //        {
-        //            Amount = (long)(order.Amount * 100),
-        //            Currency = _config["StripeSettings:Currency"],
-        //            PaymentMethod = paymentMethod.Id,
-        //            PaymentMethodTypes = new List<string> { "card" },
-        //            Confirm = true
-        //        });
-
-        //        if (paymentIntent.Status != "succeeded")
-        //            return new PaymentResultDto { Success = false, Message = "Stripe payment failed" };
-
-            
-        //        decimal craftsmanShare = order.Amount * 0.9m;
-        //        decimal adminShare = order.Amount * 0.1m;
-
-              
-        //        AddTransaction(craftsmanWallet, craftsmanShare, TransactionType.Credit, order.Id, "Order Payment Share");
-        //        AddTransaction(adminWallet, adminShare, TransactionType.Credit, order.Id, "Platform Commission");
-
-            
-        //        if (!isNewCraftsmanWallet)
-        //        {
-        //              _walletRepo.Update (craftsmanWallet);
-        //        }
-        //        else
-        //        {
-        //            await _walletRepo.SaveAsync ();
-        //        }
-
-        //        if (!isNewAdminWallet)
-        //        {
-        //              _walletRepo.Update (adminWallet);
-        //        }
-        //        else
-        //        {
-        //            await _walletRepo.SaveAsync();
-        //        }
-
-       
-        //        var payment = new Payment
-        //        {
-        //            OrderId = order.Id,
-        //            Amount = order.Amount,
-        //            Status = PaymentStatus.Paid,
-        //            TransactionRef = paymentIntent.Id
-        //        };
-
-        //        order.Payment = payment;
-
-        //        await _paymentRepo.AddAsync(payment);
-        //          _orderRepo.Update (order);
-        //        await _paymentRepo.SaveAsync();
-        //        return new PaymentResultDto { Success = true, Message = "Payment successful via card" };
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new PaymentResultDto { Success = false, Message = $"Payment failed: {ex.Message}" };
-        //    }
-        //}
 
         private void AddTransaction(Wallet wallet, decimal amount, TransactionType type, int orderId, string reason)
         {

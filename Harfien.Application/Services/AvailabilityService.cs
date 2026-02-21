@@ -34,15 +34,12 @@ public class AvailabilityService : IAvailabilityService
         await _availabilityRepository.SaveAsync();
     }
 
-    public async Task<IEnumerable<AvailabilityreadDto>> GetMyAvailabilityAsync(string userId)
+    public async Task <IEnumerable<AvailabilityreadDto>> GetCraftsmanAvailabilityAsync(int craftsmanId)
     {
-        var craftsman = await _craftsmanRepository.GetByUserIdAsync(userId);
-        if (craftsman == null) throw new Exception("Craftsman not found");
-
-        var availabilities = await _availabilityRepository.GetAllByCraftsmanIdAsync(craftsman.Id);
-
-
-        return availabilities.Select(a => new AvailabilityreadDto
+        var availabilities = await _availabilityRepository.GetAllByCraftsmanIdAsync(craftsmanId);
+        return availabilities
+            .Where(a=>a.IsAvailable)
+            .Select(a => new AvailabilityreadDto
         {
             CraftsmanId = a.CraftsmanId,
             Day = a.Day,
@@ -51,6 +48,25 @@ public class AvailabilityService : IAvailabilityService
             IsAvailable = a.IsAvailable
         });
     }
+
+
+  /*public async Task<IEnumerable<AvailabilityreadDto>> GetMyAvailabilityAsync(string userId)
+    {
+        var craftsman = await _craftsmanRepository.GetByUserIdAsync(userId);
+        if (craftsman == null) throw new Exception("Craftsman not found");
+
+        var availabilities = await _availabilityRepository.GetAllByCraftsmanIdAsync(craftsman.Id);
+
+
+        return availabilities .Select(a => new AvailabilityreadDto
+        {
+            CraftsmanId = a.CraftsmanId,
+            Day = a.Day,
+            StartTime = a.From,
+            EndTime = a.To,
+            IsAvailable = a.IsAvailable
+        });
+    }*/
 
     public async Task UpdateMyAvailabilityAsync(List<CreateAvailabilityDto> dtos, string userId)
     {

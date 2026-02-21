@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection.Metadata;
+using System.Security.Claims;
 using System.Text;
 
 namespace Harfien.Api
@@ -99,6 +100,40 @@ namespace Harfien.Api
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
                     )
+                };
+
+                // ✅ Add event handler to validate security stamp
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = async context =>
+                    {
+                        var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+                        var userId = context.Principal?.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                        if (userId == null)
+                        {
+                            context.Fail("Invalid token");
+                            return;
+                        }
+
+                        var user = await userManager.FindByIdAsync(userId);
+                        if (user == null)
+                        {
+                            context.Fail("User not found");
+                            return;
+                        }
+
+                        // Get the security stamp claim from token
+                        var tokenSecurityStamp = context.Principal?.FindFirstValue("SecurityStamp");
+                        var userSecurityStamp = await userManager.GetSecurityStampAsync(user);
+
+                        // If security stamps don't match, token has been invalidated (user logged out)
+                        if (tokenSecurityStamp != userSecurityStamp)
+                        {
+                            context.Fail("Token has been invalidated");
+                            return;
+                        }
+                    }
                 };
             });
 
@@ -257,7 +292,7 @@ namespace Harfien.Api
             app.UseSwagger();
             app.UseSwaggerUI();
             app.MapHub<ChatHub>("/chatHub");
-
+            app.MapHub<NotificationHub>("/notificationHub");
             await app.RunAsync();
         }
     }

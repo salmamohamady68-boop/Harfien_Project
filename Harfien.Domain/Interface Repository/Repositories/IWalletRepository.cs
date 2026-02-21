@@ -12,7 +12,8 @@ namespace Harfien.Domain.Shared.Repositories
         Task<Wallet?> GetByUserIdAsync(string userId);
         Task<bool> HasSufficientBalanceAsync(string userId, decimal amount);
         Task<Wallet?> GetByUserIdWithTransactionsAsync(string userId);
- 
+        IQueryable<Payment> GetPaymentsByClientId(string clientId);
+
     }
 
 }

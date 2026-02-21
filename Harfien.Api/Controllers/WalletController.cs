@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Harfien.Application.Interfaces.payment_interfaces;
+using Harfien.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -81,6 +82,23 @@ namespace Harfien.Presentation.Controllers
             var transactions = await _walletService  .GetTransactionsAsync(userId, pageNumber, pageSize);
 
             return Ok(transactions);
+        }
+
+        [HttpGet("my-payments")]
+        public async Task<IActionResult> GetMyPayments(
+  int pageNumber = 1,
+  int pageSize = 10)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+          
+            var result = await _walletService
+                .GetPaymentsByClientIdAsync(userId, pageNumber, pageSize);
+
+            return Ok(result);
         }
 
     }

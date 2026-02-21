@@ -1,4 +1,5 @@
-﻿using Harfien.Application.Interfaces;
+﻿using Harfien.Application.DTO.Notifications;
+using Harfien.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -36,6 +37,21 @@ namespace Harfien.Presentation.Controllers
         {
             await _notificationService.MarkAsReadAsync(id);
             return NoContent();
+        }
+
+
+        [HttpPost("send")]
+        public async Task<IActionResult> SendNotification([FromBody] NotificationRequestDto request)
+        {
+            await _notificationService.CreateNotificationAsync(request.UserId, request.Title, request.Message);
+            return Ok("Notification sent successfully");
+        }
+
+        [HttpPost("send-multiple")]
+        public async Task<IActionResult> SendMultipleNotifications([FromBody] NotificationMultipleRequestDto request)
+        {
+            await _notificationService.SendToMultipleUsersAsync(request.UserIds, request.Title, request.Message);
+            return Ok("Notifications sent successfully");
         }
     }
 }
