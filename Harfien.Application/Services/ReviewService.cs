@@ -20,7 +20,7 @@ namespace Harfien.Application.Services
         }
         public async Task<ReviewDto> AddReviewAsync(CreateReviewDto dto, String currentUserId)
         {
-            var order = await _orderRepository.GetByIdWithDetailsAsync(dto.OrderId);
+            var order = await _orderRepository.GetByIdAsync(dto.OrderId);
 
             if (order == null)
                 throw new Exception("Order not found.");
@@ -31,7 +31,7 @@ namespace Harfien.Application.Services
             if (await _reviewRepository.HasReviewForOrderAsync(order.Id))
                 throw new Exception("You already reviewed this order.");
 
-            if (order.Status != OrderStatus.Complete)
+            if (order.Status != OrderStatus.Completed)
                 throw new Exception("You can only review completed orders.");
 
             if (order.Craftsman == null)

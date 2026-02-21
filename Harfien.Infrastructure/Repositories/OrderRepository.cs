@@ -13,42 +13,51 @@ namespace Harfien.Infrastructure.Repositories
 {
     public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
-       
-            public OrderRepository(HarfienDbContext context) : base(context) { }
 
-            public async Task<Order?> GetByIdWithDetailsAsync(int id)
-                => await _context.Orders
-                    .Include(o => o.Client)
-                        .ThenInclude(c => c.User)
-                    .Include(o => o.Craftsman)
-                    .Include(o => o.Service)
-                    .Include(o => o.Payment)
-                    .FirstOrDefaultAsync(o => o.Id == id);
-            public async Task<IEnumerable<Order>> GetAllWithDetailsAsync()
-            {
-                return await _context.Orders
-                    .Include(o => o.Service)
-                    .Include(o => o.Client).ThenInclude(c => c.User)
-                    .Include(o => o.Craftsman).ThenInclude(c => c.User)
-                    .Include(o => o.Payment)
-                    .ToListAsync();
-            }
+        private readonly HarfienDbContext _context;
 
-
-        public async Task<IEnumerable<Order>> GetByClientIdAsync(int clientId)
-                => await _context.Orders
-                    .Where(o => o.ClientId == clientId)
-                    .ToListAsync();
-
-            public async Task<IEnumerable<Order>> GetByCraftsmanIdAsync(int craftsmanId)
-                => await _context.Orders
-                    .Where(o => o.CraftsmanId == craftsmanId)
-                    .ToListAsync();
-
-            public async Task<IEnumerable<Order>> GetByStatusAsync(OrderStatus status)
-                => await _context.Orders
-                    .Where(o => o.Status == status)
-                    .ToListAsync();
+        public OrderRepository(HarfienDbContext context):base(context)
+        {
+            _context = context;
         }
+
+        public async Task AddAsync(Order order)
+        {
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Order>> GetAllAsync()
+        {
+            return await _context.Orders
+                .Include(o => o.Client)
+                .Include(o => o.Craftsman)
+                .Include(o => o.Service)
+                .ToListAsync();
+        }
+
+        public async Task<Order?> GetByIdAsync(int id)
+        {
+            return await _context.Orders
+                .Include(o => o.Client)
+                .Include(o => o.Craftsman)
+                .Include(o => o.Service)
+                .FirstOrDefaultAsync(o => o.Id == id);
+        }
+
+        public async Task UpdateAsync(Order order)
+        {
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(Order order)
+        {
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+        }
+
+        
+    }
     
 }

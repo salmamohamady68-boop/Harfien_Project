@@ -1,23 +1,20 @@
-﻿using Harfien.Application;
-using Harfien.Application.Autherization;
+﻿using Harfien.Application.Autherization;
 using Harfien.Application.Interfaces;
 using Harfien.Application.Interfaces.payment_interfaces;
 using Harfien.Application.Services;
 using Harfien.DataAccess;
 using Harfien.Domain.Entities;
-using Harfien.Domain.Interface_Repository;
 using Harfien.Domain.Interface_Repository.Repositories;
 using Harfien.Domain.Shared.Repositories;
 using Harfien.Infrastructure.Repositories;
+using Harfien.Infrastructure.Services;
 using Harfien.Presentation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Reflection.Metadata;
 using System.Text;
 
 namespace Harfien.Api
@@ -61,6 +58,7 @@ namespace Harfien.Api
             builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
+            builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 
             // chat 
             builder.Services.AddScoped<IMessageRepositry, MessageRepositry>();
@@ -123,7 +121,7 @@ namespace Harfien.Api
             builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
 
             builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
-
+            builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 
             builder.Services.AddScoped<ICityRepository, CityRepository>();
             builder.Services.AddScoped<IAreaRepository, AreaRepository>();
@@ -146,6 +144,8 @@ namespace Harfien.Api
             builder.Services.AddScoped<ICityService, CityService>();
             builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
             builder.Services.AddScoped<IAreaService, AreaService>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
 
 
             // =========================

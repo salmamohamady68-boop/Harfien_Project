@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Harfien.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitailCreate : Migration
+    public partial class intialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,7 +64,7 @@ namespace Harfien.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     DurationInDays = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -245,7 +245,7 @@ namespace Harfien.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ChatMessage",
+                name: "ChatMessages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -260,20 +260,20 @@ namespace Harfien.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChatMessage", x => x.Id);
+                    table.PrimaryKey("PK_ChatMessages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ChatMessage_AspNetUsers_ApplicationUserId",
+                        name: "FK_ChatMessages_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_ChatMessage_AspNetUsers_ReceiverId",
+                        name: "FK_ChatMessages_AspNetUsers_ReceiverId",
                         column: x => x.ReceiverId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ChatMessage_AspNetUsers_SenderId",
+                        name: "FK_ChatMessages_AspNetUsers_SenderId",
                         column: x => x.SenderId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -343,8 +343,7 @@ namespace Harfien.Infrastructure.Migrations
                         name: "FK_Notifications_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -365,8 +364,7 @@ namespace Harfien.Infrastructure.Migrations
                         name: "FK_Wallet_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -398,6 +396,30 @@ namespace Harfien.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CraftsmanAvailabilities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CraftsmanId = table.Column<int>(type: "int", nullable: false),
+                    Day = table.Column<int>(type: "int", nullable: false),
+                    From = table.Column<TimeSpan>(type: "time", nullable: false),
+                    To = table.Column<TimeSpan>(type: "time", nullable: false),
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CraftsmanAvailabilities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CraftsmanAvailabilities_Craftsmen_CraftsmanId",
+                        column: x => x.CraftsmanId,
+                        principalTable: "Craftsmen",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Services",
                 columns: table => new
                 {
@@ -405,7 +427,7 @@ namespace Harfien.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     CraftsmanId = table.Column<int>(type: "int", nullable: false),
                     ServiceCategoryId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -438,23 +460,11 @@ namespace Harfien.Infrastructure.Migrations
                     ScheduledAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ApplicationUserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Orders_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Orders_AspNetUsers_ApplicationUserId1",
-                        column: x => x.ApplicationUserId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_Clients_ClientId",
                         column: x => x.ClientId,
@@ -505,7 +515,7 @@ namespace Harfien.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderId = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     TransactionRef = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -553,7 +563,7 @@ namespace Harfien.Infrastructure.Migrations
                     WalletId = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     TransactionReason = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Reference = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
@@ -581,14 +591,14 @@ namespace Harfien.Infrastructure.Migrations
                 values: new object[,]
                 {
                     { "1", null, "Admin", "ADMIN" },
-                    { "2", null, "Carftsman", "CRAFTSMAN" },
+                    { "2", null, "Craftsman", "CRAFTSMAN" },
                     { "3", null, "Client", "CLIENT" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "AreaId", "ConcurrencyStamp", "CreatedAt", "DateOfBirth", "Email", "EmailConfirmed", "FullName", "Gender", "IsActive", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PasswordResetSession", "PasswordResetSessionExpiry", "PhoneNumber", "PhoneNumberConfirmed", "ProfileImage", "ResetCode", "ResetCodeExpiry", "SecurityStamp", "TwoFactorEnabled", "UserName", "Zone" },
-                values: new object[] { "ADMIN_ID", 0, "Cairo", null, "c77d307c-c4c5-4314-8f5d-b2f9154c3ab3", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "Admin@gmail.com", true, "Admin", null, true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEIdpEqN7wFTm7tWpq5IynBVYQv5iFqnFlK8hKM7nqwoCcpMNZP+UM4zCGYaoNQS2Nw==", null, null, "1234567890", true, null, null, null, "ba1fe9f0-6655-4f63-8fdf-957c5a4276d7", false, "Admin@gamil.com", null });
+                values: new object[] { "ADMIN_ID", 0, "Cairo", null, "729d0867-3ca2-48fa-a5a2-551972e86ba6", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "Admin@gmail.com", true, "Admin", null, true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEFu7KojsRLRq47nuFwwbN+e10qtQhZlsnaYbFypDqxoluDaCivs9NN1zGKT9dF0smQ==", null, null, "1234567890", true, null, null, null, "1705c684-4d72-4084-8ab2-4c398af63a96", false, "Admin@gmail.com", null });
 
             migrationBuilder.InsertData(
                 table: "Cities",
@@ -668,18 +678,18 @@ namespace Harfien.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChatMessage_ApplicationUserId",
-                table: "ChatMessage",
+                name: "IX_ChatMessages_ApplicationUserId",
+                table: "ChatMessages",
                 column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChatMessage_ReceiverId",
-                table: "ChatMessage",
+                name: "IX_ChatMessages_ReceiverId",
+                table: "ChatMessages",
                 column: "ReceiverId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChatMessage_SenderId_ReceiverId",
-                table: "ChatMessage",
+                name: "IX_ChatMessages_SenderId_ReceiverId",
+                table: "ChatMessages",
                 columns: new[] { "SenderId", "ReceiverId" });
 
             migrationBuilder.CreateIndex(
@@ -694,6 +704,11 @@ namespace Harfien.Infrastructure.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CraftsmanAvailabilities_CraftsmanId",
+                table: "CraftsmanAvailabilities",
+                column: "CraftsmanId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Craftsmen_UserId",
                 table: "Craftsmen",
                 column: "UserId",
@@ -703,16 +718,6 @@ namespace Harfien.Infrastructure.Migrations
                 name: "IX_Notifications_UserId",
                 table: "Notifications",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_ApplicationUserId",
-                table: "Orders",
-                column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_ApplicationUserId1",
-                table: "Orders",
-                column: "ApplicationUserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_ClientId",
@@ -797,10 +802,13 @@ namespace Harfien.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ChatMessage");
+                name: "ChatMessages");
 
             migrationBuilder.DropTable(
                 name: "Complaints");
+
+            migrationBuilder.DropTable(
+                name: "CraftsmanAvailabilities");
 
             migrationBuilder.DropTable(
                 name: "Notifications");
