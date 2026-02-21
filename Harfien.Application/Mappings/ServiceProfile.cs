@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Harfien.Application.DTO;
+using Harfien.Application.DTO.Service;
 using Harfien.Domain.Entities;
 
 namespace Harfien.Application.Mappings

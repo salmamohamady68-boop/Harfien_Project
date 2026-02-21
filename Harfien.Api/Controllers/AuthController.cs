@@ -1,4 +1,4 @@
-using Harfien.Application.DTO;
+using Harfien.Application.DTO.Authentication;
 using Harfien.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,20 +24,28 @@ namespace Harfien.Presentation.Controllers
         [HttpPost("register-client")]
         public async Task<IActionResult> RegisterClient(RegisterClientDto dto)
         {
-            var token = await _authService.RegisterClientAsync(dto);
-            return Ok(new { token });
-        }
+            var resultMessage = await _authService.RegisterClientAsync(dto);
 
+           
+            if (resultMessage.Contains("failed") || resultMessage.Contains("already registered"))
+                return BadRequest(new { Message = resultMessage });
+
+   
+            return Ok(new { Message = resultMessage });
+        }
         // ==========================
         // Register Craftsman
         // ==========================
         [HttpPost("register-craftsman")]
         public async Task<IActionResult> RegisterCraftsman(RegisterCraftsmanDto dto)
         {
-            await _authService.RegisterCraftsmanAsync(dto);
-            return Ok(new { message = "Waiting for approval" });
-        }
+            var resultMessage = await _authService.RegisterCraftsmanAsync(dto);
 
+            if (resultMessage.Contains("failed") || resultMessage.Contains("already registered"))
+                return BadRequest(new { Message = resultMessage });
+
+            return Ok(new { Message = resultMessage });
+        }
         // ==========================
         // Login
         // ==========================
@@ -50,6 +58,23 @@ namespace Harfien.Presentation.Controllers
                 return BadRequest(result.Message);
 
             return Ok(result);
+        }
+
+        // ==========================
+        // Logout
+        // ==========================
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+                return Unauthorized(new { message = "User not authenticated" });
+
+            await _authService.LogoutAsync(userId);
+
+            return Ok(new { message = "Logged out successfully" });
         }
 
         // ==========================

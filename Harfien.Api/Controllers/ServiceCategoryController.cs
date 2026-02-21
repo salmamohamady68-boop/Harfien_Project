@@ -1,5 +1,6 @@
 ﻿using Harfien.Application.DTO.ServiceCategory;
 using Harfien.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,6 +39,7 @@ namespace Harfien.Presentation.Controllers
 
        
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add([FromBody] AddServiceCategoryDto dto)
         {
             if (!ModelState.IsValid)
@@ -48,6 +50,7 @@ namespace Harfien.Presentation.Controllers
         }
        
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, [FromBody] ServiceCategoryDto dto)
         {
             if (id != dto.Id)
@@ -65,6 +68,7 @@ namespace Harfien.Presentation.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             try

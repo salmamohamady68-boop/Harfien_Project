@@ -15,6 +15,8 @@ namespace Harfien.Domain.Shared.Repositories
         Task<IEnumerable<Order>> GetByClientIdAsync(int clientId);
         Task<IEnumerable<Order>> GetByCraftsmanIdAsync(int craftsmanId);
         Task<IEnumerable<Order>> GetByStatusAsync(OrderStatus status);
+        Task<bool> ExistsAsync(int craftsmanId, DateTime scheduledAt);
+
     }
 
 }

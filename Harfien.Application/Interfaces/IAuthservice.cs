@@ -1,5 +1,5 @@
 ﻿using Harfien.Application.Autherization;
-using Harfien.Application.DTO;
+using Harfien.Application.DTO.Authentication;
 
 namespace Harfien.Application.Interfaces
 {
@@ -8,6 +8,7 @@ namespace Harfien.Application.Interfaces
         Task<string> RegisterClientAsync(RegisterClientDto dto);
         Task <string> RegisterCraftsmanAsync(RegisterCraftsmanDto dto);
         Task<LoginResponse> LoginAsync(loginDto dto);
+        Task LogoutAsync(string userId);
         Task<string> ApproveCraftsmanAsync(int craftsmanId); 
         Task<string> RejectCraftsmanAsync(int craftsmanId);
         Task<(bool Success, string Message)> ForgetPasswordAsync(ForgetPassword forgetPassword);

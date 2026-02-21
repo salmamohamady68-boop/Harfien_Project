@@ -22,11 +22,14 @@ public class JwtTokenService : IJwtTokenService
 
     public async Task<string> GenerateTokenAsync(ApplicationUser user)
     {
+        var securityStamp = await _userManager.GetSecurityStampAsync(user);
+
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(ClaimTypes.Name, user.UserName ?? ""),
-            new Claim(ClaimTypes.Email, user.Email ?? "")
+            new Claim(ClaimTypes.Email, user.Email ?? ""),
+            new Claim("SecurityStamp", securityStamp ?? "")
         };
 
         var roles = await _userManager.GetRolesAsync(user);

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using Harfien.Application.DTO;
+using Harfien.Application.DTO.Order;
 using Harfien.Application.DTO.Payment;
 using Harfien.Domain.Entities;
 

@@ -22,7 +22,7 @@ namespace Harfien.Domain.Entities
         [ForeignKey(nameof(UserId))]
         public string UserId { get; set; }    
         public ApplicationUser User { get; set; }
-
+       
         public ICollection< Service> CraftsmanServices { get; set; }
         public ICollection<Order> Orders { get; set; } = new List<Order>();
         public ICollection<CraftsmanAvailability> Availabilities { get; set; } = new List<CraftsmanAvailability>();

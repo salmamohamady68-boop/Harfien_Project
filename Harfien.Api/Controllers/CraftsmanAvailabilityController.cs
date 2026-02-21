@@ -1,4 +1,4 @@
-﻿using Harfien.Application.DTO;
+﻿using Harfien.Application.DTO.CraftsmanAvailiability;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;

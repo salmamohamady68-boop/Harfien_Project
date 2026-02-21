@@ -1,5 +1,5 @@
 ﻿using Harfien.Application.Autherization;
-using Harfien.Application.DTO;
+using Harfien.Application.DTO.Authentication;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Interface_Repository.Repositories;
@@ -49,6 +49,9 @@ public class AuthService : IAuthService
 
     public async Task<string> RegisterClientAsync(RegisterClientDto dto)
     {
+        if (await _userManager.FindByEmailAsync(dto.Email) != null)
+            return "This email is already registered. Please use another email.";
+
         var user = new ApplicationUser
         {
             UserName = dto.Email,
@@ -58,7 +61,11 @@ public class AuthService : IAuthService
 
         var result = await _userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded)
-            throw new Exception("Register failed");
+        {
+
+            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+            return $"Registration failed: {errors}";
+        }
 
         await _userManager.AddToRoleAsync(user, "Client");
         var client = new Client
@@ -73,44 +80,47 @@ public class AuthService : IAuthService
 
     public async Task<string> RegisterCraftsmanAsync(RegisterCraftsmanDto dto)
     {
-        // تحقق من وجود الإيميل
+        
         if (await _userManager.FindByEmailAsync(dto.Email) != null)
-            throw new Exception("Email already exists");
+            return "This email is already registered.";
 
+        // إنشاء المستخدم أولاً
         var user = new ApplicationUser
         {
             UserName = dto.Email,
             Email = dto.Email,
             PhoneNumber = dto.PhoneNumber,
             FullName = dto.FullName,
-            AreaId = dto.CityId
+            AreaId = dto.AreaId,
+
+
+
         };
 
-        using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        // تسجيل المستخدم في Identity
+        var result = await _userManager.CreateAsync(user, dto.Password);
+        if (!result.Succeeded)
         {
-            // حفظ المستخدم في Identity
-            var result = await _userManager.CreateAsync(user, dto.Password);
-            if (!result.Succeeded)
-                throw new Exception(string.Join(",", result.Errors.Select(e => e.Description)));
-
-            await _userManager.AddToRoleAsync(user, "Craftsman");
-
-            // إنشاء سجل الحرفي مع IsApproved = false
-            await _unitOfWork.Craftsmen.AddAsync(new Craftsman
-            {
-                UserId = user.Id,
-                YearsOfExperience = dto.YearsOfExperience,
-                IsApproved = false
-            });
-
-            await _unitOfWork.SaveAsync();
-            scope.Complete();
+            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+            return $"Registration failed: {errors}";
         }
 
-        
+        // إضافة الدور
+        await _userManager.AddToRoleAsync(user, "Craftsman");
+
+        // إنشاء سجل الحرفي
+        var craftsman = new Craftsman
+        {
+            UserId = user.Id,
+          
+            YearsOfExperience = dto.YearsOfExperience,
+            IsApproved = false
+        };
+        await _unitOfWork.Craftsmen.AddAsync(craftsman);
+        await _unitOfWork.SaveAsync();
+
         return "Your registration is successful. Your account is pending approval by the admin.";
     }
-
 
     public async Task<LoginResponse> LoginAsync(loginDto dto)
     {
@@ -294,5 +304,17 @@ public class AuthService : IAuthService
             "ResetPassword",
             resetCode
         );
+    }
+
+    public async Task LogoutAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user != null)
+        {
+            // Optional: Invalidate refresh tokens or perform cleanup
+            // For now, invalidate the security stamp to invalidate all tokens
+            await _userManager.UpdateSecurityStampAsync(user);
+        }
     }
 }
