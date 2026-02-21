@@ -45,6 +45,32 @@ namespace Harfien.Infrastructure.Repositories
             _context.Craftsmen.Update(craftsman);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<Craftsman?> GetByUserIdWithIncludeAsync(string userId)
+        {
+            return await _context.Craftsmen
+                .Include(c => c.User)
+                .Include(c => c.CraftsmanServices)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+        }
+
+
+        public async Task<Craftsman?> GetProfileAsync(int id)
+        {
+            return await _context.Craftsmen
+             .Include(c => c.User)
+             .Include(c => c.CraftsmanServices)
+             .Include(c => c.Availabilities)
+             .Include(c => c.Orders)
+             .FirstOrDefaultAsync(c => c.Id == id && c.IsApproved);
+        }
+
+        public async Task<List<Review>?> GetReviewAsync(int craftmanid)
+        {
+           return  await _context.Reviews
+            .Where(r => r.CraftsmanId == craftmanid)
+            .ToListAsync();
+        }
     }
 
 }

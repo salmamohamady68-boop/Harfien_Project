@@ -13,6 +13,11 @@ namespace Harfien.Domain.Shared.Repositories
         Task<Craftsman?> GetWithServicesAsync(int craftsmanId);
         Task<Craftsman?> GetByUserIdAsync(string userId);
         Task UpdateAsync(Craftsman craftsman);
+
+        Task<Craftsman?> GetByUserIdWithIncludeAsync(string userId);
+        Task<Craftsman?> GetProfileAsync(int id);
+
+        Task<List<Review>?> GetReviewAsync(int craftmanid);
     }
 
 }
