@@ -7,17 +7,13 @@ using Harfien.Domain.Entities;
 
 namespace Harfien.Domain.Shared.Repositories
 {
-    public interface ICraftsmanRepository : IGenericRepository<Craftsman>
+    public interface ICraftsmanRepository
+        : IGenericRepository<Craftsman>
     {
-        Task<IEnumerable<Craftsman>> GetAvailableByServiceAsync(int serviceId);
-        Task<Craftsman?> GetWithServicesAsync(int craftsmanId);
+        Task<IEnumerable<Craftsman>> GetAllWithUserAsync();
         Task<Craftsman?> GetByUserIdAsync(string userId);
         Task UpdateAsync(Craftsman craftsman);
 
-        Task<Craftsman?> GetByUserIdWithIncludeAsync(string userId);
-        Task<Craftsman?> GetProfileAsync(int id);
-
-        Task<List<Review>?> GetReviewAsync(int craftmanid);
     }
 
 }
