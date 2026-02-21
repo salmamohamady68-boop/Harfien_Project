@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Harfien.Application.DTO
+namespace Harfien.Application.DTO.Authentication
 {
     public class RegisterCraftsmanDto
     {
@@ -22,8 +22,6 @@ namespace Harfien.Application.DTO
         public string Password { get; set; } = null!;
 
         public int CityId { get; set; }
-
-        public List<int> ServiceCategoryId { get; set; } = new List<int>();
 
         public int YearsOfExperience { get; set; }
 

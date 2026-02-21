@@ -1,5 +1,5 @@
 ﻿using Harfien.Application.Autherization;
-using Harfien.Application.DTO;
+using Harfien.Application.DTO.Authentication;
 
 namespace Harfien.Application.Interfaces
 {

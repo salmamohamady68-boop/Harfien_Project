@@ -1,4 +1,4 @@
-﻿using Harfien.Application.DTO;
+﻿using Harfien.Application.DTO.CraftsmanAvailiability;
 using Harfien.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

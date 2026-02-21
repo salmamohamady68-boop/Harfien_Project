@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Application.DTO
+namespace Harfien.Application.DTO.Complaint
 {
-    public class UpdateComplaintDto
+
+    public class CreateComplaintDto
     {
+        public int OrderId { get; set; }
         public string Description { get; set; }
         public string? EvidenceAttachmentUrl { get; set; }
     }
 
 }
+

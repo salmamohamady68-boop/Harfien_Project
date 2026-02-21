@@ -1,4 +1,4 @@
-﻿using Harfien.Application.DTO;
+﻿using Harfien.Application.DTO.Service;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Shared;
 using Microsoft.AspNetCore.Authorization;

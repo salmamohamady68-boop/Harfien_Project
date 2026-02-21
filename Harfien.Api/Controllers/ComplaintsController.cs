@@ -127,7 +127,7 @@
 //    }
 //}
 
-using Harfien.Application.DTO;
+using Harfien.Application.DTO.Complaint;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Enums;
 using Harfien.Domain.Shared.Repositories;

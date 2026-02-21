@@ -1,4 +1,4 @@
-﻿using Harfien.Application.DTO;
+﻿using Harfien.Application.DTO.CraftsmanAvailiability;
 using System;
 using System.Collections.Generic;
 using System.Linq;

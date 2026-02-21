@@ -1,5 +1,6 @@
-﻿using Harfien.Application.DTO;
+﻿using Harfien.Application.DTO.Order;
 using Harfien.Application.Interfaces;
+using Harfien.Domain.Entities;
 using Harfien.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,10 @@ namespace Harfien.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+
+
+
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _service;
@@ -18,205 +23,135 @@ namespace Harfien.Presentation.Controllers
             _service = service;
         }
 
-        //  Helper method to get current user ID from token
-        private int GetCurrentUserId()
-        {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (!int.TryParse(userIdClaim, out var userId))
-                throw new UnauthorizedAccessException("Invalid user ID");
-            return userId;
-
-        }
-
-        /// <summary>
-        /// Create a new order (Client only)
-        /// </summary>
         [HttpPost]
-        [Authorize(Roles = "Client")]
-        public async Task<IActionResult> Create([FromBody] CreateOrderDto dto)
+        public async Task<IActionResult> CreateOrder(CreateOrderDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            // 1️⃣ جلب الـ UserId من الـ Claims
+            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            try
-            {
-                var clientId = GetCurrentUserId();
-                var orderId = await _service.CreateAsync(dto, clientId);
-                return CreatedAtAction(nameof(Get), new { id = orderId }, new { orderId });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
+            // 2️⃣ التحقق من وجود قيمة وتحويلها لـ int
+            if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out int clientId))
+                return BadRequest("Invalid client id");
+
+            // 3️⃣ إنشاء الأوردر باستخدام الـ service وتمرير الـ clientId الصحيح
+            await _service.CreateAsync(dto, clientId);
+
+            // 4️⃣ إعادة رسالة نجاح
+            return Ok("Order created successfully");
         }
 
-        /// <summary>
-        /// Get order by ID (Accessible by order owner or admin)
-        /// </summary>
         [HttpGet("{id}")]
-        [Authorize]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var order = await _service.GetByIdAsync(id);
-
-                // Authorization check
-                var userId = GetCurrentUserId();
-                var isAdmin = User.IsInRole("Admin");
-
-                if (!isAdmin && order.ClientId != userId && order.CraftsmanId != userId)
-                    return Forbid();
-
-                return Ok(order);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { error = ex.Message });
-            }
+            var order = await _service.GetByIdAsync(id);
+            return Ok(order);
         }
 
-        /// <summary>
-        /// Get all orders for the current client
-        /// </summary>
-        [HttpGet("client/me")]
+        // ===========================
+        // Get Client Orders
+        // ===========================
+        [HttpGet("client")]
         [Authorize(Roles = "Client")]
-        public async Task<IActionResult> ClientOrders()
+        public async Task<IActionResult> GetClientOrders()
         {
-            try
-            {
-                var clientId = GetCurrentUserId();
-                var orders = await _service.GetClientOrdersAsync(clientId);
-                return Ok(orders);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
+            var clientId = int.Parse(User.FindFirst("id")!.Value);
+
+            var orders = await _service.GetClientOrdersAsync(clientId);
+            return Ok(orders);
         }
 
-        /// <summary>
-        /// Get all orders for the current craftsman
-        /// </summary>
-        [HttpGet("craftsman/me")]
+        [HttpGet("craftsman")]
         [Authorize(Roles = "Craftsman")]
-        public async Task<IActionResult> CraftsmanOrders()
+        public async Task<IActionResult> GetCraftsmanOrders()
         {
-            try
-            {
-                var craftsmanId = GetCurrentUserId();
-                var orders = await _service.GetCraftsmanOrdersAsync(craftsmanId);
-                return Ok(orders);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
+            var craftsmanId = int.Parse(User.FindFirst("id")!.Value);
+
+            var orders = await _service.GetCraftsmanOrdersAsync(craftsmanId);
+            return Ok(orders);
         }
 
-        /// <summary>
-        /// Get all orders (Admin only)
-        /// </summary>
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
-            try
-            {
-                var orders = await _service.GetAllAsync();
-                return Ok(orders);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
+            var orders = await _service.GetAllAsync();
+            return Ok(orders);
         }
 
-        /// <summary>
-        /// Get orders by status (Admin only)
-        /// </summary>
+        // ===========================
+        // Get By Status
+        // ===========================
         [HttpGet("status/{status}")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetByStatus(OrderStatus status)
         {
-            try
-            {
-                var orders = await _service.GetByStatusAsync(status);
-                return Ok(orders);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
+            var orders = await _service.GetByStatusAsync(status);
+            return Ok(orders);
         }
 
-        /// <summary>
-        /// Accept an order (Craftsman only)
-        /// </summary>
+        // ===========================
+        // Accept Order
+        // ===========================
         [HttpPut("{id}/accept")]
         [Authorize(Roles = "Craftsman")]
         public async Task<IActionResult> Accept(int id)
         {
-            try
-            {
-                var craftsmanId = GetCurrentUserId();
-                await _service.AcceptAsync(id, craftsmanId);
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Forbid();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
+            var craftsmanId = int.Parse(User.FindFirst("id")!.Value);
+
+            await _service.AcceptAsync(id, craftsmanId);
+            return NoContent();
         }
 
-        /// <summary>
-        /// Complete an order (Craftsman only)
-        /// </summary>
+        // ===========================
+        // Reject Order
+        // ===========================
+        [HttpPut("{id}/reject")]
+        [Authorize(Roles = "Craftsman")]
+        public async Task<IActionResult> Reject(int id)
+        {
+            var craftsmanId = int.Parse(User.FindFirst("id")!.Value);
+
+            await _service.RejectAsync(id, craftsmanId);
+            return NoContent();
+        }
+
+        // ===========================
+        // Start Order
+        // ===========================
+        [HttpPut("{id}/start")]
+        [Authorize(Roles = "Craftsman")]
+        public async Task<IActionResult> Start(int id)
+        {
+            var craftsmanId = int.Parse(User.FindFirst("id")!.Value);
+
+            await _service.StartAsync(id, craftsmanId);
+            return NoContent();
+        }
+
+        // ===========================
+        // Complete Order
+        // ===========================
         [HttpPut("{id}/complete")]
         [Authorize(Roles = "Craftsman")]
         public async Task<IActionResult> Complete(int id)
         {
-            try
-            {
-                var craftsmanId = GetCurrentUserId();
-                await _service.CompleteAsync(id, craftsmanId);
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Forbid();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
+            var craftsmanId = int.Parse(User.FindFirst("id")!.Value);
+
+            await _service.CompleteAsync(id, craftsmanId);
+            return NoContent();
         }
 
-        /// <summary>
-        /// Cancel an order (Client only)
-        /// </summary>
+        // ===========================
+        // Cancel Order
+        // ===========================
         [HttpPut("{id}/cancel")]
         [Authorize(Roles = "Client")]
         public async Task<IActionResult> Cancel(int id)
         {
-            try
-            {
-                var clientId = GetCurrentUserId();
-                await _service.CancelAsync(id, clientId);
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Forbid();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
+            var clientId = int.Parse(User.FindFirst("id")!.Value);
+
+            await _service.CancelAsync(id, clientId);
+            return NoContent();
+
         }
     }
 }

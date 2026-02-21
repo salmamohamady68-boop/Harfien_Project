@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Harfien.Application.DTO;
+using Harfien.Application.DTO.Order;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Enums;
@@ -9,119 +9,173 @@ namespace Harfien.Application.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly IOrderRepository _repo;
+        private readonly IOrderRepository _orderRepository;
+        private readonly ICraftsmanRepository _craftsmanRepository;
+        private readonly IClientRepository _clientRepository;
+        private readonly IAvailabilityRepository _availabilityRepository;
+        private readonly IServiceRepository _serviceRepository;
         private readonly IMapper _mapper;
 
-        public OrderService(IOrderRepository repo, IMapper mapper)
+        public OrderService(
+            IOrderRepository orderRepository,
+            ICraftsmanRepository craftsmanRepository,
+            IClientRepository clientRepository,
+            IAvailabilityRepository availabilityRepository,
+            IServiceRepository serviceRepository,
+            IMapper mapper)
         {
-            _repo = repo;
+            _orderRepository = orderRepository;
+            _craftsmanRepository = craftsmanRepository;
+            _clientRepository = clientRepository;
+            _availabilityRepository = availabilityRepository;
+            _serviceRepository = serviceRepository;
             _mapper = mapper;
         }
 
-        public async Task<int> CreateAsync(CreateOrderDto dto, int clientId)
+        // ===========================
+        // إنشاء أوردر جديد
+        // ===========================
+        public async Task<string> CreateAsync(CreateOrderDto dto, int clientId)
         {
+            var client = await _clientRepository.GetByIdAsync(clientId)
+                ?? throw new KeyNotFoundException("Client not found");
+
+            var craftsman = await _craftsmanRepository.GetByIdAsync(dto.CraftsmanId)
+                ?? throw new KeyNotFoundException("Craftsman not found");
+
+            var service = await _serviceRepository.GetByIdAsync(dto.ServiceId)
+                ?? throw new KeyNotFoundException("Service not found");
+
+            if (dto.ScheduledAt <= DateTime.UtcNow)
+                throw new Exception("Scheduled time must be in the future");
+
+            var isAvailable = await _availabilityRepository.IsAvailableAsync(craftsman.Id, dto.ScheduledAt);
+            if (!isAvailable)
+                throw new Exception("Craftsman not available at this time");
+
+            var isBooked = await _orderRepository.ExistsAsync(craftsman.Id, dto.ScheduledAt);
+            if (isBooked)
+                throw new Exception("This slot is already booked");
+
             var order = _mapper.Map<Order>(dto);
             order.ClientId = clientId;
-            order.Status = OrderStatus.New;
+            order.Status = OrderStatus.Pending;
+            order.Amount = service.Price;
 
-            await _repo.AddAsync(order);
-            await _repo.SaveAsync();
-            return order.Id;
+            await _orderRepository.AddAsync(order);
+            await _orderRepository.SaveAsync();
+
+            return "Order created successfully";
         }
 
+        // ===========================
+        // جلب أوردر حسب Id
+        // ===========================
         public async Task<OrderResponseDto> GetByIdAsync(int id)
         {
-            var order = await _repo.GetByIdWithDetailsAsync(id)
-                ?? throw new KeyNotFoundException($"Order with ID {id} not found");
+            var order = await _orderRepository.GetByIdWithDetailsAsync(id)
+                ?? throw new KeyNotFoundException("Order not found");
 
             return _mapper.Map<OrderResponseDto>(order);
         }
 
-        public async Task<IEnumerable<OrderResponseDto>> GetClientOrdersAsync(int clientId)
+        // ===========================
+        // جلب كل أوردرز العميل
+        // ===========================
+        public async Task<IEnumerable<OrderInfoDto>> GetClientOrdersAsync(int clientId)
         {
-            var orders = await _repo.GetByClientIdAsync(clientId);
-            return _mapper.Map<IEnumerable<OrderResponseDto>>(orders);
+            var orders = await _orderRepository.GetByClientIdAsync(clientId);
+            return _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
         }
 
-        public async Task<IEnumerable<OrderResponseDto>> GetCraftsmanOrdersAsync(int craftsmanId)
+        // ===========================
+        // جلب كل أوردرز الحرفي
+        // ===========================
+        public async Task<IEnumerable<OrderInfoDto>> GetCraftsmanOrdersAsync(int craftsmanId)
         {
-            var orders = await _repo.GetByCraftsmanIdAsync(craftsmanId);
-            return _mapper.Map<IEnumerable<OrderResponseDto>>(orders);
+            var orders = await _orderRepository.GetByCraftsmanIdAsync(craftsmanId);
+            return _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
         }
 
+        // ===========================
+        // جلب كل الأوردرز
+        // ===========================
         public async Task<IEnumerable<OrderResponseDto>> GetAllAsync()
         {
-            var orders = await _repo.GetAllWithDetailsAsync();
+            var orders = await _orderRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<OrderResponseDto>>(orders);
         }
 
+        // ===========================
+        // جلب الأوردرز حسب الحالة
+        // ===========================
         public async Task<IEnumerable<OrderResponseDto>> GetByStatusAsync(OrderStatus status)
         {
-            var orders = await _repo.GetByStatusAsync(status);
+            var orders = await _orderRepository.GetByStatusAsync(status);
             return _mapper.Map<IEnumerable<OrderResponseDto>>(orders);
         }
 
-        public async Task AcceptAsync(int orderId, int craftsmanId)
+        // ===========================
+        // تحديث حالات الأوردر
+        // ===========================
+        private async Task UpdateStatusAsync(int orderId, int userId, bool isClient, OrderStatus newStatus)
         {
-            var order = await _repo.GetByIdAsync(orderId)
-                ?? throw new KeyNotFoundException($"Order with ID {orderId} not found");
+            var order = await _orderRepository.GetByIdAsync(orderId)
+                ?? throw new KeyNotFoundException("Order not found");
 
-            if (order.CraftsmanId != craftsmanId)
-                throw new UnauthorizedAccessException("You are not authorized to accept this order");
+            if (isClient && order.ClientId != userId)
+                throw new UnauthorizedAccessException("Unauthorized");
+            if (!isClient && order.CraftsmanId != userId)
+                throw new UnauthorizedAccessException("Unauthorized");
 
-            if (order.Status != OrderStatus.New)
-                throw new InvalidOperationException($"Cannot accept order with status: {order.Status}");
+            if (order.Status == newStatus)
+                throw new InvalidOperationException("Order already in this status");
 
-            order.Status = OrderStatus.Running;
-            _repo.Update(order);
-            await _repo.SaveAsync();
+            // 🔴 Validate Transition
+            if (!IsValidTransition(order.Status, newStatus))
+                throw new InvalidOperationException("Invalid status transition");
+
+            order.Status = newStatus;
+
+            _orderRepository.Update(order);
+            await _orderRepository.SaveAsync();
         }
 
-        public async Task StartAsync(int orderId, int craftsmanId)
+        private bool IsValidTransition(OrderStatus current, OrderStatus next)
         {
-            var order = await _repo.GetByIdAsync(orderId)
-                ?? throw new KeyNotFoundException($"Order with ID {orderId} not found");
+            return (current, next) switch
+            {
+                // Pending
+                (OrderStatus.Pending, OrderStatus.Accepted) => true,
+                (OrderStatus.Pending, OrderStatus.Rejected) => true,
+                (OrderStatus.Pending, OrderStatus.Cancelled) => true,
 
-            if (order.CraftsmanId != craftsmanId)
-                throw new UnauthorizedAccessException("You are not authorized to start this order");
+                // Accepted
+                (OrderStatus.Accepted, OrderStatus.Running) => true,
+                (OrderStatus.Accepted, OrderStatus.Cancelled) => true,
 
-            if (order.Status != OrderStatus.Running)
-                throw new InvalidOperationException("Order must be accepted first");
+                // Running
+                (OrderStatus.Running, OrderStatus.Completed) => true,
 
-            // Add any additional logic for starting the order here
-            await _repo.SaveAsync();
+                _ => false
+            };
         }
 
-        public async Task CompleteAsync(int orderId, int craftsmanId)
-        {
-            var order = await _repo.GetByIdAsync(orderId)
-                ?? throw new KeyNotFoundException($"Order with ID {orderId} not found");
 
-            if (order.CraftsmanId != craftsmanId)
-                throw new UnauthorizedAccessException("You are not authorized to complete this order");
 
-            if (order.Status != OrderStatus.Running)
-                throw new InvalidOperationException($"Cannot complete order with status: {order.Status}");
+        public Task AcceptAsync(int orderId, int craftsmanId) =>
+            UpdateStatusAsync(orderId, craftsmanId, false, OrderStatus.Accepted);
 
-            order.Status = OrderStatus.Complete;
-            _repo.Update(order);
-            await _repo.SaveAsync();
-        }
+        public Task RejectAsync(int orderId, int craftsmanId) =>
+            UpdateStatusAsync(orderId, craftsmanId, false, OrderStatus.Rejected);
 
-        public async Task CancelAsync(int orderId, int clientId)
-        {
-            var order = await _repo.GetByIdAsync(orderId)
-                ?? throw new KeyNotFoundException($"Order with ID {orderId} not found");
+        public Task StartAsync(int orderId, int craftsmanId) =>
+            UpdateStatusAsync(orderId, craftsmanId, false, OrderStatus.Running);
 
-            if (order.ClientId != clientId)
-                throw new UnauthorizedAccessException("You are not authorized to cancel this order");
+        public Task CompleteAsync(int orderId, int craftsmanId) =>
+            UpdateStatusAsync(orderId, craftsmanId, false, OrderStatus.Completed);
 
-            if (order.Status != OrderStatus.New)
-                throw new InvalidOperationException("Cannot cancel order after it has been accepted");
-
-            order.Status = OrderStatus.Cancelled; // ✅ Better to mark as cancelled instead of delete
-            _repo.Update(order);
-            await _repo.SaveAsync();
-        }
+        public Task CancelAsync(int orderId, int clientId) =>
+            UpdateStatusAsync(orderId, clientId, true, OrderStatus.Cancelled);
     }
 }
