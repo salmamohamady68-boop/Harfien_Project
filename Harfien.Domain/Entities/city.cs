@@ -11,6 +11,7 @@ namespace Harfien.Domain.Entities
     {
         public string Name { get; set; }
         public ICollection<Area> Areas { get; set; }
+      
 
     }
 }

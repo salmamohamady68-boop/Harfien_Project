@@ -21,7 +21,7 @@ namespace Harfien.Application.DTO.Authentication
         [StringLength(50, MinimumLength = 6, ErrorMessage = "the password must be at least 6 characters long")]
         public string Password { get; set; } = null!;
 
-        public int CityId { get; set; }
+        public int AreaId { get; set; }
 
         public int YearsOfExperience { get; set; }
 
