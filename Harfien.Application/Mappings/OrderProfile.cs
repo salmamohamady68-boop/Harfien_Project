@@ -24,6 +24,17 @@ namespace Harfien.Application.Mappings
                     o => o.MapFrom(c => c.Craftsman != null && c.Craftsman.User != null
                         ? c.Craftsman.User.FullName
                         : "N/A"));
+            CreateMap<Order, OrderInfoDto>()
+              .ForMember(d => d.OrderId, o => o.MapFrom(s => s.Id))
+                .ForMember(d => d.ClientName, o => o.MapFrom(s => s.Client != null && s.Client.User != null
+               ? s.Client.User.FullName
+                 : "N/A"))
+               .ForMember(d => d.CraftsmanName, o => o.MapFrom(s => s.Craftsman != null && s.Craftsman.User != null
+                 ? s.Craftsman.User.FullName
+                : "N/A"))
+              .ForMember(d => d.ServiceName, o => o.MapFrom(s => s.Service != null
+                ? s.Service.Name
+               : "N/A"));
         }
     }
 }

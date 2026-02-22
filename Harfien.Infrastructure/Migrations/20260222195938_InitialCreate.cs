@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Harfien.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class v1 : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -598,7 +598,7 @@ namespace Harfien.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "AreaId", "ConcurrencyStamp", "CreatedAt", "DateOfBirth", "Email", "EmailConfirmed", "FullName", "Gender", "IsActive", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PasswordResetSession", "PasswordResetSessionExpiry", "PhoneNumber", "PhoneNumberConfirmed", "ProfileImage", "ResetCode", "ResetCodeExpiry", "SecurityStamp", "TwoFactorEnabled", "UserName", "Zone" },
-                values: new object[] { "ADMIN_ID", 0, "Cairo", null, "06085720-afac-412e-9027-dad298506737", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "Admin@gmail.com", true, "Admin", null, true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEInYMAL6SmAVi1PMZyuGo8a46ZnNAp/MPu4KBiRBWqpe8bhIk70gdw1EZuNRaXeUnw==", null, null, "1234567890", true, null, null, null, "e17e14e5-3bdb-48b9-88ed-757bb2a04c12", false, "Admin@gmail.com", null });
+                values: new object[] { "ADMIN_ID", 0, "Cairo", null, "cff27653-9255-41ec-9a1b-e94e534dee9a", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, "Admin@gmail.com", true, "Admin", null, true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEELKHz7XXrgxHF6ePvN/KLtEyAFAL6ZfTwReCMO1QcYnEpW3vjyErKz0/8G+TePs4A==", null, null, "1234567890", true, null, null, null, "21323b9f-3234-487d-8e3b-5aa597ae3b88", false, "Admin@gmail.com", null });
 
             migrationBuilder.InsertData(
                 table: "Cities",

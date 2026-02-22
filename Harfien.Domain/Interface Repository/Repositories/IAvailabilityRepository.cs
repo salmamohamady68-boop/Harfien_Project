@@ -10,9 +10,15 @@ namespace Harfien.Domain.Shared.Repositories
     // Renamed the interface to avoid the CS0101 conflict
     public interface IAvailabilityRepository : IGenericRepository<CraftsmanAvailability>
     {
-        Task<bool> IsAvailableAsync(int craftsmanId, DateTime dateTime);
-        Task<IEnumerable<int>> GetAvailableCraftsmenIdsAsync(DateTime dateTime);
+        Task AddAsync(CraftsmanAvailability availability);
+        void Update(CraftsmanAvailability availability);
+        Task SaveAsync();
+
         Task<IEnumerable<CraftsmanAvailability>> GetAllByCraftsmanIdAsync(int craftsmanId);
+
+        Task<bool> IsAvailableAsync(int craftsmanId, DateTime scheduledAt);
+
+        Task<IEnumerable<int>> GetAvailableCraftsmenIdsAsync(DateTime scheduledAt);
     }
 
 }

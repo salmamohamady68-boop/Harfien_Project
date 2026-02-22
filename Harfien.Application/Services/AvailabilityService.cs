@@ -16,10 +16,28 @@ public class AvailabilityService : IAvailabilityService
         _craftsmanRepository = craftsmanRepository;
     }
 
+    // ==========================================
+    // ✅ Add Availability
+    // ==========================================
     public async Task AddAvailabilityAsync(CreateAvailabilityDto dto, string userId)
     {
         var craftsman = await _craftsmanRepository.GetByUserIdAsync(userId);
-        if (craftsman == null) throw new Exception("Craftsman not found");
+        if (craftsman == null)
+            throw new Exception("Craftsman not found");
+
+        // 🔥 Validation
+        if (dto.StartTime >= dto.EndTime)
+            throw new Exception("Start time must be earlier than end time");
+
+        if (dto.EndTime == TimeSpan.Zero)
+            throw new Exception("End time cannot be 00:00");
+
+        // 🔥 Prevent duplicate day
+        var existing = await _availabilityRepository
+            .GetAllByCraftsmanIdAsync(craftsman.Id);
+
+        if (existing.Any(a => a.Day == dto.Day))
+            throw new Exception("Availability already exists for this day");
 
         var availability = new CraftsmanAvailability
         {
@@ -34,54 +52,54 @@ public class AvailabilityService : IAvailabilityService
         await _availabilityRepository.SaveAsync();
     }
 
-    public async Task <IEnumerable<AvailabilityreadDto>> GetCraftsmanAvailabilityAsync(int craftsmanId)
+    // ==========================================
+    // ✅ Get Availability
+    // ==========================================
+    public async Task<IEnumerable<AvailabilityreadDto>>GetCraftsmanAvailabilityAsync(int craftsmanId)
     {
-        var availabilities = await _availabilityRepository.GetAllByCraftsmanIdAsync(craftsmanId);
+        var availabilities =
+             await _availabilityRepository.GetAllByCraftsmanIdAsync(craftsmanId);
+
         return availabilities
-            .Where(a=>a.IsAvailable)
+            .Where(a => a.IsAvailable)
             .Select(a => new AvailabilityreadDto
-        {
-            CraftsmanId = a.CraftsmanId,
-            Day = a.Day,
-            StartTime = a.From,
-            EndTime = a.To,
-            IsAvailable = a.IsAvailable
-        });
+            {
+                CraftsmanId = a.CraftsmanId,
+                Day = a.Day,
+                StartTime = a.From,
+                EndTime = a.To,
+                IsAvailable = a.IsAvailable
+            });
     }
 
-
-  /*public async Task<IEnumerable<AvailabilityreadDto>> GetMyAvailabilityAsync(string userId)
+    // ==========================================
+    // ✅ Update My Availability
+    // ==========================================
+    public async Task UpdateMyAvailabilityAsync(
+        List<CreateAvailabilityDto> dtos,
+        string userId)
     {
         var craftsman = await _craftsmanRepository.GetByUserIdAsync(userId);
-        if (craftsman == null) throw new Exception("Craftsman not found");
+        if (craftsman == null)
+            throw new Exception("Craftsman not found");
 
-        var availabilities = await _availabilityRepository.GetAllByCraftsmanIdAsync(craftsman.Id);
+        var existingAvailabilities =
+            await _availabilityRepository.GetAllByCraftsmanIdAsync(craftsman.Id);
 
-
-        return availabilities .Select(a => new AvailabilityreadDto
-        {
-            CraftsmanId = a.CraftsmanId,
-            Day = a.Day,
-            StartTime = a.From,
-            EndTime = a.To,
-            IsAvailable = a.IsAvailable
-        });
-    }*/
-
-    public async Task UpdateMyAvailabilityAsync(List<CreateAvailabilityDto> dtos, string userId)
-    {
-        var craftsman = await _craftsmanRepository.GetByUserIdAsync(userId);
-        if (craftsman == null) throw new Exception("Craftsman not found");
-
-        var availabilities = await _availabilityRepository.GetAllByCraftsmanIdAsync(craftsman.Id);
         foreach (var dto in dtos)
         {
-            var availability = availabilities.FirstOrDefault(a => a.Day == dto.Day);
+            if (dto.StartTime >= dto.EndTime)
+                throw new Exception("Start time must be earlier than end time");
+
+            var availability =
+                existingAvailabilities.FirstOrDefault(a => a.Day == dto.Day);
+
             if (availability != null)
             {
                 availability.From = dto.StartTime;
                 availability.To = dto.EndTime;
                 availability.IsAvailable = dto.IsAvailable;
+
                 _availabilityRepository.Update(availability);
             }
             else
@@ -94,6 +112,7 @@ public class AvailabilityService : IAvailabilityService
                     To = dto.EndTime,
                     IsAvailable = dto.IsAvailable
                 };
+
                 await _availabilityRepository.AddAsync(newAvailability);
             }
         }
