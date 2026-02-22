@@ -1,28 +1,26 @@
 ﻿using Harfien.Application.DTO;
+using Harfien.Application.DTO.Profile_Craftman;
+using Harfien.Application.DTO.Review;
 using Harfien.Application.Interfaces;
-using Harfien.Domain.Entities;
+using Harfien.Domain.Enums;
 using Harfien.Domain.Shared.Repositories;
-using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-
-
-
 
 namespace Harfien.Application.Services
 {
     public class CraftsmanService : ICraftsmanService
     {
         private readonly ICraftsmanRepository _repository;
+    
 
         public CraftsmanService(ICraftsmanRepository repository)
         {
             _repository = repository;
         }
-
 
         public async Task<GetMyProfileDto?> GetMyProfileAsync(string userId)
         {
@@ -100,6 +98,43 @@ namespace Harfien.Application.Services
 
 
         public async Task UpdateMyProfileAsync(string userId, UpdateMyProfileDto dto)
+        {
+            var craftsman = await _repository.GetByUserIdWithIncludeAsync(userId);
+
+            if (craftsman == null)
+                throw new Exception("Craftsman not found");
+
+
+            if (!string.IsNullOrWhiteSpace(dto.Bio))
+                craftsman.Bio = dto.Bio;
+
+            if (dto.YearsOfExperience.HasValue)
+                craftsman.YearsOfExperience = dto.YearsOfExperience.Value;
+
+            if (!string.IsNullOrWhiteSpace(dto.FullName))
+                craftsman.User.FullName = dto.FullName;
+
+            if (!string.IsNullOrWhiteSpace(dto.PhoneNumber))
+                craftsman.User.PhoneNumber = dto.PhoneNumber;
+
+            if (dto.Services != null && dto.Services.Any())
+            {
+                foreach (var serviceDto in dto.Services)
+                {
+                    var existingService = craftsman.CraftsmanServices
+                        .FirstOrDefault(s => s.Id == serviceDto.Id);
+
+                    if (existingService == null)
+                        throw new Exception($"Service with Id {serviceDto.Id} not found for this craftsman");
+
+                    existingService.Name = serviceDto.Name;
+                    existingService.Price = serviceDto.Price;
+                }
+            }
+
+            await _repository.SaveAsync();
+        }
+
 
         public async Task<List<CraftsmanDto>> GetAllAsync()
 
@@ -115,11 +150,6 @@ namespace Harfien.Application.Services
                 YearsOfExperience = c.YearsOfExperience
             }).ToList();
         }
+
     }
-
-
-
-
-
-
 }

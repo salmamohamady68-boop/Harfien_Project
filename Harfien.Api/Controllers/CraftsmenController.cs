@@ -18,6 +18,13 @@ namespace Harfien.Presentation.Controllers
             _service = service;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _service.GetAllAsync();
+            return Ok(result);
+        }
+
         [HttpGet("{id}/profile")]
         public async Task<IActionResult> GetProfile(int id)
         {
