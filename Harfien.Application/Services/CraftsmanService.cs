@@ -23,7 +23,86 @@ namespace Harfien.Application.Services
             _repository = repository;
         }
 
+
+        public async Task<GetMyProfileDto?> GetMyProfileAsync(string userId)
+        {
+            var craftsman = await _repository.GetByUserIdWithIncludeAsync(userId);  
+
+            if (craftsman == null)
+                return null;
+
+            return new GetMyProfileDto
+            {
+                FullName = craftsman.User.FullName,
+                PhoneNumber = craftsman.User.PhoneNumber,
+                Bio = craftsman.Bio,
+                YearsOfExperience = craftsman.YearsOfExperience,
+                IsVerified = craftsman.IsVerified,
+
+                Services = craftsman.CraftsmanServices
+                    .Select(s => new ServiceDto
+                    {
+                        Name = s.Name,
+                        Price = s.Price
+                    }).ToList()
+            };
+        }
+
+        public async Task<CraftsmanProfileDto?> GetProfileAsync(int id)
+        {
+            var craftsman = await _repository.GetProfileAsync(id);
+
+            if (craftsman == null)
+                return null;
+
+            var reviews = await _repository.GetReviewAsync(id); 
+
+            var averageRating = reviews.Any()
+                ? reviews.Average(r => r.Rating)
+                : 0;
+
+            return new CraftsmanProfileDto
+            {
+                Id = craftsman.Id,
+                FullName = craftsman.User.FullName,
+                Bio = craftsman.Bio,
+                YearsOfExperience = craftsman.YearsOfExperience,
+                IsVerified = craftsman.IsVerified,
+                Rating = Math.Round(averageRating, 1),
+
+                Services = craftsman.CraftsmanServices
+                    .Select(s => new ServiceDto
+                    {
+                        Name = s.Name,
+                        Price = s.Price
+                    }).ToList(),
+
+                Availabilities = craftsman.Availabilities
+                    .Where(a => a.IsAvailable)
+                    .Select(a => new AvailabilityDto
+                    {
+                        Day = a.Day,
+                        From = a.From,
+                        To = a.To
+                    }).ToList(),
+
+                Reviews = reviews
+                    .Select(r => new ReviewsDto
+                    {
+                        Rating = r.Rating,
+                        Comment = r.Comment
+                    }).ToList(),
+
+                CompletedOrdersCount = craftsman.Orders
+                    .Count(o => o.Status == OrderStatus.Completed)
+            };
+        }
+
+
+        public async Task UpdateMyProfileAsync(string userId, UpdateMyProfileDto dto)
+
         public async Task<List<CraftsmanDto>> GetAllAsync()
+
         {
             var craftsmen = await _repository.GetAllWithUserAsync();
 
