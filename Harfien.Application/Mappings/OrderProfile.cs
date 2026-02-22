@@ -10,9 +10,8 @@ namespace Harfien.Application.Mappings
         {
             CreateMap<CreateOrderDto, Order>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.ClientId, opt => opt.Ignore())
-                .ForMember(dest => dest.Status, opt => opt.Ignore());
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
+            // باقي الحقول زي ClientId و Status handled بعد المابّينج
 
             CreateMap<Order, OrderResponseDto>()
                 .ForMember(d => d.ServiceName,

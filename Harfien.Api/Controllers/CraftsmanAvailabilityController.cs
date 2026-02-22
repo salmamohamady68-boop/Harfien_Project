@@ -44,7 +44,7 @@ public class CraftsmanAvailabilityController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(Roles = "Craftsman")]
+   // [Authorize(Roles = "Craftsman")]
     public async Task<IActionResult> UpdateAvailability([FromBody] List<CreateAvailabilityDto> dtos)
     {
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;

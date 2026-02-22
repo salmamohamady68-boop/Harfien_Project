@@ -38,7 +38,7 @@ namespace Harfien.Application.Services
         public async Task<string> CreateAsync(CreateOrderDto dto, int clientId)
         {
             var client = await _clientRepository.GetByIdAsync(clientId)
-                ?? throw new KeyNotFoundException("Client not found");
+        ?? throw new KeyNotFoundException("Client not found");
 
             var craftsman = await _craftsmanRepository.GetByIdAsync(dto.CraftsmanId)
                 ?? throw new KeyNotFoundException("Craftsman not found");
@@ -46,21 +46,29 @@ namespace Harfien.Application.Services
             var service = await _serviceRepository.GetByIdAsync(dto.ServiceId)
                 ?? throw new KeyNotFoundException("Service not found");
 
-            if (dto.ScheduledAt <= DateTime.UtcNow)
-                throw new Exception("Scheduled time must be in the future");
 
-            var isAvailable = await _availabilityRepository.IsAvailableAsync(craftsman.Id, dto.ScheduledAt);
+            var scheduledLocal = dto.ScheduledAt;
+
+            var isAvailable = await _availabilityRepository
+                .IsAvailableAsync(craftsman.Id, scheduledLocal);
+
             if (!isAvailable)
-                throw new Exception("Craftsman not available at this time");
+                return "Craftsman not available at this time";
 
-            var isBooked = await _orderRepository.ExistsAsync(craftsman.Id, dto.ScheduledAt);
+            var isBooked = await _orderRepository.ExistsAsync(craftsman.Id, scheduledLocal);
             if (isBooked)
-                throw new Exception("This slot is already booked");
+                return "This slot is already booked";
 
-            var order = _mapper.Map<Order>(dto);
-            order.ClientId = clientId;
-            order.Status = OrderStatus.Pending;
-            order.Amount = service.Price;
+            var order = new Order
+            {
+                ClientId = clientId,
+                CraftsmanId = dto.CraftsmanId,
+                ServiceId = dto.ServiceId,
+                Description = dto.Description,
+                ScheduledAt = scheduledLocal.ToUniversalTime(), // حفظ UTC
+                Status = OrderStatus.Pending,
+                Amount = service.Price
+            };
 
             await _orderRepository.AddAsync(order);
             await _orderRepository.SaveAsync();
