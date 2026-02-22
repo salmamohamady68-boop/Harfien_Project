@@ -9,6 +9,7 @@ using Harfien.Domain.Interface_Repository;
 using Harfien.Domain.Interface_Repository.Repositories;
 using Harfien.Domain.Shared.Repositories;
 using Harfien.Infrastructure.Repositories;
+using Harfien.Infrastructure.Services;
 using Harfien.Presentation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -177,6 +178,10 @@ namespace Harfien.Api
             
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IReviewService, ReviewService>();
+
+            //Admin Dash
+            builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+
 
             builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<ICityService, CityService>();

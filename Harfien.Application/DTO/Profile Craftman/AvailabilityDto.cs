@@ -8,7 +8,7 @@ namespace Harfien.Application.DTO.Profile_Craftman
 {
     public class AvailabilityDto
     {
-        public DayOfWeek Day { get; set; }
+        public int Day { get; set; }
         public TimeSpan From { get; set; }
         public TimeSpan To { get; set; }
     }

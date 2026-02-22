@@ -13,37 +13,64 @@ namespace Harfien.Infrastructure.Repositories
     public class AvailabilityRepository
        : GenericRepository<CraftsmanAvailability>, IAvailabilityRepository
     {
-        public AvailabilityRepository(HarfienDbContext context) : base(context) { }
+        private readonly HarfienDbContext _context;
 
-        public async Task<bool> IsAvailableAsync(int craftsmanId, DateTime dateTime)
+        public AvailabilityRepository(HarfienDbContext context)
+            : base(context)
         {
-            return await _dbSet.AnyAsync(a =>
-                a.CraftsmanId == craftsmanId &&
-                a.Day == dateTime.DayOfWeek &&
-                a.From <= dateTime.TimeOfDay &&
-                a.To >= dateTime.TimeOfDay &&
-                a.IsAvailable
-            );
+            _context = context;
         }
 
-        public async Task<IEnumerable<int>> GetAvailableCraftsmenIdsAsync(DateTime dateTime)
+        // ==========================================
+        // 🔥 Check if craftsman is available
+        // ==========================================
+        public async Task<bool> IsAvailableAsync(int craftsmanId, DateTime scheduledAt)
         {
-            return await _dbSet
+            // مهم جدًا نتعامل كـ Local وقت المقارنة
+            var localTime = scheduledAt.ToLocalTime();
+
+            var day = (int)localTime.DayOfWeek;      // تحويل enum لـ int
+            var time = localTime.TimeOfDay;          // ناخد الوقت فقط
+
+            return await _context.CraftsmanAvailabilities
+                .AnyAsync(a =>
+                    a.CraftsmanId == craftsmanId &&
+                    a.Day == day &&
+                    a.IsAvailable &&
+                    a.From <= time &&
+                    a.To > time
+                );
+        }
+
+        // ==========================================
+        // 🔥 Get all available craftsmen at time
+        // ==========================================
+        public async Task<IEnumerable<int>> GetAvailableCraftsmenIdsAsync(DateTime scheduledAt)
+        {
+            var localTime = scheduledAt.ToLocalTime();
+            var day = (int)localTime.DayOfWeek;
+            var time = localTime.TimeOfDay;
+
+            return await _context.CraftsmanAvailabilities
                 .Where(a =>
-                    a.Day == dateTime.DayOfWeek &&
-                    a.From <= dateTime.TimeOfDay &&
-                    a.To >= dateTime.TimeOfDay &&
-                    a.IsAvailable
+                    a.Day == day &&
+                    a.IsAvailable &&
+                    a.From <= time &&
+                    a.To > time
                 )
                 .Select(a => a.CraftsmanId)
                 .Distinct()
                 .ToListAsync();
         }
-        public async Task<IEnumerable<CraftsmanAvailability>> GetAllByCraftsmanIdAsync(int craftsmanId)
-        {
-            return await _dbSet.Where(a => a.CraftsmanId == craftsmanId).ToListAsync();
-        }
 
+        // ==========================================
+        public async Task<IEnumerable<CraftsmanAvailability>>
+            GetAllByCraftsmanIdAsync(int craftsmanId)
+        {
+            return await _context.CraftsmanAvailabilities
+                .Where(a => a.CraftsmanId == craftsmanId)
+                .ToListAsync();
+        }
     }
 
-}
+    }

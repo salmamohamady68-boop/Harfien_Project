@@ -135,7 +135,7 @@ namespace Harfien.Infrastructure.Migrations
                             Id = "ADMIN_ID",
                             AccessFailedCount = 0,
                             Address = "Cairo",
-                            ConcurrencyStamp = "06085720-afac-412e-9027-dad298506737",
+                            ConcurrencyStamp = "cff27653-9255-41ec-9a1b-e94e534dee9a",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "Admin@gmail.com",
                             EmailConfirmed = true,
@@ -144,10 +144,10 @@ namespace Harfien.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEInYMAL6SmAVi1PMZyuGo8a46ZnNAp/MPu4KBiRBWqpe8bhIk70gdw1EZuNRaXeUnw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEELKHz7XXrgxHF6ePvN/KLtEyAFAL6ZfTwReCMO1QcYnEpW3vjyErKz0/8G+TePs4A==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "e17e14e5-3bdb-48b9-88ed-757bb2a04c12",
+                            SecurityStamp = "21323b9f-3234-487d-8e3b-5aa597ae3b88",
                             TwoFactorEnabled = false,
                             UserName = "Admin@gmail.com"
                         });

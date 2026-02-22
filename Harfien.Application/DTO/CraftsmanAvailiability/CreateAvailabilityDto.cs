@@ -10,7 +10,7 @@ namespace Harfien.Application.DTO.CraftsmanAvailiability
     public class CreateAvailabilityDto
     {
         [Range(0, 6, ErrorMessage = "Day must be between 0 (Sunday) and 6 (Saturday).")]
-        public DayOfWeek Day { get; set; }
+        public int Day { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         public bool IsAvailable { get; set; }

@@ -13,7 +13,7 @@ namespace Harfien.Domain.Entities
         public int CraftsmanId { get; set; }
         public Craftsman Craftsman { get; set; } = null!;
 
-        public DayOfWeek Day { get; set; }
+        public int Day { get; set; }
         public TimeSpan From { get; set; }
         public TimeSpan To { get; set; }
 

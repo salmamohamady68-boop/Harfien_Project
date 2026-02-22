@@ -10,7 +10,7 @@ namespace Harfien.Application.DTO.CraftsmanAvailiability
     {
 
        public int CraftsmanId { get; internal set; }
-        public DayOfWeek Day { get; set; }
+        public int Day { get; set; }
         public TimeSpan StartTime  { get; set; }
         public TimeSpan EndTime { get; set; }
         public bool IsAvailable { get; set; }
