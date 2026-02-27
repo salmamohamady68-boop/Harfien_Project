@@ -23,6 +23,7 @@ public class AuthService : IAuthService
     private readonly IEmailService _emailSender;
     private readonly IMemoryCache _cache;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IClientRepository _clientRepo;
 
 
 
@@ -34,7 +35,8 @@ public class AuthService : IAuthService
         IConfiguration configuration,
         IEmailService emailSender,
         IMemoryCache cache,
-        IUnitOfWork context
+        IUnitOfWork context,
+        IClientRepository clientRepo
         )
     {
         _userManager = userManager;
@@ -44,7 +46,8 @@ public class AuthService : IAuthService
         _emailSender = emailSender;
         _cache = cache;
         _unitOfWork = context;
-      
+        _clientRepo = clientRepo;
+
     }
 
     public async Task<string> RegisterClientAsync(RegisterClientDto dto)
@@ -80,7 +83,7 @@ public class AuthService : IAuthService
 
     public async Task<string> RegisterCraftsmanAsync(RegisterCraftsmanDto dto)
     {
-        
+
         if (await _userManager.FindByEmailAsync(dto.Email) != null)
             return "This email is already registered.";
 
@@ -112,7 +115,7 @@ public class AuthService : IAuthService
         var craftsman = new Craftsman
         {
             UserId = user.Id,
-          
+
             YearsOfExperience = dto.YearsOfExperience,
             IsApproved = false
         };
@@ -146,25 +149,50 @@ public class AuthService : IAuthService
             };
         }
 
-       
-        var craftsman = await _craftsmanRepo.GetByUserIdAsync(user.Id);
+        var roles = await _userManager.GetRolesAsync(user);
+        var role = roles.FirstOrDefault();
 
-        if (craftsman != null && !craftsman.IsApproved)
+        int? craftsmanId = null;
+        int? clientId = null;
+
+        if (role == "Craftsman")
         {
-            return new LoginResponse
+
+            var craftsman = await _craftsmanRepo.GetByUserIdAsync(user.Id);
+
+            if (craftsman != null && !craftsman.IsApproved)
             {
-                Success = false,
-                Message = "Your account is not approved yet"
-            };
+                return new LoginResponse
+                {
+                    Success = false,
+                    Message = "Your account is not approved yet"
+                };
+            }
+
+            craftsmanId = craftsman?.Id;
+
+        }
+        else if (role == "Client")
+        {
+            var client = await _clientRepo.GetByUserIdAsync(user.Id);
+            clientId = client?.Id;
         }
 
         // Generate JWT
         var token = await _jwtService.GenerateTokenAsync(user);
 
+
+
         return new LoginResponse
         {
             Success = true,
-            Token = token
+            Token = token,
+            UserId = user.Id,
+            Role = role,
+            CraftsmanId = craftsmanId,
+            ClientId = clientId
+
+
         };
     }
 
@@ -182,7 +210,7 @@ public class AuthService : IAuthService
         // تحديث البيانات في قاعدة البيانات
         await _craftsmanRepo.UpdateAsync(craftsman);
 
-        
+
         string userId = craftsman.UserId;
 
         return "Craftsman approved successfully. User can now log in.";
@@ -191,13 +219,13 @@ public class AuthService : IAuthService
 
     public async Task<string> RejectCraftsmanAsync(int craftsmanId)
     {
-       
+
         var craftsman = await _craftsmanRepo.GetByIdAsync(craftsmanId);
         if (craftsman == null)
-            return null; 
+            return null;
         craftsman.IsApproved = false;
 
-        
+
         await _craftsmanRepo.UpdateAsync(craftsman);
 
 
