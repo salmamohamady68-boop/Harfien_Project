@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Harfien.Application.DTO.Error;
 using Harfien.Application.DTO.Service;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Shared;
 using Harfien.Domain.Shared.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -19,23 +21,65 @@ namespace Harfien.Application.Services
            _serviceRepository = serviceRepository;
         }
         #region crud op
-        public async Task<ServiceReadDto> CreateServiceAsync(ServiceCreateDto dto)
+        public async Task<ServiceReadDto> CreateServiceAsync(ServiceCreateDto dto, List<FieldErrorDto> serviceErrors)
         {
-             
-            var service = _mapper.Map<Service>(dto);
+            if (dto.CraftsmanId.HasValue)
+            {
+                if (!await _serviceRepository.CraftsmanExistsAsync(dto.CraftsmanId.Value))
+                {
+                    serviceErrors.Add(new FieldErrorDto
+                    {
+                        Field = nameof(dto.CraftsmanId),
+                        Message = "Craftsman not found."
+                    });
+                }
 
-             await _serviceRepository.AddAsync(service);
+                if (await _serviceRepository.ServiceExistsAsync(dto.Name, dto.CraftsmanId.Value))
+                {
+                    serviceErrors.Add(new FieldErrorDto
+                    {
+                        Field = nameof(dto.Name),
+                        Message = "Service with the same name already exists for this craftsman."
+                    });
+                }
+            }
 
-             await _serviceRepository.SaveAsync();
-            var serviceWithRelations = await _serviceRepository.GetServiceByIdWithCraftData(service.Id);
+      
+            if (dto.ServiceCategoryId.HasValue)
+            {
+                if (!await _serviceRepository.CategoryExistsAsync(dto.ServiceCategoryId.Value))
+                {
+                    serviceErrors.Add(new FieldErrorDto
+                    {
+                        Field = nameof(dto.ServiceCategoryId),
+                        Message = "Service category not found."
+                    });
+                }
+            }
 
-            return _mapper.Map<ServiceReadDto>(serviceWithRelations);
-
-            
 
 
+            if (serviceErrors.Any())
+                return null;
+
+          
+            try
+            {
+                var service = _mapper.Map<Service>(dto);
+
+                await _serviceRepository.AddAsync(service);
+                await _serviceRepository.SaveAsync();
+
+                var serviceWithRelations = await _serviceRepository.GetServiceByIdWithCraftData(service.Id);
+
+                return _mapper.Map<ServiceReadDto>(serviceWithRelations);
+            }
+            catch (Exception ex)
+            {
+                return null;
+
+            }
         }
-
         public async Task<bool> DeleteServiceAsync(int id)
         {
             var service = await _serviceRepository.GetByIdAsync(id);
@@ -50,8 +94,40 @@ namespace Harfien.Application.Services
 
 
        
-        public async Task<ServiceReadDto> UpdateServiceAsync(int id, ServiceUpdateDto dto)
+        public async Task<ServiceReadDto> UpdateServiceAsync(int id, ServiceUpdateDto dto, List<FieldErrorDto> serviceErrors)
         {
+            if (dto.CraftsmanId.HasValue)
+            {
+                if (!await _serviceRepository.CraftsmanExistsAsync(dto.CraftsmanId.Value))
+                {
+                    serviceErrors.Add(new FieldErrorDto
+                    {
+                        Field = nameof(dto.CraftsmanId),
+                        Message = "Craftsman not found."
+                    });
+                }
+
+               
+            }
+
+
+            if (dto.ServiceCategoryId.HasValue)
+            {
+                if (!await _serviceRepository.CategoryExistsAsync(dto.ServiceCategoryId.Value))
+                {
+                    serviceErrors.Add(new FieldErrorDto
+                    {
+                        Field = nameof(dto.ServiceCategoryId),
+                        Message = "Service category not found."
+                    });
+                }
+            }
+
+
+
+            if (serviceErrors.Any())
+                return null;
+
             var service = await _serviceRepository.GetByIdAsync(id);
             _mapper.Map(dto, service);
             _serviceRepository.Update(service);
@@ -78,10 +154,38 @@ namespace Harfien.Application.Services
             return _mapper.Map<ServiceReadDto>(service);
         }
 
-        public async Task<IEnumerable<ServiceReadDto>> GetServicesByCategoryAsync(int categoryId)
+        public async Task<PagedResult<ServiceReadDto>> GetServicesByCategoryAsync(int categoryId, int pageNumber, int pageSize, List<FieldErrorDto> serviceErrors)
         {
-            var services = await _serviceRepository.GetServicesByCategory(categoryId);
-            return _mapper.Map<List<ServiceReadDto>>(services);
+            if (!await _serviceRepository.CategoryExistsAsync(categoryId))
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = nameof(categoryId),
+                    Message = "Service category not found."
+                });
+            }
+            var services = await _serviceRepository.GetServicesByCategoryAsync(categoryId,pageNumber,pageSize);
+           if( await _serviceRepository.CategoryExistsAsync(categoryId))
+           { if (!services.Items.Any())
+                {
+                    serviceErrors.Add(new FieldErrorDto
+                    {
+                        Field = nameof(categoryId),
+                        Message = "No services found for the specified category"
+                    });
+                }
+            }
+            if (serviceErrors.Any())
+                return null;
+           
+            return new PagedResult<ServiceReadDto>
+            {
+                Items = _mapper.Map<IEnumerable<ServiceReadDto>>(services.Items),
+                TotalCount = services.TotalCount,
+                PageNumber = services.PageNumber,
+                PageSize = services.PageSize
+            };
+
         }
 
         public async Task<PagedResult<ServiceReadDto>> GetFilteredAsync(ServiceQueryDto query)
@@ -97,11 +201,32 @@ namespace Harfien.Application.Services
             };
         }
 
-        public async Task<PagedResult<ServiceReadDto>> GetServicesByCraftsmanIdAsync(int craftsmanId, int pageNumber, int pageSize)
+        public async Task<PagedResult<ServiceReadDto>> GetServicesByCraftsmanIdAsync(int craftsmanId, int pageNumber, int pageSize, List<FieldErrorDto> serviceErrors)
         {
-            var result = await _serviceRepository.GetServicesByCraftsmanIdAsync( craftsmanId,   pageNumber,   pageSize);
+            if (!await _serviceRepository.CraftsmanExistsAsync(craftsmanId))
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = nameof(craftsmanId),
+                    Message = "Craftsman not found."
+                });
+            }
 
-            return new PagedResult<ServiceReadDto>
+            if (serviceErrors.Any())
+                return null;
+            var result = await _serviceRepository.GetServicesByCraftsmanIdAsync( craftsmanId,   pageNumber,   pageSize);
+            if (await _serviceRepository.CraftsmanExistsAsync(craftsmanId))
+            {
+                if (!result.Items.Any())
+                {
+                    serviceErrors.Add(new FieldErrorDto
+                    {
+                        Field = nameof(craftsmanId),
+                        Message = "No services found for the specified craftmane"
+                    });
+                }
+            }
+                return new PagedResult<ServiceReadDto>
             {
                 Items = _mapper.Map<IEnumerable<ServiceReadDto>>(result.Items),
                 TotalCount = result.TotalCount,
