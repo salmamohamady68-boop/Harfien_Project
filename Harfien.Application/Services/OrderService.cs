@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using Harfien.Application.DTO.Error;
 using Harfien.Application.DTO.Order;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Enums;
 using Harfien.Domain.Shared.Repositories;
-
 namespace Harfien.Application.Services
 {
     public class OrderService : IOrderService
@@ -32,32 +32,55 @@ namespace Harfien.Application.Services
             _mapper = mapper;
         }
 
-        // ===========================
-        // إنشاء أوردر جديد
-        // ===========================
-        public async Task<string> CreateAsync(CreateOrderDto dto, int clientId)
+        // ================= CREATE =================
+        public async Task<OrderResponseDto?> CreateAsync(
+            CreateOrderDto dto,
+            int clientId,
+            List<FieldErrorDto> serviceErrors)
         {
-            var client = await _clientRepository.GetByIdAsync(clientId)
-        ?? throw new KeyNotFoundException("Client not found");
+            var client = await _clientRepository.GetByIdAsync(clientId);
+            if (client == null)
+                serviceErrors.Add(new FieldErrorDto { Field = "Client", Message = "Client not found" });
 
-            var craftsman = await _craftsmanRepository.GetByIdAsync(dto.CraftsmanId)
-                ?? throw new KeyNotFoundException("Craftsman not found");
+            var craftsman = await _craftsmanRepository.GetByIdAsync(dto.CraftsmanId);
+            if (craftsman == null)
+                serviceErrors.Add(new FieldErrorDto { Field = nameof(dto.CraftsmanId), Message = "Craftsman not found" });
 
-            var service = await _serviceRepository.GetByIdAsync(dto.ServiceId)
-                ?? throw new KeyNotFoundException("Service not found");
+            var service = await _serviceRepository.GetByIdAsync(dto.ServiceId);
+            if (service == null)
+                serviceErrors.Add(new FieldErrorDto { Field = nameof(dto.ServiceId), Message = "Service not found" });
 
+            if (dto.ScheduledAt <= DateTime.Now)
+                serviceErrors.Add(new FieldErrorDto { Field = nameof(dto.ScheduledAt), Message = "Cannot book in the past" });
 
-            var scheduledLocal = dto.ScheduledAt;
+            if (serviceErrors.Any())
+                return null;
 
             var isAvailable = await _availabilityRepository
-                .IsAvailableAsync(craftsman.Id, scheduledLocal);
+                .IsAvailableAsync(dto.CraftsmanId, dto.ScheduledAt);
 
             if (!isAvailable)
-                return "Craftsman not available at this time";
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = nameof(dto.ScheduledAt),
+                    Message = "Craftsman not available at this time"
+                });
+                return null;
+            }
 
-            var isBooked = await _orderRepository.ExistsAsync(craftsman.Id, scheduledLocal);
+            var isBooked = await _orderRepository
+                .ExistsAsync(dto.CraftsmanId, dto.ScheduledAt);
+
             if (isBooked)
-                return "This slot is already booked";
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = nameof(dto.ScheduledAt),
+                    Message = "This slot is already booked"
+                });
+                return null;
+            }
 
             var order = new Order
             {
@@ -65,83 +88,120 @@ namespace Harfien.Application.Services
                 CraftsmanId = dto.CraftsmanId,
                 ServiceId = dto.ServiceId,
                 Description = dto.Description,
-                ScheduledAt = scheduledLocal.ToUniversalTime(), // حفظ UTC
+                ScheduledAt = dto.ScheduledAt.ToUniversalTime(),
                 Status = OrderStatus.Pending,
-                Amount = service.Price
+                Amount = service!.Price
             };
 
             await _orderRepository.AddAsync(order);
             await _orderRepository.SaveAsync();
 
-            return "Order created successfully";
+            var createdOrder =
+                await _orderRepository.GetByIdWithDetailsAsync(order.Id);
+
+            return _mapper.Map<OrderResponseDto>(createdOrder);
         }
 
-        // ===========================
-        // جلب أوردر حسب Id
-        // ===========================
-        public async Task<OrderResponseDto> GetByIdAsync(int id)
+        // ================= GET BY ID =================
+        public async Task<OrderResponseDto?> GetByIdAsync(
+            int id,
+            List<FieldErrorDto> serviceErrors)
         {
-            var order = await _orderRepository.GetByIdWithDetailsAsync(id)
-                ?? throw new KeyNotFoundException("Order not found");
+            var order = await _orderRepository.GetByIdWithDetailsAsync(id);
+
+            if (order == null)
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = "Id",
+                    Message = "Order not found"
+                });
+                return null;
+            }
 
             return _mapper.Map<OrderResponseDto>(order);
         }
 
-        // ===========================
-        // جلب كل أوردرز العميل
-        // ===========================
-        public async Task<IEnumerable<OrderInfoDto>> GetClientOrdersAsync(int clientId)
+        // ================= CLIENT ORDERS =================
+        public async Task<IEnumerable<OrderInfoDto>?> GetClientOrdersAsync(
+            int clientId,
+            List<FieldErrorDto> serviceErrors)
         {
             var orders = await _orderRepository.GetByClientIdAsync(clientId);
+
+            if (!orders.Any())
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = "ClientId",
+                    Message = "No orders found for this client"
+                });
+                return null;
+            }
+
             return _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
         }
 
-        // ===========================
-        // جلب كل أوردرز الحرفي
-        // ===========================
-        public async Task<IEnumerable<OrderInfoDto>> GetCraftsmanOrdersAsync(int craftsmanId)
+        // ================= CRAFTSMAN ORDERS =================
+        public async Task<IEnumerable<OrderInfoDto>?> GetCraftsmanOrdersAsync(
+            int craftsmanId,
+            List<FieldErrorDto> serviceErrors)
         {
             var orders = await _orderRepository.GetByCraftsmanIdAsync(craftsmanId);
+
+            if (!orders.Any())
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = "CraftsmanId",
+                    Message = "No orders found for this craftsman"
+                });
+                return null;
+            }
+
             return _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
         }
 
-        // ===========================
-        // جلب كل الأوردرز
-        // ===========================
-        public async Task<IEnumerable<OrderResponseDto>> GetAllAsync()
+        // ================= STATUS UPDATE =================
+        private async Task UpdateStatusAsync(
+            int orderId,
+            int userId,
+            bool isClient,
+            OrderStatus newStatus,
+            List<FieldErrorDto> serviceErrors)
         {
-            var orders = await _orderRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<OrderResponseDto>>(orders);
-        }
+            var order = await _orderRepository.GetByIdAsync(orderId);
 
-        // ===========================
-        // جلب الأوردرز حسب الحالة
-        // ===========================
-        public async Task<IEnumerable<OrderResponseDto>> GetByStatusAsync(OrderStatus status)
-        {
-            var orders = await _orderRepository.GetByStatusAsync(status);
-            return _mapper.Map<IEnumerable<OrderResponseDto>>(orders);
-        }
+            if (order == null)
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = "OrderId",
+                    Message = "Order not found"
+                });
+                return;
+            }
 
-        // ===========================
-        // تحديث حالات الأوردر
-        // ===========================
-        private async Task UpdateStatusAsync(int orderId, int userId, bool isClient, OrderStatus newStatus)
-        {
-            var order = await _orderRepository.GetByIdAsync(orderId)
-                ?? throw new KeyNotFoundException("Order not found");
+            if (isClient && order.ClientId != userId ||
+               !isClient && order.CraftsmanId != userId)
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = "Authorization",
+                    Message = "You are not allowed to modify this order"
+                });
+                return;
+            }
 
-            if (isClient && order.ClientId != userId)
-                throw new UnauthorizedAccessException("Unauthorized");
-            if (!isClient && order.CraftsmanId != userId)
-                throw new UnauthorizedAccessException("Unauthorized");
-
-            if (order.Status == newStatus)
-                throw new InvalidOperationException("Order already in this status");
-
-            // 🔴 Validate Transition
             if (!IsValidTransition(order.Status, newStatus))
-                throw new InvalidOperationException("Invalid status transition");
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = "Status",
+                    Message = "Invalid status transition"
+                });
+                return;
+            }
 
             order.Status = newStatus;
 
@@ -153,37 +213,29 @@ namespace Harfien.Application.Services
         {
             return (current, next) switch
             {
-                // Pending
                 (OrderStatus.Pending, OrderStatus.Accepted) => true,
                 (OrderStatus.Pending, OrderStatus.Rejected) => true,
                 (OrderStatus.Pending, OrderStatus.Cancelled) => true,
-
-                // Accepted
                 (OrderStatus.Accepted, OrderStatus.Running) => true,
                 (OrderStatus.Accepted, OrderStatus.Cancelled) => true,
-
-                // Running
                 (OrderStatus.Running, OrderStatus.Completed) => true,
-
                 _ => false
             };
         }
 
+        public Task AcceptAsync(int orderId, int craftsmanId, List<FieldErrorDto> serviceErrors)
+            => UpdateStatusAsync(orderId, craftsmanId, false, OrderStatus.Accepted, serviceErrors);
 
+        public Task RejectAsync(int orderId, int craftsmanId, List<FieldErrorDto> serviceErrors)
+            => UpdateStatusAsync(orderId, craftsmanId, false, OrderStatus.Rejected, serviceErrors);
 
-        public Task AcceptAsync(int orderId, int craftsmanId) =>
-            UpdateStatusAsync(orderId, craftsmanId, false, OrderStatus.Accepted);
+        public Task StartAsync(int orderId, int craftsmanId, List<FieldErrorDto> serviceErrors)
+            => UpdateStatusAsync(orderId, craftsmanId, false, OrderStatus.Running, serviceErrors);
 
-        public Task RejectAsync(int orderId, int craftsmanId) =>
-            UpdateStatusAsync(orderId, craftsmanId, false, OrderStatus.Rejected);
+        public Task CompleteAsync(int orderId, int craftsmanId, List<FieldErrorDto> serviceErrors)
+            => UpdateStatusAsync(orderId, craftsmanId, false, OrderStatus.Completed, serviceErrors);
 
-        public Task StartAsync(int orderId, int craftsmanId) =>
-            UpdateStatusAsync(orderId, craftsmanId, false, OrderStatus.Running);
-
-        public Task CompleteAsync(int orderId, int craftsmanId) =>
-            UpdateStatusAsync(orderId, craftsmanId, false, OrderStatus.Completed);
-
-        public Task CancelAsync(int orderId, int clientId) =>
-            UpdateStatusAsync(orderId, clientId, true, OrderStatus.Cancelled);
+        public Task CancelAsync(int orderId, int clientId, List<FieldErrorDto> serviceErrors)
+            => UpdateStatusAsync(orderId, clientId, true, OrderStatus.Cancelled, serviceErrors);
     }
 }
