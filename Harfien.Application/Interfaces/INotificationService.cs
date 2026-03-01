@@ -1,4 +1,5 @@
 ﻿using Harfien.Application.DTO.Notifications;
+using Harfien.Application.Helpers;
 using Harfien.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ namespace Harfien.Application.Interfaces
     public interface INotificationService
     {
         Task<IEnumerable<Notification>> GetUserNotificationsAsync(string userId);
-        Task MarkAsReadAsync(int notificationId);
+
+        Task<ServiceResult<bool>> MarkAsReadAsync(int notificationId);
 
         Task<IEnumerable<NotificationDto>> GetUserNotificationsDtoAsync(string userId);
         Task CreateNotificationAsync(string userId, string title, string message);

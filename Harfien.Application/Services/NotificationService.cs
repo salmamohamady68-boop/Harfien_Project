@@ -67,6 +67,8 @@ namespace Harfien.Application.Services
 
             notification.IsRead = true;
             await _notificationRepository.SaveChangesAsync();
+            return ServiceResult<bool>.Success(true);
+        }
 
         public async Task CreateNotificationAsync(string userId, string title, string message)
         {
