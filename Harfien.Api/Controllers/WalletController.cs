@@ -1,9 +1,12 @@
 ﻿using System.Security.Claims;
+using Harfien.Application.DTO.Error;
+using Harfien.Application.Helpers;
 using Harfien.Application.Interfaces.payment_interfaces;
 using Harfien.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Harfien.Presentation.Controllers
 {
@@ -28,7 +31,17 @@ namespace Harfien.Presentation.Controllers
             var wallet = await _walletService.GetWalletByUserIdAsync(userId);
 
             if (wallet == null)
-                return NotFound("Wallet not found");
+            { var errors = new List<FieldErrorDto>
+                    {
+                        new FieldErrorDto
+                        {
+                            Field = "id",
+                            Message = $"Wallet for user {userId} not found."
+                        }
+                    };
+                    return ErrorHelper.HandleErrors(this, serviceErrors: errors, message: "Get wallet operation failed",
+                statusCode: StatusCodes.Status404NotFound);
+            }
 
             return Ok(wallet);
         }
@@ -63,12 +76,37 @@ namespace Harfien.Presentation.Controllers
                 var deleted = await _walletService.DeleteWalletAsync(userId);
 
                 if (!deleted)
-                    return NotFound("Wallet not found");
+                {
+                    var errors = new List<FieldErrorDto>
+                        {
+                           new FieldErrorDto
+                           {
+                                Field = "id",
+                                Message = $"No Wallet found for this User"
+                            }
+                        };
+
+                    return ErrorHelper.HandleErrors(this, serviceErrors: errors, message: "Get Wallet operation failed",
+                   statusCode: StatusCodes.Status404NotFound);
+
+                }
+                   
 
                 return Ok("Wallet deleted successfully");
             }
             catch (Exception ex) { 
-            return BadRequest(ex.Message);
+                  
+                var errors = new List<FieldErrorDto>
+                        {
+                           new FieldErrorDto
+                           {
+                                Field = "wallet",
+                                Message = $"Wallet operation failed"
+                            }
+                        };
+
+                return ErrorHelper.HandleErrors(this, serviceErrors: errors, message: " Wallet operation failed",
+               statusCode: StatusCodes.Status400BadRequest);
             }
 
             
@@ -80,24 +118,62 @@ namespace Harfien.Presentation.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var transactions = await _walletService  .GetTransactionsAsync(userId, pageNumber, pageSize);
+            if (!transactions.Items.Any())
+            {
+                var errors = new List<FieldErrorDto>
+                        {
+                           new FieldErrorDto
+                           {
+                                Field = "transaction",
+                                Message = $"No transactions found for this User"
+                            }
+                        };
+
+                return ErrorHelper.HandleErrors(this, serviceErrors: errors, message: "Get transactions operation failed",
+               statusCode: StatusCodes.Status404NotFound);
+            }
+
 
             return Ok(transactions);
         }
 
         [HttpGet("my-payments")]
-        public async Task<IActionResult> GetMyPayments(
-  int pageNumber = 1,
-  int pageSize = 10)
+        public async Task<IActionResult> GetMyPayments( int pageNumber = 1,  int pageSize = 10)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userId))
-                return Unauthorized();
+                {
+                    var errors = new List<FieldErrorDto>
+                    {
+                       new FieldErrorDto
+                       {
+                            Field = "id",
+                            Message = $"User not authenticated"
+                        }
+                    };
+
+                    return ErrorHelper.HandleErrors(this, serviceErrors: errors, message: "Get user operation failed",
+                   statusCode: StatusCodes.Status401Unauthorized);
+            }
 
           
             var result = await _walletService
                 .GetPaymentsByClientIdAsync(userId, pageNumber, pageSize);
+            if (!result.Items.Any())
+            {
+                var errors = new List<FieldErrorDto>
+                        {
+                           new FieldErrorDto
+                           {
+                                Field = " wallet transaction",
+                                Message = $"No wallet transactions found for this User"
+                            }
+                        };
 
+                return ErrorHelper.HandleErrors(this, serviceErrors: errors, message: "Get wallet transactions operation failed",
+               statusCode: StatusCodes.Status404NotFound);
+            }
             return Ok(result);
         }
 
