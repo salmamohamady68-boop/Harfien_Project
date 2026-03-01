@@ -1,4 +1,6 @@
-﻿using Harfien.Application.Interfaces;
+﻿using Harfien.Application.DTO.Error;
+using Harfien.Application.Helpers;
+using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Interface_Repository.Repositories;
 using Microsoft.AspNetCore.SignalR;
@@ -45,16 +47,26 @@ namespace Harfien.Application.Services
             return await _notificationRepository.GetByUserIdAsync(userId);
         }
 
-        public async Task MarkAsReadAsync(int notificationId)
+        public async Task<ServiceResult<bool>> MarkAsReadAsync(int notificationId)
         {
             var notification = await _notificationRepository.GetByIdAsync(notificationId);
 
             if (notification == null)
-                throw new Exception("Notification not found");
+            {
+                return ServiceResult<bool>.Failure(
+                    "Notification not found",
+                    new List<FieldErrorDto>
+                    {
+                new FieldErrorDto
+                {
+                    Field = "notificationId",
+                    Message = "Invalid notification id"
+                }
+                    });
+            }
 
             notification.IsRead = true;
             await _notificationRepository.SaveChangesAsync();
-        }
 
         public async Task CreateNotificationAsync(string userId, string title, string message)
         {

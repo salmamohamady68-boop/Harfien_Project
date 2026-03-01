@@ -11,17 +11,17 @@ namespace Harfien.Application.Interfaces
 {
     public interface IComplaintService
     {
-        Task CreateComplaintAsync(int reporterId, CreateComplaintDto dto);
-        Task UpdateComplaintAsync(int reporterId, int complaintId, UpdateComplaintDto dto);
-        Task DeleteComplaintAsync(int reporterId, int complaintId);
+        Task<ComplaintResponseDto> CreateComplaintAsync(int reporterId, CreateComplaintDto dto);
+        Task<ComplaintResponseDto> UpdateComplaintAsync(int reporterId, int complaintId, UpdateComplaintDto dto);
+        Task<ComplaintResponseDto> DeleteComplaintAsync(int reporterId, int complaintId);
 
         Task<IEnumerable<ComplaintResponseDto>> GetMyComplaintsAsync(int reporterId);
         Task<ComplaintResponseDto?> GetComplaintByIdAsync(int reporterId, int complaintId);
 
         Task<IEnumerable<ComplaintDetailsDto>> GetAllComplaintsAsync(); // Admin
         Task<ComplaintDetailsDto?> GetComplaintDetailsAsync(int complaintId); // Admin
-        Task<bool> ChangeStatusAsync(int complaintId, ComplaintStatus status); // Admin
-        Task<bool> AddResolutionAsync(int complaintId, string notes); // Admin
+        Task<ComplaintResponseDto> ChangeStatusAsync(int complaintId, ComplaintStatus status);//admin
+        Task<ComplaintResponseDto> AddResolutionAsync(int complaintId, string notes); //admin
     }
 
 }

@@ -35,6 +35,10 @@ namespace Harfien.Infrastructure.Repositories
                     .ToListAsync();
             }
 
+        public async Task<Order?> GetByIdAsync(int id)
+        {
+            return await _context.Orders.FindAsync(id);
+        }
 
         public async Task<IEnumerable<Order>> GetByClientIdAsync(int clientId)
                 => await _context.Orders
