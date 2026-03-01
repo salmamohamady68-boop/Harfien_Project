@@ -15,5 +15,7 @@ namespace Harfien.Application.DTO.Profile_Craftman
         public bool IsVerified { get; set; }
 
         public List<ServiceDto> Services { get; set; }
+        public List<AvailabilityDto> Availabilities { get; internal set; }
+        public int Id { get; internal set; }
     }
 }

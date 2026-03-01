@@ -1,4 +1,5 @@
 ﻿using Harfien.Application.DTO.Notifications;
+using Harfien.Application.Helpers;
 using Harfien.Application.Interfaces;
 using Harfien.Application.Services;
 using Harfien.Domain.Entities;
@@ -37,10 +38,21 @@ namespace Harfien.Presentation.Controllers
 
 
         [HttpPut("{id}/read")]
+        [HttpPut("mark-as-read/{id}")]
         public async Task<IActionResult> MarkAsRead(int id)
         {
-            await _notificationService.MarkAsReadAsync(id);
-            return NoContent();
+            var result = await _notificationService.MarkAsReadAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                return ErrorHelper.HandleErrors(
+                    this,
+                    result.Errors,
+                    result.Message,
+                    StatusCodes.Status404NotFound);
+            }
+
+            return Ok(new { message = result.Message });
         }
         [HttpPost("send")]
         public async Task<IActionResult> SendNotification([FromBody] NotificationRequestDto request)
