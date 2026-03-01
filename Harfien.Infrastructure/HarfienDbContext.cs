@@ -135,6 +135,10 @@ namespace Harfien.DataAccess
 
             #region Decimal Fixes
 
+            builder.Entity<Wallet>()
+                .Property(w => w.Balance)
+                .HasPrecision(18, 2);
+
             builder.Entity<Payment>()
                 .Property(p => p.Amount)
                 .HasPrecision(18, 2);
@@ -200,7 +204,9 @@ namespace Harfien.DataAccess
                 IsActive = true
             };
 
-            adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin123456");
+            //adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin123456");
+            // fixed hash for "Admin123456" to ensure consistent seeding across environments
+            adminUser.PasswordHash = "AQAAAAIAAYagAAAAEELKHz7XXrgxHF6ePvN/KLtEyAFAL6ZfTwReCMO1QcYnEpW3vjyErKz0/8G+TePs4A==";
 
             builder.Entity<ApplicationUser>().HasData(adminUser);
 

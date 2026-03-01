@@ -1,4 +1,7 @@
-﻿using Harfien.Application.DTO.Service;
+﻿using System;
+using Harfien.Application.DTO.Error;
+using Harfien.Application.DTO.Service;
+using Harfien.Application.Helpers;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -19,40 +22,51 @@ namespace Harfien.Presentation.Controllers
         }
         [Authorize(Roles = "Craftsman")]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]ServiceCreateDto serviceCreateDto)
+      
+        public async Task<IActionResult> Create([FromBody] ServiceCreateDto dto)
         {
-            if (serviceCreateDto is not null)
-            {
-              var service=  await _serviceService.CreateServiceAsync(serviceCreateDto);
-                return Ok(service);
-            }
-            return BadRequest();
+            var serviceErrors = new List<FieldErrorDto>();
+
+
+            var result = await _serviceService.CreateServiceAsync(dto, serviceErrors);
+
+            if (!ModelState.IsValid || serviceErrors.Any())
+                return ErrorHelper.HandleErrors(this, serviceErrors, "Service creation failed");
+
+            return Ok(result);
         }
         [Authorize(Roles = "Craftsman")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, ServiceUpdateDto dto)
         {
-            var result = await _serviceService.UpdateServiceAsync(id, dto);
+            var serviceErrors = new List<FieldErrorDto>();
+            var result = await _serviceService.UpdateServiceAsync(id, dto,serviceErrors);
+            if (!ModelState.IsValid || serviceErrors.Any())
+                return ErrorHelper.HandleErrors(this, serviceErrors, "Service update failed");
             return Ok(result);
         }
         [Authorize(Roles = "Craftsman")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            
-            try
-            {
+             
                 var deleted = await _serviceService.DeleteServiceAsync(id);
                 if (!deleted)
-                    return NotFound(new { message = $"Service with ID {id} not found." });
+                {
+                    var errors = new List<FieldErrorDto>
+                    {
+                        new FieldErrorDto
+                        {
+                            Field = "id",
+                            Message = $"Service with ID {id} not found."
+                        }
+                    };
+                    return ErrorHelper.HandleErrors(  this, serviceErrors: errors,   message: "Delete operation failed", 
+                        statusCode: StatusCodes.Status404NotFound);
+                }
 
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                
-                return StatusCode(500, new { message = "An error occurred while deleting the service.", details = ex.Message });
-            }
+                    return NoContent();
+       
         }
 
         [HttpGet]
@@ -66,14 +80,30 @@ namespace Harfien.Presentation.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var service = await _serviceService.GetServiceByIdAsync(id);
-            if (service == null) return NotFound();
+            if (service == null)
+                
+                {
+                    var errors = new List<FieldErrorDto>
+                    {
+                        new FieldErrorDto
+                        {
+                            Field = "id",
+                            Message = $"Service with ID {id} not found."
+                        }
+                    };
+                    return ErrorHelper.HandleErrors(this, serviceErrors: errors, message: "GetById operation failed",
+                        statusCode: StatusCodes.Status404NotFound);
+                }
             return Ok(service);
         }
 
         [HttpGet("category/{categoryId}")]
-        public async Task<IActionResult> GetByCategory(int categoryId)
+        public async Task<IActionResult> GetByCategory(int categoryId, int pageNumber, int pageSize)
         {
-            var services = await _serviceService.GetServicesByCategoryAsync(categoryId);
+            var serviceErrors = new List<FieldErrorDto>();
+            var services = await _serviceService.GetServicesByCategoryAsync(categoryId,pageNumber,pageSize,serviceErrors);
+            if (!ModelState.IsValid || serviceErrors.Any())
+                return ErrorHelper.HandleErrors(this, serviceErrors, "Service get by category failed",404);
             return Ok(services);
         }
 
@@ -84,14 +114,15 @@ namespace Harfien.Presentation.Controllers
             return Ok(result);
         }
         [HttpGet("craftsman/{craftsmanId}")]
-        public async Task<IActionResult> GetByCraftsmanId(
-    int craftsmanId,
-    [FromQuery] int pageNumber = 1,
-    [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetByCraftsmanId(  int craftsmanId,  [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10)
         {
+            var serviceErrors = new List<FieldErrorDto>();
             var result = await _serviceService
-                .GetServicesByCraftsmanIdAsync(craftsmanId, pageNumber, pageSize);
-
+                .GetServicesByCraftsmanIdAsync(craftsmanId, pageNumber, pageSize, serviceErrors);
+            
+            if (!ModelState.IsValid || serviceErrors.Any())
+                return ErrorHelper.HandleErrors(this, serviceErrors, "Service get by craftmanid failed", 404);
             return Ok(result);
         }
     }
