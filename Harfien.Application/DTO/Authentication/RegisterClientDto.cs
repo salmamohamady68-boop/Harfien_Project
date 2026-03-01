@@ -15,6 +15,9 @@ namespace Harfien.Application.DTO.Authentication
         [DataType(DataType.Password)]
         [StringLength(50, MinimumLength = 6, ErrorMessage = "the password must be at least 6 characters long")]
         public string Password { get; set; } = null!;
+        public string PhoneNumber { get; set; } = null!;
+        public string Address { get; set; } = null!;
+
 
         [Range(typeof(bool), "true", "true", ErrorMessage = "You must agree to terms")]
         public bool AgreeTerms { get; set; }
