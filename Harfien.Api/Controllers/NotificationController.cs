@@ -1,6 +1,8 @@
 ﻿using Harfien.Application.DTO.Notifications;
 using Harfien.Application.Helpers;
 using Harfien.Application.Interfaces;
+using Harfien.Application.Services;
+using Harfien.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -20,18 +22,20 @@ namespace Harfien.Presentation.Controllers
         {
             _notificationService = notificationService;
         }
-
+        
         [HttpGet]
-        public async Task<IActionResult> GetMyNotifications()
+        public async Task<IActionResult> GetUserNotifications()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
-                return BadRequest("No Have Notification");
-            var notifications =
-                await _notificationService.GetUserNotificationsAsync(userId);
            
+            var userId = User.Claims.FirstOrDefault(c => c.Type.Contains("nameidentifier"))?.Value;
+            if (userId == null)
+                return Unauthorized();
+
+            var notifications = await _notificationService.GetUserNotificationsDtoAsync(userId);
             return Ok(notifications);
         }
+
+
 
         [HttpPut("{id}/read")]
         [HttpPut("mark-as-read/{id}")]
@@ -50,14 +54,35 @@ namespace Harfien.Presentation.Controllers
 
             return Ok(new { message = result.Message });
         }
-
-
         [HttpPost("send")]
         public async Task<IActionResult> SendNotification([FromBody] NotificationRequestDto request)
         {
-            await _notificationService.CreateNotificationAsync(request.UserId, request.Title, request.Message);
-            return Ok("Notification sent successfully");
+            if (string.IsNullOrEmpty(request.UserId) || string.IsNullOrEmpty(request.Title))
+                return BadRequest("UserId and Title are required");
+
+            try
+            {
+                
+                await _notificationService.CreateNotificationAsync(request.UserId, request.Title, request.Message);
+
+                
+                var notification = new
+                {
+                    request.UserId,
+                    request.Title,
+                    request.Message,
+                    CreatedAt = DateTime.UtcNow,
+                    IsRead = false
+                };
+
+                return Ok(notification); 
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
+
 
         [HttpPost("send-multiple")]
         public async Task<IActionResult> SendMultipleNotifications([FromBody] NotificationMultipleRequestDto request)
@@ -67,3 +92,4 @@ namespace Harfien.Presentation.Controllers
         }
     }
 }
+

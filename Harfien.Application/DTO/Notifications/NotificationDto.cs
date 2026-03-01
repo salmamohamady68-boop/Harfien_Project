@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Harfien.Application.DTO.Payment
+namespace Harfien.Application.DTO.Notifications
 {
-    public class WalletDto
+    public class NotificationDto
     {
         public int Id { get; set; }
         public string UserId { get; set; }
-        public decimal Balance { get; set; }
-        public bool IsActive { get; set; }
+        public string Title { get; set; }
+        public string Message { get; set; }
         public DateTime CreatedAt { get; set; }
-        public List<WalletTransactionDto> Transactions { get; set; } = new();
+        public bool IsRead { get; set; }
 
     }
 }
+
