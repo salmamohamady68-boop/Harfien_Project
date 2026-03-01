@@ -90,7 +90,7 @@ namespace Harfien.Application.Services
                 Description = dto.Description,
                 ScheduledAt = dto.ScheduledAt.ToUniversalTime(),
                 Status = OrderStatus.Pending,
-                Amount = service!.Price
+                Amount = service.Price
             };
 
             await _orderRepository.AddAsync(order);

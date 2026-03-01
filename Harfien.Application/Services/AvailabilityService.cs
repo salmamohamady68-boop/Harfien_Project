@@ -1,7 +1,12 @@
 ﻿using Harfien.Application.DTO.CraftsmanAvailiability;
+using Harfien.Application.DTO.Error;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Shared.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 public class AvailabilityService : IAvailabilityService
 {
@@ -17,27 +22,33 @@ public class AvailabilityService : IAvailabilityService
     }
 
     // ==========================================
-    // ✅ Add Availability
+    // ✅ Add Availability (ترجع DTO)
     // ==========================================
-    public async Task AddAvailabilityAsync(CreateAvailabilityDto dto, string userId)
+    public async Task<AvailabilityreadDto?> AddAvailabilityAsync(
+        CreateAvailabilityDto dto,
+        string userId,
+        List<FieldErrorDto> serviceErrors)
     {
         var craftsman = await _craftsmanRepository.GetByUserIdAsync(userId);
         if (craftsman == null)
-            throw new Exception("Craftsman not found");
+        {
+            serviceErrors.Add(new FieldErrorDto { Field = "Craftsman", Message = "Craftsman not found" });
+            return null;
+        }
 
-        // 🔥 Validation
+        // Validation
         if (dto.StartTime >= dto.EndTime)
-            throw new Exception("Start time must be earlier than end time");
+            serviceErrors.Add(new FieldErrorDto { Field = "StartTime", Message = "Start time must be earlier than end time" });
 
         if (dto.EndTime == TimeSpan.Zero)
-            throw new Exception("End time cannot be 00:00");
+            serviceErrors.Add(new FieldErrorDto { Field = "EndTime", Message = "End time cannot be 00:00" });
 
-        // 🔥 Prevent duplicate day
-        var existing = await _availabilityRepository
-            .GetAllByCraftsmanIdAsync(craftsman.Id);
-
+        var existing = await _availabilityRepository.GetAllByCraftsmanIdAsync(craftsman.Id);
         if (existing.Any(a => a.Day == dto.Day))
-            throw new Exception("Availability already exists for this day");
+            serviceErrors.Add(new FieldErrorDto { Field = "Day", Message = "Availability already exists for this day" });
+
+        if (serviceErrors.Any())
+            return null;
 
         var availability = new CraftsmanAvailability
         {
@@ -50,15 +61,24 @@ public class AvailabilityService : IAvailabilityService
 
         await _availabilityRepository.AddAsync(availability);
         await _availabilityRepository.SaveAsync();
+
+        // رجع DTO بدل الـ Entity
+        return new AvailabilityreadDto
+        {
+            CraftsmanId = availability.CraftsmanId,
+            Day = availability.Day,
+            StartTime = availability.From,
+            EndTime = availability.To,
+            IsAvailable = availability.IsAvailable
+        };
     }
 
     // ==========================================
     // ✅ Get Availability
     // ==========================================
-    public async Task<IEnumerable<AvailabilityreadDto>>GetCraftsmanAvailabilityAsync(int craftsmanId)
+    public async Task<IEnumerable<AvailabilityreadDto>> GetCraftsmanAvailabilityAsync(int craftsmanId)
     {
-        var availabilities =
-             await _availabilityRepository.GetAllByCraftsmanIdAsync(craftsmanId);
+        var availabilities = await _availabilityRepository.GetAllByCraftsmanIdAsync(craftsmanId);
 
         return availabilities
             .Where(a => a.IsAvailable)
@@ -73,26 +93,40 @@ public class AvailabilityService : IAvailabilityService
     }
 
     // ==========================================
-    // ✅ Update My Availability
+    // ✅ Update My Availability (ترجع DTO)
     // ==========================================
-    public async Task UpdateMyAvailabilityAsync(
+    public async Task<AvailabilityreadDto?> UpdateMyAvailabilityAsync(
         List<CreateAvailabilityDto> dtos,
-        string userId)
+        string userId,
+        List<FieldErrorDto> serviceErrors)
     {
         var craftsman = await _craftsmanRepository.GetByUserIdAsync(userId);
         if (craftsman == null)
-            throw new Exception("Craftsman not found");
+        {
+            serviceErrors.Add(new FieldErrorDto { Field = "Craftsman", Message = "Craftsman not found" });
+            return null;
+        }
 
-        var existingAvailabilities =
-            await _availabilityRepository.GetAllByCraftsmanIdAsync(craftsman.Id);
+        var existingAvailabilities = await _availabilityRepository.GetAllByCraftsmanIdAsync(craftsman.Id);
+
+        CraftsmanAvailability? lastUpdated = null;
 
         foreach (var dto in dtos)
         {
+            // Validation
             if (dto.StartTime >= dto.EndTime)
-                throw new Exception("Start time must be earlier than end time");
+            {
+                serviceErrors.Add(new FieldErrorDto { Field = "StartTime", Message = "Start time must be earlier than end time" });
+                continue;
+            }
 
-            var availability =
-                existingAvailabilities.FirstOrDefault(a => a.Day == dto.Day);
+            if (dto.EndTime == TimeSpan.Zero)
+            {
+                serviceErrors.Add(new FieldErrorDto { Field = "EndTime", Message = "End time cannot be 00:00" });
+                continue;
+            }
+
+            var availability = existingAvailabilities.FirstOrDefault(a => a.Day == dto.Day);
 
             if (availability != null)
             {
@@ -101,6 +135,7 @@ public class AvailabilityService : IAvailabilityService
                 availability.IsAvailable = dto.IsAvailable;
 
                 _availabilityRepository.Update(availability);
+                lastUpdated = availability;
             }
             else
             {
@@ -114,9 +149,21 @@ public class AvailabilityService : IAvailabilityService
                 };
 
                 await _availabilityRepository.AddAsync(newAvailability);
+                lastUpdated = newAvailability;
             }
         }
 
-        await _availabilityRepository.SaveAsync();
+        if (!serviceErrors.Any() && lastUpdated != null)
+            await _availabilityRepository.SaveAsync();
+
+        // رجع DTO بدل Entity
+        return lastUpdated == null ? null : new AvailabilityreadDto
+        {
+            CraftsmanId = lastUpdated.CraftsmanId,
+            Day = lastUpdated.Day,
+            StartTime = lastUpdated.From,
+            EndTime = lastUpdated.To,
+            IsAvailable = lastUpdated.IsAvailable
+        };
     }
 }
