@@ -20,6 +20,8 @@ namespace Harfien.Application.DTO.Service
         public string CraftsmanName { get; set; }
         public string ServiceCategoryName { get; set; }
         public string CraftsmanCity { get; set; }
+        public DateTime CreatedAt { get; set; }
+
 
 
 
