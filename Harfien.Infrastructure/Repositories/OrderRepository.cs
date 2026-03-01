@@ -21,6 +21,7 @@ namespace Harfien.Infrastructure.Repositories
                     .Include(o => o.Client)
                         .ThenInclude(c => c.User)
                     .Include(o => o.Craftsman)
+                        .ThenInclude(c => c.User)
                     .Include(o => o.Service)
                     .Include(o => o.Payment)
                     .FirstOrDefaultAsync(o => o.Id == id);
