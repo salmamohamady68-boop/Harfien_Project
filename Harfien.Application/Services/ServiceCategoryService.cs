@@ -1,11 +1,11 @@
-﻿using Harfien.Application.DTO.ServiceCategory;
+﻿using Harfien.Application.DTO.Error;
+using Harfien.Application.DTO.ServiceCategory;
 using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Shared.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Harfien.Application.Services
@@ -19,6 +19,7 @@ namespace Harfien.Application.Services
             _unitOfWork = unitOfWork;
         }
 
+        // ================= Get All Categories =================
         public async Task<IEnumerable<ServiceCategoryDto>> GetAllAsync()
         {
             var categories = await _unitOfWork.ServiceCategories.GetAllAsync();
@@ -32,22 +33,31 @@ namespace Harfien.Application.Services
             });
         }
 
-        public async Task<ServiceCategoryDto> GetByIdAsync(int id)
+        // ================= Get By Id =================
+        public async Task<ServiceCategoryDto?> GetByIdAsync(int id,List<FieldErrorDto> serviceErrors)
         {
-            var c = await _unitOfWork.ServiceCategories.GetByIdAsync(id);
+            var entity = await _unitOfWork.ServiceCategories.GetByIdAsync(id);
 
-            if (c == null) return null;
+            if (entity == null)
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = "Id",
+                    Message = "Service Category Not Found"
+                });
+                return null;
+            }
 
             return new ServiceCategoryDto
             {
-                Id = c.Id,
-                Name = c.Name,
-                Type = c.Type,
-                Description = c.Description
+                Id = entity.Id,
+                Name = entity.Name,
+                Type = entity.Type,
+                Description = entity.Description
             };
         }
-
-        public async Task AddAsync(AddServiceCategoryDto dto)
+        // ================= Add Category =================
+        public async Task<ServiceCategoryDto> AddAsync(AddServiceCategoryDto dto)
         {
             var entity = new ServiceCategory
             {
@@ -59,35 +69,80 @@ namespace Harfien.Application.Services
 
             await _unitOfWork.ServiceCategories.AddAsync(entity);
             await _unitOfWork.SaveAsync();
-        }
-       public async Task UpdateAsync(ServiceCategoryDto entity)
-       {
-            var serviceCategory = await _unitOfWork.ServiceCategories.GetByIdAsync(entity.Id);
-            if (serviceCategory == null)
-                throw new Exception("Service Category Not Found");
 
-            serviceCategory.Name = entity.Name;
-            serviceCategory.Type = entity.Type;
-            serviceCategory.Description = entity.Description;
-
-           _unitOfWork.ServiceCategories.Update(serviceCategory);
-           await _unitOfWork.SaveAsync();   
-
+            // ارجع DTO بعد الإضافة مع الـ ID الجديد
+            return new ServiceCategoryDto
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Type = entity.Type,
+                Description = entity.Description
+            };
         }
 
+        // ================= Update Category =================
+        public async Task<ServiceCategoryDto?> UpdateAsync(
+        ServiceCategoryDto dto,
+        List<FieldErrorDto> serviceErrors)
+        {
+            var entity = await _unitOfWork.ServiceCategories.GetByIdAsync(dto.Id);
 
-        public async Task DeleteAsync(int id)
+            if (entity == null)
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = "Id",
+                    Message = "Service Category Not Found"
+                });
+                return null;
+            }
+
+            entity.Name = dto.Name;
+            entity.Type = dto.Type;
+            entity.Description = dto.Description;
+
+            _unitOfWork.ServiceCategories.Update(entity);
+            await _unitOfWork.SaveAsync();
+
+            return new ServiceCategoryDto
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Type = entity.Type,
+                Description = entity.Description
+            };
+        }
+        // ================= Delete Category =================
+        // ================= Delete Category =================
+        public async Task<ServiceCategoryDto?> DeleteAsync( int id, List<FieldErrorDto> serviceErrors)
         {
             var entity = await _unitOfWork.ServiceCategories.GetByIdAsync(id);
+
             if (entity == null)
-                throw new Exception("Service Category Not Found");
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = "Id",
+                    Message = "Service Category Not Found"
+                });
+                return null;
+            }
+            if (await _unitOfWork.ServiceCategories.HasServicesAsync(id))
+            {
+                serviceErrors.Add(new FieldErrorDto { Field = "Id", Message = "Cannot delete category with services" });
+                return null;
+            }
 
-           _unitOfWork.ServiceCategories.Delete(entity);     
-           
-           await _unitOfWork.SaveAsync();   
+            _unitOfWork.ServiceCategories.Delete(entity);
+            await _unitOfWork.SaveAsync();
 
-
+            return new ServiceCategoryDto
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Type = entity.Type,
+                Description = entity.Description
+            };
         }
     }
-
 }
