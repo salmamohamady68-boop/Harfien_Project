@@ -111,6 +111,19 @@ namespace Harfien.Presentation.Controllers
         public async Task<IActionResult> GetFiltered([FromQuery] ServiceQueryDto query)
         {
             var result = await _serviceService.GetFilteredAsync(query);
+            if (!result.Items.Any())
+            {
+                var errors = new List<FieldErrorDto>
+                    {
+                        new FieldErrorDto
+                        {
+                            Field = "filter",
+                            Message = $"Services not found."
+                        }
+                    };
+                return ErrorHelper.HandleErrors(this, serviceErrors: errors, message: "Get Services operation failed",
+                    statusCode: StatusCodes.Status404NotFound);
+            }
             return Ok(result);
         }
         [HttpGet("craftsman/{craftsmanId}")]
