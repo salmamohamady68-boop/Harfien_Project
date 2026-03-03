@@ -3,6 +3,7 @@ using Harfien.Application.DTO.Profile_Craftman;
 using Harfien.Application.DTO.Review;
 using Harfien.Application.Exceptions;
 using Harfien.Application.Interfaces;
+using Harfien.Domain.Entities;
 using Harfien.Domain.Enums;
 using Harfien.Domain.Shared.Repositories;
 using System;
@@ -35,12 +36,14 @@ namespace Harfien.Application.Services
                 PhoneNumber = craftsman.User?.PhoneNumber,
                 Bio = craftsman.Bio,
                 YearsOfExperience = craftsman.YearsOfExperience,
-                IsVerified = craftsman.IsVerified,
-                
+                IsVerified = craftsman.IsApproved,
+
+
 
                 Services = craftsman.CraftsmanServices?
                     .Select(s => new ServiceDto
                     {
+                        Id=s.Id,
                         Name = s.Name,
                         Price = s.Price
                     }).ToList() ?? new List<ServiceDto>(),
@@ -75,12 +78,13 @@ namespace Harfien.Application.Services
                 FullName = craftsman.User?.FullName,
                 Bio = craftsman.Bio,
                 YearsOfExperience = craftsman.YearsOfExperience,
-                IsVerified = craftsman.IsVerified,
+                IsVerified = craftsman.IsApproved,
                 Rating = Math.Round(averageRating, 1),
 
                 Services = craftsman.CraftsmanServices?
                     .Select(s => new ServiceDto
                     {
+                        Id=s.Id,
                         Name = s.Name,
                         Price = s.Price
                     }).ToList() ?? new List<ServiceDto>(),
@@ -153,11 +157,12 @@ namespace Harfien.Application.Services
                 Bio = c.Bio,
                 Rating = c.Rating,
                 YearsOfExperience = c.YearsOfExperience,
-                IsVerified = c.IsVerified,
+                IsVerified = c.IsApproved,
 
                 Services = c.CraftsmanServices?
                     .Select(s => new ServiceDto
                     {
+                        Id = s.Id,
                         Name = s.Name,
                         Price = s.Price
                     }).ToList() ?? new List<ServiceDto>(),
