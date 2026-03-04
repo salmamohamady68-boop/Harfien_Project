@@ -4,6 +4,7 @@ using Harfien.Application.DTO.Error;
 using Harfien.Application.DTO.Payment;
 using Harfien.Application.Helpers;
 using Harfien.Application.Interfaces.payment_interfaces;
+using Harfien.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +18,12 @@ namespace Harfien.Presentation.Controllers
     public class PaymentsController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
+        private readonly IWalletService _walletService;
 
-        public PaymentsController(IPaymentService paymentService)
+        public PaymentsController(IPaymentService paymentService,IWalletService walletService)
         {
             _paymentService = paymentService;
+            this._walletService = walletService;
         }
 
 
@@ -71,8 +74,16 @@ namespace Harfien.Presentation.Controllers
                 return ErrorHelper.HandleErrors(this, serviceErrors: errors, message: "Payment operation failed",
                statusCode: StatusCodes.Status400BadRequest);
             }
+            var trans = await _walletService
+          .GetPaymentsByClientIdAsync(clientId, 1, 1);
 
-            return Ok(result.Message);
+            var firstTransaction = trans.Items.FirstOrDefault();
+
+            return Ok(new
+            {
+                paymentMessage = result.Message,
+                Data = firstTransaction
+            });
         }
     }
 }
