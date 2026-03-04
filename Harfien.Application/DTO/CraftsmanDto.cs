@@ -13,13 +13,17 @@ namespace Harfien.Application.DTO
         public int Id { get; set; }
         public string FullName { get; set; }
         public string Bio { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
+        public string AreaName { get; set; }
+        public string CityName { get; set; }
         public double Rating { get; set; }
         public int YearsOfExperience { get; set; }
         public bool IsVerified { get; set; }
 
-        public List<ServiceDto> Services { get; set; } = new();
-        public List<AvailabilityDto> Availabilities { get; set; } = new();
-        public List<ReviewsDto> Reviews { get; set; } = new();
+        public List<ServiceDto> Services { get; set; }
+        public List<AvailabilityDto> Availabilities { get; set; }
+        public List<ReviewsDto> Reviews { get; set; }
         public int CompletedOrdersCount { get; set; }
 
 
