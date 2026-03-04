@@ -18,7 +18,7 @@ namespace Harfien.Application.Services
             _orderRepository = orderRepository;
             _craftsmanRepository = craftsmanRepository;
         }
-        public async Task<ReviewDto> AddReviewAsync(CreateReviewDto dto, String currentUserId)
+        public async Task<GetReviewDto> AddReviewAsync(CreateReviewDto dto, String currentUserId)
         {
             var order = await _orderRepository.GetByIdWithDetailsAsync(dto.OrderId);
 
@@ -62,7 +62,7 @@ namespace Harfien.Application.Services
             var createdReview = await _reviewRepository.GetByIdAsync(review.Id);
             if (createdReview == null) throw new Exception("Failed to create review.");
 
-            return new ReviewDto
+            return new GetReviewDto
             {
                 Id = createdReview.Id,
                 Rating = createdReview.Rating,
@@ -79,12 +79,12 @@ namespace Harfien.Application.Services
             return Math.Round(newAverage, 2);
         }
 
-        public async Task<IEnumerable<ReviewDto>> GetReviewsByCraftsmanIdAsync(int craftsmanId)
+        public async Task<IEnumerable<GetReviewDto>> GetReviewsByCraftsmanIdAsync(int craftsmanId)
         {
             var reviews = await _reviewRepository.GetAllByCraftsmanIdAsync(craftsmanId);
 
             // Map Entity to DTO
-            return reviews.Select(r => new ReviewDto
+            return reviews.Select(r => new GetReviewDto
             {
                 Id = r.Id,
                 ClientName = r.Order?.Client?.User?.FullName ?? "Unknown User",
@@ -93,14 +93,14 @@ namespace Harfien.Application.Services
                 CreatedAt = DateOnly.FromDateTime(r.CreatedAt)
             }).ToList();
         }
-        public async Task<PagedResult<ReviewDto>> GetPagedReviewsByCraftsmanIdAsync(int craftsmanId, int pageNumber, int pageSize)
+        public async Task<PagedResult<GetReviewDto>> GetPagedReviewsByCraftsmanIdAsync(int craftsmanId, int pageNumber, int pageSize)
         {
             pageNumber = pageNumber < 1 ? 1 : pageNumber;
             pageSize = pageSize < 1 ? 5 : pageSize;
 
             var (reviews, totalCount) = await _reviewRepository.GetPagedByCraftsmanIdAsync(craftsmanId, pageNumber, pageSize);
 
-            var dtos = reviews.Select(r => new ReviewDto
+            var dtos = reviews.Select(r => new GetReviewDto
             {
                 Id = r.Id,
                 ClientName = r.Order?.Client?.User?.FullName ?? "Unknown User",
@@ -109,7 +109,7 @@ namespace Harfien.Application.Services
                 CreatedAt = DateOnly.FromDateTime(r.CreatedAt)
             }).ToList();
 
-            return new PagedResult<ReviewDto>
+            return new PagedResult<GetReviewDto>
             {
                 Items = dtos,
                 TotalCount = totalCount,

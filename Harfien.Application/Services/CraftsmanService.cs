@@ -16,10 +16,12 @@ namespace Harfien.Application.Services
     public class CraftsmanService : ICraftsmanService
     {
         private readonly ICraftsmanRepository _repository;
+        private readonly IReviewRepository _reviewRepository;
 
-        public CraftsmanService(ICraftsmanRepository repository)
+        public CraftsmanService(ICraftsmanRepository repository, IReviewRepository reviewRepository)
         {
             _repository = repository;
+            _reviewRepository = reviewRepository;
         }
 
         public async Task<GetMyProfileDto?> GetMyProfileAsync(string userId)
@@ -168,7 +170,8 @@ namespace Harfien.Application.Services
                     {
                         Id = s.Id,
                         Name = s.Name,
-                        Price = s.Price
+                        Price = s.Price,
+                        ServiceCategoreyName = s.ServiceCategory?.Name
                     }).ToList() ?? new List<ServiceDto>(),
 
                 Availabilities = c.Availabilities?
@@ -179,6 +182,16 @@ namespace Harfien.Application.Services
                         From = a.From,
                         To = a.To
                     }).ToList() ?? new List<AvailabilityDto>(),
+
+                Reviews = _reviewRepository.GetAllByCraftsmanIdAsync(c.Id).Result?
+                    .Select(r => new GetReviewDto
+                    {
+                        Id = r.Id,
+                        CreatedAt = DateOnly.FromDateTime(r.CreatedAt),
+                        ClientName = r.Order.Client?.User?.FullName ?? "Unknown User",
+                        Rating = r.Rating,
+                        Comment = r.Comment
+                    }).ToList() ?? new List<GetReviewDto>(),
 
                 CompletedOrdersCount = c.Orders?
                     .Count(o => o.Status == OrderStatus.Completed) ?? 0

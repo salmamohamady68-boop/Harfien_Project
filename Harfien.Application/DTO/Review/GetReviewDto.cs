@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Harfien.Application.DTO.Review
 {
-    public class ReviewDto
+    public class GetReviewDto
     {
         public int Id { get; set; }
         public string ClientName { get; set; }

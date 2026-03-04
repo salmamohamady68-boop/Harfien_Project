@@ -1,4 +1,5 @@
 ﻿using Harfien.Application.DTO.Profile_Craftman;
+using Harfien.Application.DTO.Review;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace Harfien.Application.DTO
 
         public List<ServiceDto> Services { get; set; }
         public List<AvailabilityDto> Availabilities { get; set; }
-        public List<ReviewsDto> Reviews { get; set; }
+        public List<GetReviewDto> Reviews { get; set; }
         public int CompletedOrdersCount { get; set; }
 
 
