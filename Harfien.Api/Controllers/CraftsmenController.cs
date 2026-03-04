@@ -1,7 +1,7 @@
 ﻿using Harfien.Application.DTO.Profile_Craftman;
+using Harfien.Application.Exceptions;
 using Harfien.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -31,7 +31,7 @@ namespace Harfien.Presentation.Controllers
             var result = await _service.GetProfileAsync(id);
 
             if (result == null)
-                return NotFound("Craftsman not found");
+                throw new NotFoundException("Craftsman not found");
 
             return Ok(result);
         }
@@ -45,7 +45,7 @@ namespace Harfien.Presentation.Controllers
             var result = await _service.GetMyProfileAsync(userId);
 
             if (result == null)
-                return NotFound();
+                throw new NotFoundException("Profile not found");
 
             return Ok(result);
         }
@@ -58,9 +58,11 @@ namespace Harfien.Presentation.Controllers
 
             await _service.UpdateMyProfileAsync(userId, dto);
 
-            return NoContent();
+            return Ok(new
+            {
+                success = true,
+                message = "Profile updated successfully"
+            });
         }
-
-
     }
 }

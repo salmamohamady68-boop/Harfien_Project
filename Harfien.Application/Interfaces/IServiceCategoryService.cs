@@ -1,4 +1,5 @@
-﻿using Harfien.Application.DTO.ServiceCategory;
+﻿using Harfien.Application.DTO.Error;
+using Harfien.Application.DTO.ServiceCategory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,10 @@ namespace Harfien.Application.Interfaces
     public interface IServiceCategoryService
     {
         Task<IEnumerable<ServiceCategoryDto>> GetAllAsync();
-        Task<ServiceCategoryDto> GetByIdAsync(int id);
-        Task AddAsync(AddServiceCategoryDto dto);
-        Task UpdateAsync(ServiceCategoryDto entity);
-        Task DeleteAsync(int id);
+        Task<ServiceCategoryDto> GetByIdAsync(int id, List<FieldErrorDto> serviceErrors);
+        Task<ServiceCategoryDto> AddAsync(AddServiceCategoryDto dto);
+        Task<ServiceCategoryDto> UpdateAsync(ServiceCategoryDto entity, List<FieldErrorDto> serviceErrors);
+        Task<ServiceCategoryDto> DeleteAsync(int id, List<FieldErrorDto> serviceErrors);
     }
 
 }

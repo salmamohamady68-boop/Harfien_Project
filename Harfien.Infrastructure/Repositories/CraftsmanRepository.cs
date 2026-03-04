@@ -24,6 +24,11 @@ namespace Harfien.Infrastructure.Repositories
         {
             return await _context.Craftsmen
                 .Include(c => c.User)
+                    .ThenInclude(u => u.Area)
+                        .ThenInclude(a => a.City)
+                .Include(c => c.CraftsmanServices).
+                        ThenInclude(cs => cs.ServiceCategory)
+                .Include(c => c.Availabilities)
                 .ToListAsync();
         }
 

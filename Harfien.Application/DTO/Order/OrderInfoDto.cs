@@ -13,6 +13,7 @@ namespace Harfien.Application.DTO.Order
         public string ClientName { get; set; }
         public string CraftsmanName { get; set; }
         public string ServiceName { get; set; }
+        public string Description { get; set; }
 
         public DateTime ScheduledAt { get; set; }
         public OrderStatus OrderStatus { get; set; }

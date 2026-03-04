@@ -18,9 +18,10 @@ namespace Harfien.Infrastructure.Repositories
         private IComplaintRepository _complaintRepository;
         private IWalletRepository _walletRepository;
         private IPaymentRepository _paymentRepository;
+        private IOrderRepository _orderRepository;
 
 
-        public UnitOfWork(HarfienDbContext context,IClientRepository clients,
+        public UnitOfWork(HarfienDbContext context, IClientRepository clients,
             ICraftsmanRepository craftsmen)
 
         {
@@ -30,6 +31,21 @@ namespace Harfien.Infrastructure.Repositories
         }
         public IClientRepository Clients { get; }
         public ICraftsmanRepository Craftsmen { get; }
+
+
+
+        public IOrderRepository Orders
+        {
+            get
+            {
+                if (_orderRepository == null)
+                {
+                    _orderRepository = new OrderRepository(_context);
+                }
+
+                return _orderRepository;
+            }
+        }
 
         public IWalletRepository Wallets
         {
@@ -79,6 +95,7 @@ namespace Harfien.Infrastructure.Repositories
         }
 
         
+
 
 
         public async Task SaveAsync()
