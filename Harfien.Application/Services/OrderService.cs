@@ -123,7 +123,7 @@ namespace Harfien.Application.Services
         }
 
         // ================= CLIENT ORDERS =================
-        public async Task<IEnumerable<OrderInfoDto>?> GetClientOrdersAsync(
+        public async Task<IEnumerable<OrderResponseDto>?> GetClientOrdersAsync(
             int clientId,
             List<FieldErrorDto> serviceErrors)
         {
@@ -139,11 +139,11 @@ namespace Harfien.Application.Services
                 return null;
             }
 
-            return _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
+            return _mapper.Map<IEnumerable<OrderResponseDto>>(orders);
         }
 
         // ================= CRAFTSMAN ORDERS =================
-        public async Task<IEnumerable<OrderInfoDto>?> GetCraftsmanOrdersAsync(
+        public async Task<IEnumerable<OrderResponseDto>?> GetCraftsmanOrdersAsync(
             int craftsmanId,
             List<FieldErrorDto> serviceErrors)
         {
@@ -159,7 +159,7 @@ namespace Harfien.Application.Services
                 return null;
             }
 
-            return _mapper.Map<IEnumerable<OrderInfoDto>>(orders);
+            return _mapper.Map<IEnumerable<OrderResponseDto>>(orders);
         }
 
         // ================= STATUS UPDATE =================

@@ -11,9 +11,9 @@ namespace Harfien.Application.Interfaces
 
             Task<OrderResponseDto?> GetByIdAsync(int id, List<FieldErrorDto> serviceErrors);
 
-            Task<IEnumerable<OrderInfoDto>?> GetClientOrdersAsync(int clientId,List<FieldErrorDto> serviceErrors);
+            Task<IEnumerable<OrderResponseDto>?> GetClientOrdersAsync(int clientId,List<FieldErrorDto> serviceErrors);
 
-            Task<IEnumerable<OrderInfoDto>?> GetCraftsmanOrdersAsync( int craftsmanId,List<FieldErrorDto> serviceErrors);
+            Task<IEnumerable<OrderResponseDto>?> GetCraftsmanOrdersAsync( int craftsmanId,List<FieldErrorDto> serviceErrors);
 
             Task AcceptAsync(int orderId, int craftsmanId, List<FieldErrorDto> serviceErrors);
             Task RejectAsync(int orderId, int craftsmanId, List<FieldErrorDto> serviceErrors);
