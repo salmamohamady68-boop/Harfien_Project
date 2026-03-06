@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Harfien.Application.DTO.Error;
+using Harfien.Application.DTO.Payment;
 using Harfien.Application.Helpers;
 using Harfien.Application.Interfaces.payment_interfaces;
 using Harfien.Application.Services;
@@ -175,6 +176,46 @@ namespace Harfien.Presentation.Controllers
                statusCode: StatusCodes.Status404NotFound);
             }
             return Ok(result);
+        }
+
+
+        [HttpPost("withdraw")]
+        public async Task<IActionResult> Withdraw([FromBody] WithdrawRequestDto request)
+        {
+            var errors = new List<FieldErrorDto>();
+            if (!ModelState.IsValid)
+              { 
+
+                return ErrorHelper.HandleErrors(this, serviceErrors: errors, message: "withdraw operation failed",
+               statusCode: StatusCodes.Status400BadRequest);
+            }
+            
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            try
+            {
+                var result = await _walletService.WithdrawAsync(userId, request,errors);
+
+                if (errors.Any())
+                {
+                    return ErrorHelper.HandleErrors(this, serviceErrors: errors, message: "Withdraw operation failed");
+                }
+                return Ok(new
+                {
+                    message = "Withdrawal successful",
+                    wallet = result
+                });
+            }
+            catch (Exception ex)
+            {
+                 
+                return ErrorHelper.HandleErrors(
+                    this,
+                    message: ex.Message,
+                    statusCode: StatusCodes.Status400BadRequest
+                );
+            }
         }
 
     }

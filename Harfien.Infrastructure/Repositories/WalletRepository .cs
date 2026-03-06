@@ -55,6 +55,10 @@ namespace Harfien.Infrastructure.Repositories
                              .ThenInclude(o => o.Craftsman)
                              .ThenInclude(u=>u.User)
                      .Include(w => w.Transactions)
+                       .ThenInclude(t => t.Order)
+                             .ThenInclude(o => o.Client)
+                             .ThenInclude(u => u.User)
+                     .Include(w => w.Transactions)
                          .ThenInclude(t => t.Order)
                              .ThenInclude(o => o.Service)
                      .FirstOrDefaultAsync(w => w.UserId == userId);
