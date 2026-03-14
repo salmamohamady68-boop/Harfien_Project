@@ -10,5 +10,6 @@ namespace Harfien.Application.Interfaces.payment_interfaces
     public interface IPaymentService
     {
         Task<PaymentResultDto> PayOrderWithCardAsync(CreatePaymentDto dto, string clientId);
+        Task<PaymentResultDto> TransferToCraftsmanAsync(int orderId);
     }
 }

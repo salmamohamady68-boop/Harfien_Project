@@ -85,5 +85,46 @@ namespace Harfien.Presentation.Controllers
                 Data = firstTransaction
             });
         }
+
+
+        [HttpPost("transfer-to-craftsman/{orderId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> TransferToCraftsman(int orderId)
+        {
+            var errorslist = new List<FieldErrorDto>();
+
+            var result = await _paymentService.TransferToCraftsmanAsync(orderId);
+
+            if (!result.Success)
+            {
+                var errors = new List<FieldErrorDto>
+        {
+            new FieldErrorDto
+            {
+                Field = "transfer",
+                Message = result.Message
+            }
+        };
+
+                return ErrorHelper.HandleErrors(
+                    this,
+                    serviceErrors: errors,
+                    message: "Transfer operation failed",
+                    statusCode: StatusCodes.Status400BadRequest
+                );
+            }
+
+            var adminId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var trans = await _walletService.GetTransactionsAsync(adminId, 1, 1);
+
+            var firstTransaction = trans.Items.FirstOrDefault();
+
+            return Ok(new
+            {
+                transferMessage = result.Message,
+                Data = firstTransaction
+            });
+        }
     }
 }
