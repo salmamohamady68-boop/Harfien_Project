@@ -12,6 +12,8 @@ namespace Harfien.Application.DTO.Payment
         public string UserId { get; set; }
         public decimal Balance { get; set; }
         public bool IsActive { get; set; }
+        public DateTime CreatedAt { get; set; }
         public List<WalletTransactionDto> Transactions { get; set; } = new();
+
     }
 }

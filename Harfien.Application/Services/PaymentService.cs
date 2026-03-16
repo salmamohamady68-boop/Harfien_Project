@@ -45,12 +45,12 @@ namespace Harfien.Application.Services
         {
             try
             {
-                if (string.IsNullOrEmpty(dto.stripeToken))
-                    return new PaymentResultDto
-                    {
-                        Success = false,
-                        Message = "Stripe token is required"
-                    };
+                //if (string.IsNullOrEmpty(dto.StripeToken))
+                //    return new PaymentResultDto
+                //    {
+                //        Success = false,
+                //        Message = "Stripe token is required"
+                //    };
 
                 var order = await _orderRepo.GetByIdWithDetailsAsync(dto.OrderId);
                 if (order == null)
@@ -128,7 +128,7 @@ namespace Harfien.Application.Services
                     Type = "card",
                     Card = new PaymentMethodCardOptions
                     {
-                        Token = dto.stripeToken
+                        Token = dto.StripeToken
                     }
                 });
 
