@@ -26,6 +26,7 @@ namespace Harfien.Infrastructure.Repositories
         public async Task<IEnumerable<Notification>> GetByUserIdAsync(string userId)
         {
             return await _context.Notifications
+                 .Include(n => n.ApplicationUser)
                 .Where(n => n.UserId == userId)
                 .OrderByDescending(n => n.CreatedAt)
                 .ToListAsync();

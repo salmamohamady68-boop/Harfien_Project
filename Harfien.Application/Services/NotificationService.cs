@@ -23,23 +23,27 @@ namespace Harfien.Application.Services
             _notificationRepository = notificationRepository;
             this._hubContext = hubContext;
         }
-        // 🔹 ترجع NotificationDto
+       
         public async Task<IEnumerable<NotificationDto>> GetUserNotificationsDtoAsync(string userId)
         {
             var notifications = await _notificationRepository.GetByUserIdAsync(userId);
 
             return notifications.Select(n => new NotificationDto
             {
+                
                 Id = n.Id,
-                UserId = n.UserId,      // مهم للفرونت
+                UserId = n.UserId,
+                UserName = n.ApplicationUser.FullName,
+                Email = n.ApplicationUser.Email,
                 Title = n.Title,
                 Message = n.Message,
                 CreatedAt = n.CreatedAt,
                 IsRead = n.IsRead
+               
             }).ToList();
         }
 
-        // 🔹 ترجع Notification مباشرة
+       
         public async Task<IEnumerable<Notification>> GetUserNotificationsAsync(string userId)
         {
             return await _notificationRepository.GetByUserIdAsync(userId);
@@ -72,7 +76,7 @@ namespace Harfien.Application.Services
                 .SendAsync("ReceiveNotification", new
                 {
                     notification.Id,
-                    notification.UserId,   // مهم للفرونت
+                    notification.UserId,  
                     notification.Title,
                     notification.Message,
                     notification.CreatedAt
