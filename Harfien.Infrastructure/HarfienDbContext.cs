@@ -176,7 +176,7 @@ namespace Harfien.DataAccess
             #endregion
 
             #region Seed Data
-
+            /*
             var fixedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
             builder.Entity<IdentityRole>().HasData(
@@ -202,20 +202,20 @@ namespace Harfien.DataAccess
                 Address = "Cairo",
                 CreatedAt = fixedDate,
                 IsActive = true
-            };
+            };*/
 
             //adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin123456");
             // fixed hash for "Admin123456" to ensure consistent seeding across environments
-            adminUser.PasswordHash = "AQAAAAIAAYagAAAAEELKHz7XXrgxHF6ePvN/KLtEyAFAL6ZfTwReCMO1QcYnEpW3vjyErKz0/8G+TePs4A==";
+           // adminUser.PasswordHash = "AQAAAAIAAYagAAAAEELKHz7XXrgxHF6ePvN/KLtEyAFAL6ZfTwReCMO1QcYnEpW3vjyErKz0/8G+TePs4A==";
+           //
+            //builder.Entity<ApplicationUser>().HasData(adminUser);
 
-            builder.Entity<ApplicationUser>().HasData(adminUser);
-
-            builder.Entity<IdentityUserRole<string>>().HasData(
+            /*builder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
                     RoleId = "1",
                     UserId = "ADMIN_ID"
-                });
+                });*/
 
             #endregion
         }

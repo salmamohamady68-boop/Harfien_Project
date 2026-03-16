@@ -1,4 +1,5 @@
 ﻿using Harfien.Application.DTO;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Harfien.Application.Interfaces
     {
         Task<List<ClientDto>> GetAllAsync();
         Task<ClientDto> GetByIdAsync(int id);
-        Task UpdateAsync(int id, string fullName);
+        Task UpdateAsync(int id, ClientUpdateDto dto);
         Task DeleteAsync(int id);
         Task<List<ClientDto>> SearchAsync(string keyword);
     }

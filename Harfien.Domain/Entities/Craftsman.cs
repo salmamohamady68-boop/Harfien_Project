@@ -18,6 +18,7 @@ namespace Harfien.Domain.Entities
 
         public bool IsVerified { get; set; } = false;
         public double Rating { get; set; } = 0;
+        public string ProfilePicture { get; set; }
 
         [ForeignKey(nameof(UserId))]
         public string UserId { get; set; }    

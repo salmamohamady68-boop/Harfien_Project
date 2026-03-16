@@ -1,4 +1,6 @@
-﻿using Harfien.Application;
+﻿using E_Learning.Service.Contract;
+using E_Learning.Service.Services;
+using Harfien.Application;
 using Harfien.Application.Autherization;
 using Harfien.Application.Exceptions;
 using Harfien.Application.Interfaces;
@@ -190,6 +192,8 @@ namespace Harfien.Api
             builder.Services.AddScoped<ICityService, CityService>();
             builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
             builder.Services.AddScoped<IAreaService, AreaService>();
+            builder.Services.AddScoped<IFileService, FileService>();
+
             builder.Services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;

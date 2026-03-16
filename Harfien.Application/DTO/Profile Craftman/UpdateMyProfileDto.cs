@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ namespace Harfien.Application.DTO.Profile_Craftman
         public string? PhoneNumber { get; set; }
         public string? Bio { get; set; }
         public int? YearsOfExperience { get; set; }
+        public IFormFile?ProfilePicture { get; set; }
 
         public List<UpdateServiceDto>? Services { get; set; }
     }

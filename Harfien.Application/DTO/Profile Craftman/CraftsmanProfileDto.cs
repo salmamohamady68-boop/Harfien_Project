@@ -1,4 +1,5 @@
 ﻿using Harfien.Application.DTO.Review;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace Harfien.Application.DTO.Profile_Craftman
         public int YearsOfExperience { get; set; }
         public double Rating { get; set; }
         public bool IsVerified { get; set; }
+        public string? ProfilePicture { get; set; }
+
 
         public List<ServiceDto> Services { get; set; }
         public List<AvailabilityDto> Availabilities { get; set; }
