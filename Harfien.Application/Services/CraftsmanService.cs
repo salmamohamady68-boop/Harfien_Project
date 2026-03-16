@@ -2,6 +2,7 @@
 using Harfien.Application.DTO.Profile_Craftman;
 using Harfien.Application.DTO.Review;
 using Harfien.Application.Interfaces;
+using Harfien.Domain.Entities;
 using Harfien.Domain.Enums;
 using Harfien.Domain.Shared.Repositories;
 using System;
@@ -53,7 +54,7 @@ namespace Harfien.Application.Services
             if (craftsman == null)
                 return null;
 
-            var reviews = await _repository.GetReviewAsync(id); 
+            var reviews = await _repository.GetReviewAsync(id);
 
             var averageRating = reviews.Any()
                 ? reviews.Average(r => r.Rating)
@@ -62,7 +63,16 @@ namespace Harfien.Application.Services
             return new CraftsmanProfileDto
             {
                 Id = craftsman.Id,
-                FullName = craftsman.User.FullName,
+
+                // 🔥 FULL USER TABLE DATA
+                User = new UserDto
+                {
+                    Id = craftsman.User.Id,
+                    FullName = craftsman.User.FullName,
+                    Email = craftsman.User.Email,
+                    PhoneNumber = craftsman.User.PhoneNumber,
+                },
+
                 Bio = craftsman.Bio,
                 YearsOfExperience = craftsman.YearsOfExperience,
                 IsVerified = craftsman.IsVerified,
@@ -71,6 +81,7 @@ namespace Harfien.Application.Services
                 Services = craftsman.CraftsmanServices
                     .Select(s => new ServiceDto
                     {
+                        Id = s.Id,
                         Name = s.Name,
                         Price = s.Price
                     }).ToList(),
@@ -144,10 +155,17 @@ namespace Harfien.Application.Services
             return craftsmen.Select(c => new CraftsmanDto
             {
                 Id = c.Id,
-                FullName = c.User.FullName,
                 Bio = c.Bio,
                 Rating = c.Rating,
-                YearsOfExperience = c.YearsOfExperience
+                YearsOfExperience = c.YearsOfExperience,
+
+                User = new UserDto
+                {
+                    Id = c.User.Id,
+                    FullName = c.User.FullName,
+                    Email = c.User.Email,
+                    PhoneNumber = c.User.PhoneNumber,
+                }
             }).ToList();
         }
 

@@ -15,7 +15,7 @@ namespace Harfien.Application.DTO
         public double Rating { get; set; }
         public int YearsOfExperience { get; set; }
 
-
+        public UserDto User { get; set; }
 
 
 

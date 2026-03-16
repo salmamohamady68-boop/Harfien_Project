@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace Harfien.Domain.Shared
 {
-    public class ChatListDto
+    public class ChatUserDto
     {
         public string UserId { get; set; }
+
         public string UserName { get; set; }
+
         public string UserImage { get; set; }
 
-        public string LastMessage { get; set; }
-        public DateTime LastMessageTime { get; set; }
-
-        public int UnreadCount { get; set; }
+        public bool IsOnline { get; set; }
     }
 }
