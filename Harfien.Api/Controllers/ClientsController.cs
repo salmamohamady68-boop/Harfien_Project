@@ -1,4 +1,5 @@
-﻿using Harfien.Application.Interfaces;
+﻿using Harfien.Application.DTO;
+using Harfien.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace Harfien.Presentation.Controllers
     public class ClientsController : ControllerBase
     {
         private readonly IClientService _service;
+      
 
         public ClientsController(IClientService service)
         {
             _service = service;
+            
         }
 
         [HttpGet]
@@ -30,9 +33,9 @@ namespace Harfien.Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] string fullName)
+        public async Task<IActionResult> Update(int id, [FromForm] ClientUpdateDto dto)
         {
-            await _service.UpdateAsync(id, fullName);
+            await _service.UpdateAsync(id, dto);
             return Ok(new { message = "Client updated successfully" });
         }
 

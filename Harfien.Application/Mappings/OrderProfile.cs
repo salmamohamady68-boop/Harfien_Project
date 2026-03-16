@@ -24,7 +24,11 @@ namespace Harfien.Application.Mappings
         o => o.MapFrom(c => c.Craftsman != null && c.Craftsman.User != null
             ? c.Craftsman.User.FullName
             : "N/A"))
-       .ForMember(d => d.Status, o => o.MapFrom(s => s.Status)); // 👈 هنا
+       .ForMember(d => d.Status, o => o.MapFrom(s => s.Status))
+       .ForMember(d => d.UserId, 
+        o => o.MapFrom(c => c.Client != null && c.Client.User != null
+            ? c.Client.User.Id.ToString()
+            : null));
 
             CreateMap<Order, OrderInfoDto>()
                 .ForMember(d => d.OrderId, o => o.MapFrom(s => s.Id))

@@ -1,7 +1,10 @@
-﻿using Harfien.Application.DTO;
+﻿using E_Learning.Service.Contract;
+using Harfien.Application.DTO;
 using Harfien.Application.Exceptions;
 using Harfien.Application.Interfaces;
+using Harfien.Domain.Entities;
 using Harfien.Domain.Shared.Repositories;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +14,14 @@ using System.Threading.Tasks;
 namespace Harfien.Application.Services
 {
     public  class ClientService :IClientService
+
     {
         private IClientRepository _repository;
-
-        public ClientService(IClientRepository repository)
+        private readonly IFileService _fileService;
+        public ClientService(IClientRepository repository ,IFileService fileService)
         {
             _repository = repository;
+            _fileService = fileService;
         }
 
         public async Task<List<ClientDto>> GetAllAsync()
@@ -54,17 +59,40 @@ namespace Harfien.Application.Services
             };
         }
 
-        public async Task UpdateAsync(int id, string fullName)
+        public async Task UpdateAsync(int id, ClientUpdateDto dto)
         {
             var client = await _repository.GetByIdWithIncludesAsync(id);
 
             if (client == null)
                 throw new NotFoundException("Client not found");
 
-            client.User.FullName = fullName;
+            client.User.FullName = dto.FullName;
 
+            if (dto.ProfilePicture != null)
+            {
+                if (!string.IsNullOrWhiteSpace(client.ProfilePicture))
+                {
+                    var oldPath = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot",
+                        client.ProfilePicture.TrimStart('/')
+                    );
+
+                    if (System.IO.File.Exists(oldPath))
+                        System.IO.File.Delete(oldPath);
+                }
+
+                var newPath = await _fileService.UploadFileAsync(dto.ProfilePicture, "images/clients");
+
+                client.ProfilePicture = newPath;
+            }
+
+            _repository.Update(client);
             await _repository.SaveAsync();
         }
+
+
+        
 
         public async Task DeleteAsync(int id)
         {
@@ -74,6 +102,7 @@ namespace Harfien.Application.Services
                 throw new NotFoundException("Client not found");
 
             await _repository.DeleteAsync(client);
+            await _repository.SaveAsync();
         }
 
         public async Task<List<ClientDto>> SearchAsync(string keyword)

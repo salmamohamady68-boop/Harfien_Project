@@ -86,6 +86,7 @@ namespace Harfien.Application.Services
             {
                 ClientId = clientId,
                 CraftsmanId = dto.CraftsmanId,
+
                 ServiceId = dto.ServiceId,
                 Description = dto.Description,
                 ScheduledAt = dto.ScheduledAt.ToUniversalTime(),
