@@ -1,5 +1,8 @@
-﻿using Harfien.Application;
+﻿using E_Learning.Service.Contract;
+using E_Learning.Service.Services;
+using Harfien.Application;
 using Harfien.Application.Autherization;
+using Harfien.Application.Exceptions;
 using Harfien.Application.Interfaces;
 using Harfien.Application.Interfaces.payment_interfaces;
 using Harfien.Application.Services;
@@ -13,7 +16,9 @@ using Harfien.Infrastructure.Services;
 using Harfien.Presentation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -54,7 +59,7 @@ namespace Harfien.Api
 
             builder.Services.AddScoped<IClientRepository, ClientRepository>();
             builder.Services.AddScoped<ICraftsmanRepository, CraftsmanRepository>();
-         
+
 
 
 
@@ -74,13 +79,13 @@ namespace Harfien.Api
 
 
 
-          
+
             builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
             builder.Services.AddScoped<IWalletRepository, WalletRepository>();
-            builder.Services.AddScoped<IComplaintService, ComplaintService>();   
+            builder.Services.AddScoped<IComplaintService, ComplaintService>();
+            builder.Services.AddScoped<IClientService, ClientService>();
 
-
-            builder.Services.AddScoped<IWalletTransactionRepository,WalletTransactionRepository>();
+            builder.Services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
             builder.Services.AddScoped<IWalletTransactionService, WalletTransactionService>();
             // =========================
             // JWT Authentication (مرة واحدة)
@@ -175,7 +180,7 @@ namespace Harfien.Api
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
             builder.Services.AddScoped<IServiceService, ServiceService>();
-            
+
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IReviewService, ReviewService>();
 
@@ -187,7 +192,12 @@ namespace Harfien.Api
             builder.Services.AddScoped<ICityService, CityService>();
             builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
             builder.Services.AddScoped<IAreaService, AreaService>();
+            builder.Services.AddScoped<IFileService, FileService>();
 
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
 
             // =========================
             // AutoMapper
@@ -289,6 +299,41 @@ namespace Harfien.Api
                 app.UseSwaggerUI();
             }
 
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(async context =>
+                {
+                    var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerFeature>();
+                    var exception = exceptionHandlerPathFeature?.Error;
+
+                    context.Response.ContentType = "application/json";
+
+                    switch (exception)
+                    {
+                        case NotFoundException:
+                            context.Response.StatusCode = 404;
+                            break;
+                        case BadRequestException:
+                            context.Response.StatusCode = 400;
+                            break;
+                        default:
+                            context.Response.StatusCode = 500;
+                            await context.Response.WriteAsJsonAsync(new
+                            {
+                                success = false,
+                                message = "Internal Server Error",
+                                detail = exception?.Message
+                            });
+                            break;
+                    }
+
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        error = exception?.Message
+                    });
+                });
+            });
+        
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors("AllowAll");
@@ -300,6 +345,7 @@ namespace Harfien.Api
             app.MapHub<ChatHub>("/chatHub");
             app.MapHub<NotificationHub>("/notificationHub");
             await app.RunAsync();
+           
         }
     }
 }

@@ -45,12 +45,12 @@ namespace Harfien.Application.Services
         {
             try
             {
-                if (string.IsNullOrEmpty(dto.stripeToken))
-                    return new PaymentResultDto
-                    {
-                        Success = false,
-                        Message = "Stripe token is required"
-                    };
+                //if (string.IsNullOrEmpty(dto.StripeToken))
+                //    return new PaymentResultDto
+                //    {
+                //        Success = false,
+                //        Message = "Stripe token is required"
+                //    };
 
                 var order = await _orderRepo.GetByIdWithDetailsAsync(dto.OrderId);
                 if (order == null)
@@ -62,7 +62,15 @@ namespace Harfien.Application.Services
                         Success = false,
                         Message = "Invalid order amount"
                     };
-
+                if (order.Status != OrderStatus.Accepted)
+                {
+                    return new PaymentResultDto
+                    {
+                        Success = false,
+                        Message = "Payment is allowed only after the order is accepted"
+                    };
+                }
+                #region validation
                 if (order.ClientId == null)
                     return new PaymentResultDto { Success = false, Message = "Order has no client associated" };
 
@@ -83,8 +91,9 @@ namespace Harfien.Application.Services
                 var craftsman = await _craftsmanRepo.GetByIdAsync(order.CraftsmanId);
                 if (craftsman == null)
                     return new PaymentResultDto { Success = false, Message = "Craftsman not found" };
+                #endregion
 
-
+                #region if craft has no wallet
                 var craftsmanWallet = await _walletRepo.GetByUserIdAsync(craftsman.UserId);
                 bool isNewCraftsmanWallet = false;
 
@@ -100,15 +109,15 @@ namespace Harfien.Application.Services
                     await _walletRepo.AddAsync(craftsmanWallet);
                     isNewCraftsmanWallet = true;
                 }
-
+                #endregion
                 var admin = await _userRepo.GetAdminAsync();
                 if (admin == null)
                     return new PaymentResultDto { Success = false, Message = "Admin user not found" };
 
-
+                #region if admin has no wallet
                 var adminWallet = await _walletRepo.GetByUserIdAsync(admin.Id);
                 bool isNewAdminWallet = false;
-
+              
                 if (adminWallet == null)
                 {
                     adminWallet = new Wallet
@@ -121,14 +130,15 @@ namespace Harfien.Application.Services
                     await _walletRepo.AddAsync(adminWallet);
                     isNewAdminWallet = true;
                 }
-
+                #endregion
+                #region Stripe Payment
                 var paymentMethodService = new PaymentMethodService();
                 var paymentMethod = await paymentMethodService.CreateAsync(new PaymentMethodCreateOptions
                 {
                     Type = "card",
                     Card = new PaymentMethodCardOptions
                     {
-                        Token = dto.stripeToken
+                        Token = dto.StripeToken
                     }
                 });
 
@@ -160,24 +170,24 @@ namespace Harfien.Application.Services
 
                 if (paymentIntent.Status != "succeeded")
                     return new PaymentResultDto { Success = false, Message = "Stripe payment failed" };
+                #endregion
+
+                //decimal craftsmanShare = order.Amount * 0.9m;
+                decimal adminShare = order.Amount ;
 
 
-                decimal craftsmanShare = order.Amount * 0.9m;
-                decimal adminShare = order.Amount * 0.1m;
-
-
-                AddTransaction(craftsmanWallet, craftsmanShare, TransactionType.Credit, order.Id, "Order Payment Share");
+                //AddTransaction(craftsmanWallet, craftsmanShare, TransactionType.Credit, order.Id, "Order Payment Share");
                 AddTransaction(adminWallet, adminShare, TransactionType.Credit, order.Id, "Platform Commission");
 
 
-                if (!isNewCraftsmanWallet)
-                {
-                    _walletRepo.Update(craftsmanWallet);
-                }
-                else
-                {
-                    await _walletRepo.SaveAsync();
-                }
+                //if (!isNewCraftsmanWallet)
+                //{
+                //    _walletRepo.Update(craftsmanWallet);
+                //}
+                //else
+                //{
+                //    await _walletRepo.SaveAsync();
+                //}
 
                 if (!isNewAdminWallet)
                 {
@@ -238,6 +248,110 @@ namespace Harfien.Application.Services
                 OrderId = orderId,
                 Reference = Guid.NewGuid().ToString()
             });
+        }
+
+        public async Task<PaymentResultDto> TransferToCraftsmanAsync(int orderId)
+        {
+            try
+            {
+                var order = await _orderRepo.GetByIdWithDetailsAsync(orderId);
+
+                if (order == null)
+                    return new PaymentResultDto
+                    {
+                        Success = false,
+                        Message = "Order not found"
+                    };
+                if (order.Status != OrderStatus.Completed)
+                {
+                    return new PaymentResultDto
+                    {
+                        Success = false,
+                        Message = "Transfer allowed only after order completion"
+                    };
+                }
+                if (order.CraftsmanId == null)
+                    return new PaymentResultDto
+                    {
+                        Success = false,
+                        Message = "Order has no craftsman"
+                    };
+
+                var craftsman = await _craftsmanRepo.GetByIdAsync(order.CraftsmanId);
+
+                if (craftsman == null)
+                    return new PaymentResultDto
+                    {
+                        Success = false,
+                        Message = "Craftsman not found"
+                    };
+
+                var admin = await _userRepo.GetAdminAsync();
+
+                if (admin == null)
+                    return new PaymentResultDto
+                    {
+                        Success = false,
+                        Message = "Admin not found"
+                    };
+
+                var adminWallet = await _walletRepo.GetByUserIdAsync(admin.Id);
+                var craftsmanWallet = await _walletRepo.GetByUserIdAsync(craftsman.UserId);
+
+                if (adminWallet == null)
+                    return new PaymentResultDto
+                    {
+                        Success = false,
+                        Message = "Admin wallet not found"
+                    };
+
+                if (craftsmanWallet == null)
+                {
+                    craftsmanWallet = new Wallet
+                    {
+                        UserId = craftsman.UserId,
+                        Balance = 0,
+                        IsActive = true,
+                        Transactions = new List<WalletTransaction>()
+                    };
+
+                    await _walletRepo.AddAsync(craftsmanWallet);
+                }
+
+                decimal craftsmanShare = order.Amount * 0.9m;
+
+                if (adminWallet.Balance < craftsmanShare)
+                    return new PaymentResultDto
+                    {
+                        Success = false,
+                        Message = "Admin wallet has insufficient balance"
+                    };
+
+                // Debit Admin
+                AddTransaction(adminWallet, craftsmanShare, TransactionType.Debit, order.Id, "Transfer to craftsman");
+
+                // Credit Craftsman
+                AddTransaction(craftsmanWallet, craftsmanShare, TransactionType.Credit, order.Id, "Order payment");
+
+                _walletRepo.Update(adminWallet);
+                _walletRepo.Update(craftsmanWallet);
+
+                await _walletRepo.SaveAsync();
+
+                return new PaymentResultDto
+                {
+                    Success = true,
+                    Message = "Transfer to craftsman completed successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new PaymentResultDto
+                {
+                    Success = false,
+                    Message = $"Transfer failed: {ex.Message}"
+                };
+            }
         }
     }
 }

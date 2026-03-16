@@ -135,7 +135,7 @@ namespace Harfien.Infrastructure.Migrations
                             Id = "ADMIN_ID",
                             AccessFailedCount = 0,
                             Address = "Cairo",
-                            ConcurrencyStamp = "cff27653-9255-41ec-9a1b-e94e534dee9a",
+                            ConcurrencyStamp = "5b97be9c-46c8-4cde-93c1-81ee8d46590c",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "Admin@gmail.com",
                             EmailConfirmed = true,
@@ -147,7 +147,7 @@ namespace Harfien.Infrastructure.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAEELKHz7XXrgxHF6ePvN/KLtEyAFAL6ZfTwReCMO1QcYnEpW3vjyErKz0/8G+TePs4A==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "21323b9f-3234-487d-8e3b-5aa597ae3b88",
+                            SecurityStamp = "29d21b1a-a588-404d-bc72-b293db74e803",
                             TwoFactorEnabled = false,
                             UserName = "Admin@gmail.com"
                         });
@@ -183,35 +183,931 @@ namespace Harfien.Infrastructure.Migrations
                             Id = 1,
                             CityId = 1,
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "Maadi"
+                            Name = "المعادي"
                         },
                         new
                         {
                             Id = 2,
                             CityId = 1,
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "Helwan"
+                            Name = "حلوان"
                         },
                         new
                         {
                             Id = 3,
                             CityId = 1,
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "Ramses"
+                            Name = "الزمالك"
                         },
                         new
                         {
                             Id = 4,
-                            CityId = 2,
+                            CityId = 1,
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "El Omarania"
+                            Name = "مصر الجديدة"
                         },
                         new
                         {
                             Id = 5,
+                            CityId = 1,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "النزهة"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CityId = 1,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "مدينة نصر"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CityId = 1,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "التجمع الخامس"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CityId = 1,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الشروق"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CityId = 2,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "العمرانية"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CityId = 2,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الهرم"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CityId = 2,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الدقي"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CityId = 2,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الشيخ زايد"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CityId = 2,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "6 أكتوبر"
+                        },
+                        new
+                        {
+                            Id = 14,
                             CityId = 3,
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "Naga Elarab"
+                            Name = "سيدي جابر"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CityId = 3,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "محرم بك"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CityId = 3,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "برج العرب"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CityId = 3,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الحضرة"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CityId = 3,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الإبراهيمية"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CityId = 4,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "المنصورة"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CityId = 4,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "شربين"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CityId = 4,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "أجا"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CityId = 4,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "السنبلاوين"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CityId = 4,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "تمي الأمديد"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CityId = 5,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الزقازيق"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CityId = 5,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "بلبيس"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CityId = 5,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "كفر صقر"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CityId = 5,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الحسينية"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            CityId = 5,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "10 رمضان"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CityId = 6,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "بنها"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            CityId = 6,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الخصوص"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            CityId = 6,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "شبرا الخيمة"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CityId = 6,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "القناطر الخيرية"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            CityId = 6,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "طوخ"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            CityId = 7,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "شبين الكوم"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            CityId = 7,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "قويسنا"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            CityId = 7,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "أشمون"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            CityId = 7,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "السادات"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            CityId = 7,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الباجور"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            CityId = 8,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "دمنهور"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            CityId = 8,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "رشيد"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            CityId = 8,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "إيتاي البارود"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            CityId = 8,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "كفر الدوار"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            CityId = 8,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الرحمانية"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            CityId = 9,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "طنطا"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            CityId = 9,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "سمنود"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            CityId = 9,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "زفتى"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            CityId = 9,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "المحلة الكبرى"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            CityId = 9,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "كفر الزيات"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            CityId = 10,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "بيلا"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            CityId = 10,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الحامول"
+                        },
+                        new
+                        {
+                            Id = 51,
+                            CityId = 10,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "دسوق"
+                        },
+                        new
+                        {
+                            Id = 52,
+                            CityId = 10,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "سيدي سالم"
+                        },
+                        new
+                        {
+                            Id = 53,
+                            CityId = 10,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "فوه"
+                        },
+                        new
+                        {
+                            Id = 54,
+                            CityId = 11,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "دمياط الجديدة"
+                        },
+                        new
+                        {
+                            Id = 55,
+                            CityId = 11,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "فارسكور"
+                        },
+                        new
+                        {
+                            Id = 56,
+                            CityId = 11,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "رأس البر"
+                        },
+                        new
+                        {
+                            Id = 57,
+                            CityId = 11,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "كفر سعد"
+                        },
+                        new
+                        {
+                            Id = 58,
+                            CityId = 11,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "عزبة البرج"
+                        },
+                        new
+                        {
+                            Id = 59,
+                            CityId = 12,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "القنطرة شرق"
+                        },
+                        new
+                        {
+                            Id = 60,
+                            CityId = 12,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "القنطرة غرب"
+                        },
+                        new
+                        {
+                            Id = 61,
+                            CityId = 12,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "فايد"
+                        },
+                        new
+                        {
+                            Id = 62,
+                            CityId = 12,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "القصاصين"
+                        },
+                        new
+                        {
+                            Id = 63,
+                            CityId = 12,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "التل الكبير"
+                        },
+                        new
+                        {
+                            Id = 64,
+                            CityId = 13,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الجناين"
+                        },
+                        new
+                        {
+                            Id = 65,
+                            CityId = 13,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "عتاقة"
+                        },
+                        new
+                        {
+                            Id = 66,
+                            CityId = 13,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الأربعين"
+                        },
+                        new
+                        {
+                            Id = 67,
+                            CityId = 13,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "حي فيصل"
+                        },
+                        new
+                        {
+                            Id = 68,
+                            CityId = 14,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "شرق بورسعيد"
+                        },
+                        new
+                        {
+                            Id = 69,
+                            CityId = 14,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "غرب بورسعيد"
+                        },
+                        new
+                        {
+                            Id = 70,
+                            CityId = 14,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "بورفؤاد"
+                        },
+                        new
+                        {
+                            Id = 71,
+                            CityId = 14,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الضواحي"
+                        },
+                        new
+                        {
+                            Id = 72,
+                            CityId = 15,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "العريش"
+                        },
+                        new
+                        {
+                            Id = 73,
+                            CityId = 15,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "رفح"
+                        },
+                        new
+                        {
+                            Id = 74,
+                            CityId = 15,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الشيخ زويد"
+                        },
+                        new
+                        {
+                            Id = 75,
+                            CityId = 15,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "بئر العبد"
+                        },
+                        new
+                        {
+                            Id = 76,
+                            CityId = 15,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "نخل"
+                        },
+                        new
+                        {
+                            Id = 77,
+                            CityId = 16,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "شرم الشيخ"
+                        },
+                        new
+                        {
+                            Id = 78,
+                            CityId = 16,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "دهب"
+                        },
+                        new
+                        {
+                            Id = 79,
+                            CityId = 16,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "نويبع"
+                        },
+                        new
+                        {
+                            Id = 80,
+                            CityId = 16,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "طابا"
+                        },
+                        new
+                        {
+                            Id = 81,
+                            CityId = 16,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "سانت كاترين"
+                        },
+                        new
+                        {
+                            Id = 82,
+                            CityId = 17,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الغردقة"
+                        },
+                        new
+                        {
+                            Id = 83,
+                            CityId = 17,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "سفاجا"
+                        },
+                        new
+                        {
+                            Id = 84,
+                            CityId = 17,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "القصير"
+                        },
+                        new
+                        {
+                            Id = 85,
+                            CityId = 17,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "مرسى علم"
+                        },
+                        new
+                        {
+                            Id = 86,
+                            CityId = 17,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "رأس غارب"
+                        },
+                        new
+                        {
+                            Id = 87,
+                            CityId = 18,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الخارجة"
+                        },
+                        new
+                        {
+                            Id = 88,
+                            CityId = 18,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الداخلة"
+                        },
+                        new
+                        {
+                            Id = 89,
+                            CityId = 18,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "باريس"
+                        },
+                        new
+                        {
+                            Id = 90,
+                            CityId = 18,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الفرافرة"
+                        },
+                        new
+                        {
+                            Id = 91,
+                            CityId = 19,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "مرسى مطروح"
+                        },
+                        new
+                        {
+                            Id = 92,
+                            CityId = 19,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "السلوم"
+                        },
+                        new
+                        {
+                            Id = 93,
+                            CityId = 19,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الضبعة"
+                        },
+                        new
+                        {
+                            Id = 94,
+                            CityId = 19,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "النجيلة"
+                        },
+                        new
+                        {
+                            Id = 95,
+                            CityId = 20,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "ناصر"
+                        },
+                        new
+                        {
+                            Id = 96,
+                            CityId = 20,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الفشن"
+                        },
+                        new
+                        {
+                            Id = 97,
+                            CityId = 20,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "سمسطا"
+                        },
+                        new
+                        {
+                            Id = 98,
+                            CityId = 20,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "إهناسيا"
+                        },
+                        new
+                        {
+                            Id = 99,
+                            CityId = 20,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "ببا"
+                        },
+                        new
+                        {
+                            Id = 100,
+                            CityId = 21,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "يوسف الصديق"
+                        },
+                        new
+                        {
+                            Id = 101,
+                            CityId = 21,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "إطسا"
+                        },
+                        new
+                        {
+                            Id = 102,
+                            CityId = 21,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "سنورس"
+                        },
+                        new
+                        {
+                            Id = 103,
+                            CityId = 21,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "طامية"
+                        },
+                        new
+                        {
+                            Id = 104,
+                            CityId = 21,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "أبشواي"
+                        },
+                        new
+                        {
+                            Id = 105,
+                            CityId = 22,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "سمالوط"
+                        },
+                        new
+                        {
+                            Id = 106,
+                            CityId = 22,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "ملوي"
+                        },
+                        new
+                        {
+                            Id = 107,
+                            CityId = 22,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "بني مزار"
+                        },
+                        new
+                        {
+                            Id = 108,
+                            CityId = 22,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "أبو قرقاص"
+                        },
+                        new
+                        {
+                            Id = 109,
+                            CityId = 22,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "مغاغة"
+                        },
+                        new
+                        {
+                            Id = 110,
+                            CityId = 23,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "ديروط"
+                        },
+                        new
+                        {
+                            Id = 111,
+                            CityId = 23,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "صدفا"
+                        },
+                        new
+                        {
+                            Id = 112,
+                            CityId = 23,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الفتح"
+                        },
+                        new
+                        {
+                            Id = 113,
+                            CityId = 23,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "أبنوب"
+                        },
+                        new
+                        {
+                            Id = 114,
+                            CityId = 23,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "منفلوط"
+                        },
+                        new
+                        {
+                            Id = 115,
+                            CityId = 24,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "أخميم"
+                        },
+                        new
+                        {
+                            Id = 116,
+                            CityId = 24,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "جرجا"
+                        },
+                        new
+                        {
+                            Id = 117,
+                            CityId = 24,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "البلينا"
+                        },
+                        new
+                        {
+                            Id = 118,
+                            CityId = 24,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "المراغة"
+                        },
+                        new
+                        {
+                            Id = 119,
+                            CityId = 24,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "دار السلام"
+                        },
+                        new
+                        {
+                            Id = 120,
+                            CityId = 25,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "نجع حمادي"
+                        },
+                        new
+                        {
+                            Id = 121,
+                            CityId = 25,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "قفط"
+                        },
+                        new
+                        {
+                            Id = 122,
+                            CityId = 25,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "دندرة"
+                        },
+                        new
+                        {
+                            Id = 123,
+                            CityId = 25,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "أبو تشت"
+                        },
+                        new
+                        {
+                            Id = 124,
+                            CityId = 25,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "قنا الجديدة"
+                        },
+                        new
+                        {
+                            Id = 125,
+                            CityId = 26,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "القرنة"
+                        },
+                        new
+                        {
+                            Id = 126,
+                            CityId = 26,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "مدينة الأقصر"
+                        },
+                        new
+                        {
+                            Id = 127,
+                            CityId = 26,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الزينية"
+                        },
+                        new
+                        {
+                            Id = 128,
+                            CityId = 26,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "البياضية"
+                        },
+                        new
+                        {
+                            Id = 129,
+                            CityId = 27,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "دراو"
+                        },
+                        new
+                        {
+                            Id = 130,
+                            CityId = 27,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "كوم أمبو"
+                        },
+                        new
+                        {
+                            Id = 131,
+                            CityId = 27,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "إدفو"
+                        },
+                        new
+                        {
+                            Id = 132,
+                            CityId = 27,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "نصر النوبة"
+                        },
+                        new
+                        {
+                            Id = 133,
+                            CityId = 27,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "أسوان الجديدة"
                         });
                 });
 
@@ -283,25 +1179,163 @@ namespace Harfien.Infrastructure.Migrations
                         {
                             Id = 1,
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "Cairo"
+                            Name = "القاهرة"
                         },
                         new
                         {
                             Id = 2,
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "Giza"
+                            Name = "الجيزة"
                         },
                         new
                         {
                             Id = 3,
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "Alexanderia"
+                            Name = "الإسكندرية"
                         },
                         new
                         {
                             Id = 4,
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "Aswan"
+                            Name = "الدقهلية"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الشرقية"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "القليوبية"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "المنوفية"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "البحيرة"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الغربية"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "كفر الشيخ"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "دمياط"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الإسماعيلية"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "السويس"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "بورسعيد"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "شمال سيناء"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "جنوب سيناء"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "البحر الأحمر"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الوادي الجديد"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "مطروح"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "بني سويف"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الفيوم"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "المنيا"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "أسيوط"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "سوهاج"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "قنا"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "الأقصر"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "أسوان"
                         });
                 });
 
@@ -315,6 +1349,10 @@ namespace Harfien.Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("ProfilePicture")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -391,6 +1429,10 @@ namespace Harfien.Infrastructure.Migrations
 
                     b.Property<int>("NationalId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ProfilePicture")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Rating")
                         .HasColumnType("float");
@@ -728,6 +1770,7 @@ namespace Harfien.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Balance")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")

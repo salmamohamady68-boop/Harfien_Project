@@ -19,6 +19,35 @@ namespace Harfien.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<List<Client>> GetAllWithIncludesAsync()
+        {
+            return await _context.Clients
+                .Include(c => c.User)
+                .Include(c => c.Orders)
+                .Include(c => c.Subscriptions)
+                .ToListAsync();
+        }
+
+        public async Task<Client?> GetByIdWithIncludesAsync(int id)
+        {
+            return await _context.Clients
+                .Include(c => c.User)
+                .Include(c => c.Orders)
+                .Include(c => c.Subscriptions)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task DeleteAsync(Client client)
+        {
+            _context.Clients.Remove(client);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<Client?> GetClientWithOrdersAsync(int clientId)
         {
             return await _context.Clients
@@ -30,6 +59,15 @@ namespace Harfien.Infrastructure.Repositories
         {
             return await _context.Clients
                 .FirstOrDefaultAsync(c => c.UserId == userId);
+        }
+        public async Task<List<Client>> SearchAsync(string keyword)
+        {
+            return await _context.Clients
+                .Include(c => c.User)
+                .Include(c => c.Orders)
+                .Include(c => c.Subscriptions)
+                .Where(c => c.User.FullName.Contains(keyword))
+                .ToListAsync();
         }
     }
 }

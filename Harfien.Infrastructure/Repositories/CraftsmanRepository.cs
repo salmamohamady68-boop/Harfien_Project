@@ -23,11 +23,13 @@ namespace Harfien.Infrastructure.Repositories
         public async Task<IEnumerable<Craftsman>> GetAllWithUserAsync()
         {
             return await _context.Craftsmen
-                     .Include(c => c.User) 
-                     .Include(c => c.CraftsmanServices)
-                     .Include(c => c.Availabilities)
-                     .Include(c => c.Orders)
-                     .ToListAsync();
+                .Include(c => c.User)
+                    .ThenInclude(u => u.Area)
+                        .ThenInclude(a => a.City)
+                .Include(c => c.CraftsmanServices).
+                        ThenInclude(cs => cs.ServiceCategory)
+                .Include(c => c.Availabilities)
+                .ToListAsync();
         }
 
         public async Task<Craftsman?> GetByUserIdAsync(string userId)

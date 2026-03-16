@@ -13,7 +13,10 @@ namespace Harfien.Application.DTO.Profile_Craftman
         public string Bio { get; set; }
         public int YearsOfExperience { get; set; }
         public bool IsVerified { get; set; }
+        public string? ProfilePicture { get; set; }
 
         public List<ServiceDto> Services { get; set; }
+        public List<AvailabilityDto> Availabilities { get; internal set; }
+        public int Id { get; internal set; }
     }
 }

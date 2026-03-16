@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Harfien.Application.DTO.Error;
 using Harfien.Application.DTO.Payment;
 using Harfien.Application.Interfaces.payment_interfaces;
 using Harfien.Domain.Entities;
+using Harfien.Domain.Enums;
 using Harfien.Domain.Interface_Repository.Repositories;
 using Harfien.Domain.Shared;
 using Harfien.Domain.Shared.Repositories;
@@ -171,6 +173,50 @@ namespace Harfien.Application.Services
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };
+        }
+
+        public async Task<WalletDto> WithdrawAsync(string userId, WithdrawRequestDto request, List<FieldErrorDto> serviceErrors)
+        {
+            
+            var wallet = await _walletRepo
+               .GetByUserIdWithTransactionsAsync(userId);
+
+            if (wallet == null)
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = "id",
+                    Message = "Wallet not found"
+                });
+                return null;
+            }
+                 
+
+            if (wallet.Balance < request.Amount)
+            {
+                serviceErrors.Add(new FieldErrorDto
+                {
+                    Field = "Amount",
+                    Message = "Insufficient balance"
+                });
+                return null;
+            }
+ 
+            wallet.Balance -= request.Amount;
+
+            var transaction = new WalletTransaction
+            {
+                WalletId = wallet.Id,
+                Type = TransactionType.Debit,
+                Amount = request.Amount,
+                TransactionReason = "Withdraw operation",
+                Reference = $"SIM-{Guid.NewGuid()}",
+                Status = TransactionStatus.Completed
+            };
+            await _transactionRepository.AddAsync(transaction);
+            await _transactionRepository.SaveAsync();
+            
+            return _mapper.Map<WalletDto>(wallet);
         }
 
     }

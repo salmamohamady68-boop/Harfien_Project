@@ -15,7 +15,7 @@ namespace Harfien.Application.DTO.Payment
         public string Status { get; set; }
         public string Reason { get; set; }
         public int? OrderId { get; set; }
-        public OrderDetailsDto OrderDetails { get; set; }
+        public OrderInfoDto Orderinfo { get; set; }
         public string Reference { get; set; }
         public DateTime CreatedAt { get; set; }
     }

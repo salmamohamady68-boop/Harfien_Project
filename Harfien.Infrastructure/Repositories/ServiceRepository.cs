@@ -43,6 +43,31 @@ namespace Harfien.Infrastructure.Repositories
                 .Include(s => s.ServiceCategory)
                 .ToListAsync();
         }
+        public async Task<PagedResult<Service>> GetServicesByCategoryAsync(  int categoryId,  int pageNumber,  int pageSize)
+        {
+            var query = _dbSet
+                .Where(s => s.ServiceCategoryId == categoryId)
+                .Include(s => s.Craftsman)
+                    .ThenInclude(c => c.User)
+                        .ThenInclude(u => u.Area)
+                .Include(s => s.ServiceCategory)
+                .AsQueryable();
+
+            var totalCount = await query.CountAsync();
+
+            var services = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PagedResult<Service>
+            {
+                Items = services,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
 
 
         public async Task<PagedResult<Service>> GetFilteredAsync(ServiceQueryDto query)
@@ -120,6 +145,25 @@ namespace Harfien.Infrastructure.Repositories
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };
+        }
+
+
+        public async Task<bool> CraftsmanExistsAsync(int craftsmanId)
+        {
+            return await _context.Craftsmen
+                .AnyAsync(c => c.Id == craftsmanId);
+        }
+
+        public async Task<bool> CategoryExistsAsync(int categoryId)
+        {
+            return await _context.ServiceCategories
+                .AnyAsync(c => c.Id == categoryId);
+        }
+
+        public async Task<bool> ServiceExistsAsync(string name, int craftsmanId)
+        {
+            return await _context.Services
+                .AnyAsync(s => s.Name == name && s.CraftsmanId == craftsmanId);
         }
     }
 }

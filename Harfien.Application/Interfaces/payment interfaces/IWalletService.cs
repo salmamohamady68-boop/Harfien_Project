@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Harfien.Application.DTO.Error;
 using Harfien.Application.DTO.Payment;
 using Harfien.Domain.Shared;
 
@@ -20,5 +21,7 @@ namespace Harfien.Application.Interfaces.payment_interfaces
             string userId, int pageNumber, int pageSize);
       Task<PagedResult<ClientPaymentDto>> GetPaymentsByClientIdAsync(
    string clientuserId, int pageNumber, int pageSize);
+
+        Task<WalletDto> WithdrawAsync(string userId, WithdrawRequestDto request, List<FieldErrorDto> serviceErrors);
     }
 }
