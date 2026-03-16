@@ -11,6 +11,7 @@ namespace Harfien.Domain.Interface_Repository.Repositories
 
         Task<List<ChatListDto>> GetChatListAsync(string currentUserId);
         Task MarkAsReadAsync(string senderId, string receiverId);
+        Task<List<ChatUserDto>> GetAvailableUsersAsync(string currentUserId);
 
     }
 }

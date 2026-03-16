@@ -24,5 +24,6 @@ namespace Harfien.Application.DTO.Profile_Craftman
         public  List<ReviewsDto> Reviews { get; set; }  
 
         public int CompletedOrdersCount { get; set; }
+        public UserDto User { get; set; }
     }
 }

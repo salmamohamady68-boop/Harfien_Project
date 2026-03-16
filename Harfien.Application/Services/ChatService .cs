@@ -18,7 +18,7 @@ namespace Harfien.Application.Services
             _notifier = notifier;
         }
 
-        public async Task SendMessageAsync(string senderId, SendMessageRequest dto)
+        public async Task<MessageDto> SendMessageAsync(string senderId, SendMessageRequest dto)
         {
             var message = new ChatMessage
             {
@@ -32,12 +32,26 @@ namespace Harfien.Application.Services
 
             var messageDto = new MessageDto
             {
-                SenderId = senderId,
-                Content = dto.Content,
-                SentAt = message.SentAt
+                Id = message.Id,
+
+                SenderId = message.SenderId,
+                SenderName = message.Sender.FullName,
+                SenderImage = message.Sender.ProfileImage,
+                SenderUsername = message.Sender.UserName,
+                SenderArea = message.Sender.Area,
+                ReceiverId = message.ReceiverId,
+                ReceiverName = message.Receiver.FullName,
+                ReceiverUsername = message.Receiver.UserName,
+                ReceiverArea = message.Receiver.Area,
+
+                Content = message.Content,
+                SentAt = message.SentAt,
+                IsRead = message.IsRead
             };
 
             await _notifier.NotifyAsync(dto.ReceiverId, messageDto);
+
+            return messageDto;
         }
 
         public async Task<List<MessageDto>> GetConversationAsync(string user1, string user2)
@@ -47,6 +61,17 @@ namespace Harfien.Application.Services
             return messages.Select(m => new MessageDto
             {
                 SenderId = m.SenderId,
+                SenderName = m.Sender.FullName,
+                SenderUsername = m.Sender.UserName,
+                SenderImage = m.Sender.ProfileImage,
+                SenderArea = m.Sender.Area,
+
+                ReceiverId = m.ReceiverId,
+                ReceiverName = m.Receiver.FullName,
+                ReceiverUsername = m.Receiver.UserName,
+                ReceiverArea = m.Receiver.Area,
+
+
                 Content = m.Content,
                 SentAt = m.SentAt
             }).ToList();
@@ -62,6 +87,14 @@ namespace Harfien.Application.Services
         {
             await _repository.MarkAsReadAsync(senderId, receiverId);
         }
+
+        public async Task<List<ChatUserDto>> GetAvailableUsersAsync(string currentUserId)
+        {
+            return await _repository.GetAvailableUsersAsync(currentUserId);
+        }
+
+
+
 
     }
 }

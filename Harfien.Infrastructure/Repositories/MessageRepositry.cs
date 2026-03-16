@@ -3,6 +3,7 @@ using Harfien.Domain.Entities;
 using Harfien.Domain.Interface_Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Harfien.Domain.Shared;
+using Harfien.Application.DTO.Chat;
 
 
 namespace Harfien.Infrastructure.Repositories
@@ -27,7 +28,7 @@ namespace Harfien.Infrastructure.Repositories
                 .Where(m =>
                     (m.SenderId == user1 && m.ReceiverId == user2) ||
                     (m.SenderId == user2 && m.ReceiverId == user1))
-                .OrderBy(m => m.SentAt)
+                .OrderBy(m => m.SentAt).Include(m=>m.Sender).Include(m=>m.Receiver)
                 .ToListAsync();
         }
 
@@ -40,18 +41,33 @@ namespace Harfien.Infrastructure.Repositories
         public async Task<List<ChatListDto>> GetChatListAsync(string currentUserId)
         {
             var messages = await _context.ChatMessages
+                .Include(m => m.Sender)
+                .Include(m => m.Receiver)
                 .Where(m => m.SenderId == currentUserId || m.ReceiverId == currentUserId)
                 .ToListAsync();
 
             var chatList = messages
                 .GroupBy(m => m.SenderId == currentUserId ? m.ReceiverId : m.SenderId)
-                .Select(g => new ChatListDto
+                .Select(g =>
                 {
-                    UserId = g.Key,
-                    LastMessage = g.OrderByDescending(x => x.SentAt).First().Content,
-                    LastMessageTime = g.Max(x => x.SentAt),
-                    UnreadCount = g.Count(x =>
-                        x.ReceiverId == currentUserId && !x.IsRead)
+                    var lastMessage = g.OrderByDescending(x => x.SentAt).First();
+
+                    var otherUser = lastMessage.SenderId == currentUserId
+                        ? lastMessage.Receiver
+                        : lastMessage.Sender;
+
+                    return new ChatListDto
+                    {
+                        UserId = otherUser.Id,
+                        UserName = otherUser.FullName,
+                        UserImage = otherUser.ProfileImage,
+
+                        LastMessage = lastMessage.Content,
+                        LastMessageTime = lastMessage.SentAt,
+
+                        UnreadCount = g.Count(x =>
+                            x.ReceiverId == currentUserId && !x.IsRead)
+                    };
                 })
                 .OrderByDescending(x => x.LastMessageTime)
                 .ToList();
@@ -72,6 +88,20 @@ namespace Harfien.Infrastructure.Repositories
                 msg.IsRead = true;
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<ChatUserDto>> GetAvailableUsersAsync(string currentUserId)
+        {
+            return await _context.Users
+                .Where(u => u.Id != currentUserId)
+                .Select(u => new ChatUserDto
+                {
+                    UserId = u.Id,
+                    UserName = u.UserName,
+                    UserImage = u.ProfileImage,
+                    IsOnline = false
+                })
+                .ToListAsync();
         }
 
     }

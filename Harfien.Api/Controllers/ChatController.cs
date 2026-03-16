@@ -3,7 +3,7 @@ using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-﻿using Harfien.Application.DTO;
+using Harfien.Application.DTO;
 using Harfien.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,16 +24,16 @@ namespace Harfien.Presentation.Controllers
         }
 
         [HttpPost("send")]
-        public async Task<IActionResult> Send(SendMessageRequest dto)
+        public async Task<IActionResult> Send([FromBody] SendMessageRequest dto)
         {
             var senderId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (senderId == null)
+            if (string.IsNullOrEmpty(senderId))
                 return Unauthorized();
 
-            await _chatService.SendMessageAsync(senderId, dto);
+            var message = await _chatService.SendMessageAsync(senderId, dto);
 
-            return Ok();
+            return Ok(message);
         }
 
         [HttpGet("conversation/{receiverId}")]
@@ -70,6 +70,18 @@ namespace Harfien.Presentation.Controllers
             return Ok();
         }
 
+        [HttpGet("users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(currentUserId))
+                return Unauthorized();
+
+            var users = await _chatService.GetAvailableUsersAsync(currentUserId);
+
+            return Ok(users);
+        }
 
     }
 }
