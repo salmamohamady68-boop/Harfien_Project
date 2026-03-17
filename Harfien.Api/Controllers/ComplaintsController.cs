@@ -108,7 +108,7 @@ namespace Harfien.Presentation.Controllers
         #endregion
 
         [Authorize(Roles = "Craftsman")]
-        [HttpGet("issued-complaints")]
+        [HttpGet("issued-craftsman")]
         public async Task<IActionResult> GetComplaintsIssuedForCraftsman()
         {
             int craftsmanId = await GetCraftsmanIdSafe();
