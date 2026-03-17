@@ -16,12 +16,13 @@ namespace Harfien.Application.Interfaces
         Task<ComplaintResponseDto> DeleteComplaintAsync(int reporterId, int complaintId);
 
         Task<IEnumerable<ComplaintResponseDto>> GetMyComplaintsAsync(int reporterId);
-        Task<ComplaintResponseDto?> GetComplaintByIdAsync(int reporterId, int complaintId);
+        Task<ComplaintResponseDto?> GetComplaintByIdAsync(int userId, int complaintId);
 
         Task<IEnumerable<ComplaintDetailsDto>> GetAllComplaintsAsync(); // Admin
         Task<ComplaintDetailsDto?> GetComplaintDetailsAsync(int complaintId); // Admin
         Task<ComplaintResponseDto> ChangeStatusAsync(int complaintId, ComplaintStatus status);//admin
         Task<ComplaintResponseDto> AddResolutionAsync(int complaintId, string notes); //admin
+        Task<IEnumerable<ComplaintResponseDto>> GetComplaintsIssuedForCraftsmanAsync(int craftsmanId);
     }
 
 }

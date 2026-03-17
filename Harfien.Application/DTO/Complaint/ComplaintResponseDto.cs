@@ -11,6 +11,8 @@ namespace Harfien.Application.DTO.Complaint
     {
         public int Id { get; set; }
         public int OrderId { get; set; }
+        public int craftsmanId { get; set; }
+        public int clientId { get; set; }
         public string Description { get; set; }
         public string? EvidenceAttachmentUrl { get; set; }
         public ComplaintStatus Status { get; set; }

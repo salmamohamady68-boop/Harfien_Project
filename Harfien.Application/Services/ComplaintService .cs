@@ -5,12 +5,6 @@ using Harfien.Application.Interfaces;
 using Harfien.Domain.Entities;
 using Harfien.Domain.Enums;
 using Harfien.Domain.Shared.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Harfien.Application.Services
 {
@@ -52,6 +46,8 @@ namespace Harfien.Application.Services
             return new ComplaintResponseDto
             {
                 Id = complaint.Id,
+                clientId = complaint.ReporterId,
+                craftsmanId = complaint.Order.CraftsmanId,
                 Description = complaint.Description,
                 EvidenceAttachmentUrl = complaint.EvidenceAttachmentUrl,
                 Status = complaint.Status,
@@ -82,6 +78,8 @@ namespace Harfien.Application.Services
             return new ComplaintResponseDto
             {
                 Id = complaint.Id,
+                clientId = complaint.ReporterId,
+                craftsmanId = complaint.Order.CraftsmanId,
                 Description = complaint.Description,
                 EvidenceAttachmentUrl = complaint.EvidenceAttachmentUrl,
                 Status = complaint.Status,
@@ -109,6 +107,8 @@ namespace Harfien.Application.Services
             var response = new ComplaintResponseDto
             {
                 Id = complaint.Id,
+                clientId = complaint.ReporterId,
+                craftsmanId = complaint.Order.CraftsmanId,
                 Description = complaint.Description,
                 EvidenceAttachmentUrl = complaint.EvidenceAttachmentUrl,
                 Status = complaint.Status,
@@ -132,6 +132,8 @@ namespace Harfien.Application.Services
 
             return complaints.Select(c => new ComplaintResponseDto  {
                 Id = c.Id,
+                clientId = c.ReporterId,
+                craftsmanId = c.Order.CraftsmanId,
                 Description = c.Description,
                 EvidenceAttachmentUrl = c.EvidenceAttachmentUrl,
                 Status = c.Status,
@@ -143,16 +145,38 @@ namespace Harfien.Application.Services
             });
         }
 
-        public async Task<ComplaintResponseDto?> GetComplaintByIdAsync(int reporterId, int complaintId)
+        public async Task<IEnumerable<ComplaintResponseDto>> GetComplaintsIssuedForCraftsmanAsync(int craftsmanId)
+        {
+            var complaints = await _unit.ComplaintRepository.GetByCraftsmanIdAsync(craftsmanId);
+
+            return complaints.Select(c => new ComplaintResponseDto
+            {
+                Id = c.Id,
+                clientId = c.ReporterId,
+                craftsmanId = craftsmanId,
+                Description = c.Description,
+                EvidenceAttachmentUrl = c.EvidenceAttachmentUrl,
+                Status = c.Status,
+                CreatedAt = c.CreatedAt,
+                AdminResolutionNotes = c.AdminResolutionNotes,
+                OrderId = c.OrderId,
+                ScheduledAt = c.Order.ScheduledAt,
+                OrderStatus = c.Order.Status
+            });
+        }
+
+        public async Task<ComplaintResponseDto?> GetComplaintByIdAsync(int userId, int complaintId)
         {
             var c = await _unit.ComplaintRepository.GetWithOrderAsync(complaintId);
 
-            if (c?.ReporterId != reporterId)
+            if (c?.ReporterId != userId && c?.Order?.CraftsmanId != userId)
                 return null;
 
             return new ComplaintResponseDto
             {
                 Id = c.Id,
+                clientId = c.ReporterId,
+                craftsmanId = c.Order.CraftsmanId,
                 Description = c.Description,
                 EvidenceAttachmentUrl = c.EvidenceAttachmentUrl,
                 Status = c.Status,
@@ -234,6 +258,8 @@ namespace Harfien.Application.Services
             return new ComplaintResponseDto
             {
                 Id = complaint.Id,
+                clientId = complaint.ReporterId,
+                craftsmanId = complaint.Order.CraftsmanId,
                 Description = complaint.Description,
                 EvidenceAttachmentUrl = complaint.EvidenceAttachmentUrl,
                 Status = complaint.Status,
@@ -260,6 +286,8 @@ namespace Harfien.Application.Services
             return new ComplaintResponseDto
             {
                 Id = complaint.Id,
+                clientId = complaint.ReporterId,
+                craftsmanId = complaint.Order.CraftsmanId,
                 Description = complaint.Description,
                 EvidenceAttachmentUrl = complaint.EvidenceAttachmentUrl,
                 Status = complaint.Status,

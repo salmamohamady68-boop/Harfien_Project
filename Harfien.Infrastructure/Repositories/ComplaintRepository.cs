@@ -25,6 +25,11 @@ namespace Harfien.Infrastructure.Repositories
 
         }
 
+        public async Task<IEnumerable<Complaint>> GetByCraftsmanIdAsync(int craftsmanId)
+        {
+            return await _context.Complaints.Where(c => c.Order.CraftsmanId == craftsmanId).Include(c => c.Order).ToListAsync();
+        }
+
         public async Task<IEnumerable<Complaint>> GetByOrderIdAsync(int orderId)
         {
             return await _context.Complaints.Where(c=>c.OrderId == orderId).ToListAsync();  

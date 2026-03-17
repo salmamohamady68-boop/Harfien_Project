@@ -8,5 +8,6 @@ namespace Harfien.Domain.Shared.Repositories
         Task<IEnumerable<Complaint>> GetByOrderIdAsync(int OrderId);
         Task<Complaint?> GetWithOrderAsync(int complaintId);
         Task<IEnumerable<Complaint>> GetAllWithOrdersAsync();
+        Task<IEnumerable<Complaint>> GetByCraftsmanIdAsync(int craftsmanId);
     }
 }

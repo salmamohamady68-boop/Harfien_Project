@@ -21,16 +21,16 @@ namespace Harfien.Presentation.Controllers
             _unit = unit;
         }
 
-        #region Client / Craftsman
+        #region Client
 
-        [Authorize(Roles = "Client,Craftsman")]
+        [Authorize(Roles = "Client")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateComplaintDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new { success = false, message = "Invalid data", errors = ModelState });
 
-            int reporterId = await GetReporterIdSafe();
+            int reporterId = await GetClientIdSafe();
 
             var result = await _service.CreateComplaintAsync(reporterId, dto);
 
@@ -42,14 +42,14 @@ namespace Harfien.Presentation.Controllers
             });
         }
 
-        [Authorize(Roles = "Client,Craftsman")]
+        [Authorize(Roles = "Client")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateComplaintDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new { success = false, message = "Invalid data", errors = ModelState });
 
-            int reporterId = await GetReporterIdSafe();
+            int reporterId = await GetClientIdSafe();
 
             var result = await _service.UpdateComplaintAsync(reporterId, id, dto);
 
@@ -61,11 +61,11 @@ namespace Harfien.Presentation.Controllers
             });
         }
 
-        [Authorize(Roles = "Client,Craftsman")]
+        [Authorize(Roles = "Client")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            int reporterId = await GetReporterIdSafe();
+            int reporterId = await GetClientIdSafe();
 
             var result = await _service.DeleteComplaintAsync(reporterId, id);
 
@@ -77,11 +77,11 @@ namespace Harfien.Presentation.Controllers
             });
         }
 
-        [Authorize(Roles = "Client,Craftsman")]
+        [Authorize(Roles = "Client")]
         [HttpGet("my")]
         public async Task<IActionResult> GetMy()
         {
-            int reporterId = await GetReporterIdSafe();
+            int reporterId = await GetClientIdSafe();
             var data = await _service.GetMyComplaintsAsync(reporterId);
 
             return Ok(new
@@ -91,12 +91,12 @@ namespace Harfien.Presentation.Controllers
             });
         }
 
-        [Authorize(Roles = "Client,Craftsman")]
+        [Authorize(Roles = "Client, Craftsman")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            int reporterId = await GetReporterIdSafe();
-            var data = await _service.GetComplaintByIdAsync(reporterId, id);
+            int userId = await GetUserIdSafe();
+            var data = await _service.GetComplaintByIdAsync(userId, id);
 
             return Ok(new
             {
@@ -106,6 +106,20 @@ namespace Harfien.Presentation.Controllers
         }
 
         #endregion
+
+        [Authorize(Roles = "Craftsman")]
+        [HttpGet("issued-complaints")]
+        public async Task<IActionResult> GetComplaintsIssuedForCraftsman()
+        {
+            int craftsmanId = await GetCraftsmanIdSafe();
+            var data = await _service.GetComplaintsIssuedForCraftsmanAsync(craftsmanId);
+
+            return Ok(new
+            {
+                success = true,
+                data
+            });
+        }
 
         #region Admin
 
@@ -170,7 +184,7 @@ namespace Harfien.Presentation.Controllers
 
         #region Helpers
 
-        private async Task<int> GetReporterIdSafe()
+        private async Task<int> GetUserIdSafe()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userId))
@@ -185,6 +199,31 @@ namespace Harfien.Presentation.Controllers
                 return client.Id;
 
             throw new UnauthorizedAccessException("User is not linked to Client or Craftsman");
+        }
+
+        private async Task<int> GetClientIdSafe()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                throw new UnauthorizedAccessException("User not authenticated");
+
+            var client = await _unit.Clients.GetByUserIdAsync(userId);
+            if (client != null)
+                return client.Id;
+
+            throw new UnauthorizedAccessException("User is not linked to Client");
+        }
+        private async Task<int> GetCraftsmanIdSafe()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                throw new UnauthorizedAccessException("User not authenticated");
+
+            var craftsman = await _unit.Craftsmen.GetByUserIdAsync(userId);
+            if (craftsman != null)
+                return craftsman.Id;
+
+            throw new UnauthorizedAccessException("User is not linked to Craftsman");
         }
 
         #endregion
