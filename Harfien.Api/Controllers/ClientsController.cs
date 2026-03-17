@@ -51,5 +51,18 @@ namespace Harfien.Presentation.Controllers
             var result = await _service.SearchAsync(keyword);
             return Ok(result);
         }
+        [HttpPatch("{clientId}/activate")]
+        public async Task<IActionResult> Activate(int clientId)
+        {
+            await _service.SetClientActiveStatus(clientId, true);
+            return NoContent();
+        }
+
+        [HttpPatch("{clientId}/deactivate")]
+        public async Task<IActionResult> Deactivate(int clientId)
+        {
+            await _service.SetClientActiveStatus(clientId, false);
+            return NoContent();
+        }
     }
 }

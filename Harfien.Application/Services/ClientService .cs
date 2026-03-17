@@ -35,6 +35,7 @@ namespace Harfien.Application.Services
                 Email = c.User?.Email,
                 Phone  = c.User?.PhoneNumber,
                 Address = c.User?.Address,
+                IsActive = c.User?.IsActive ?? false,
                 OrdersIds = c.Orders?.Select(o => o.Id).ToList() ?? new(),
                 SubscriptionIds = c.Subscriptions?.Select(s => s.Id).ToList() ?? new()
             }).ToList();
@@ -54,6 +55,7 @@ namespace Harfien.Application.Services
                 Email = client.User?.Email,
                 Phone = client.User?.PhoneNumber,
                 Address = client.User?.Address,
+                IsActive = client.User?.IsActive ?? false,
                 OrdersIds = client.Orders?.Select(o => o.Id).ToList() ?? new(),
                 SubscriptionIds = client.Subscriptions?.Select(s => s.Id).ToList() ?? new()
             };
@@ -91,8 +93,19 @@ namespace Harfien.Application.Services
             await _repository.SaveAsync();
         }
 
+        public async Task SetClientActiveStatus(int clientId, bool isActive)
+        {
+            var client = await _repository.GetByIdWithIncludesAsync(clientId);
 
-        
+            if (client == null)
+                throw new NotFoundException("Client not found");
+
+            client.User.IsActive = isActive;
+
+            _repository.Update(client);
+            await _repository.SaveAsync();
+        }
+
 
         public async Task DeleteAsync(int id)
         {
@@ -120,6 +133,9 @@ namespace Harfien.Application.Services
                 Id = c.Id,
                 FullName = c.User?.FullName,
                 Email = c.User?.Email,
+                Phone = c.User?.PhoneNumber,
+                Address = c.User?.Address,
+                IsActive = c.User?.IsActive ?? false,
                 OrdersIds = c.Orders?.Select(o => o.Id).ToList() ?? new(),
                 SubscriptionIds = c.Subscriptions?.Select(s => s.Id).ToList() ?? new()
             }).ToList();

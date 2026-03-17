@@ -180,6 +180,15 @@ public class AuthService : IAuthService
             clientId = client?.Id;
         }
 
+        if(!user.IsActive)
+        {
+            return new LoginResponse
+            {
+                Success = false,
+                Message = "Your account is deactivated"
+            };
+        }
+
         // Generate JWT
         var token = await _jwtService.GenerateTokenAsync(user);
 

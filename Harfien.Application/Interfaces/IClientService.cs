@@ -15,5 +15,6 @@ namespace Harfien.Application.Interfaces
         Task UpdateAsync(int id, ClientUpdateDto dto);
         Task DeleteAsync(int id);
         Task<List<ClientDto>> SearchAsync(string keyword);
+        Task SetClientActiveStatus(int clientId, bool isActive);
     }
 }

@@ -16,6 +16,7 @@ namespace Harfien.Application.DTO
         public List<int> OrdersIds { get; set; } = new();
         public List<int> SubscriptionIds { get; set; } = new();
         public string? Phone { get; internal set; }
+        public bool IsActive { get; set; }
         public IFormFile? ProfilePicture { get; set; }
     }
 }
