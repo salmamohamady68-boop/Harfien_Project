@@ -10,6 +10,7 @@ namespace Harfien.Domain.Entities
 {
     public class Complaint : BaseEntity
     {
+        // this currently client only
         public int ReporterId { get; set; } // Client or Craftsman who is reporting the issue
         public string Description { get; set; }
         public string? EvidenceAttachmentUrl { get; set; } // link to image/video evidence

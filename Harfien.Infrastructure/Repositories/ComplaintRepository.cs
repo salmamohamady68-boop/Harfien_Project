@@ -27,7 +27,14 @@ namespace Harfien.Infrastructure.Repositories
 
         public async Task<IEnumerable<Complaint>> GetByCraftsmanIdAsync(int craftsmanId)
         {
-            return await _context.Complaints.Where(c => c.Order.CraftsmanId == craftsmanId).Include(c => c.Order).ToListAsync();
+            return await _context.Complaints.Where(c => c.Order.CraftsmanId == craftsmanId)
+                .Include(c => c.Order)
+                    .ThenInclude(o => o.Service)
+                        .ThenInclude(s => s.ServiceCategory)
+                .Include(c => c.Order)
+                    .ThenInclude(o => o.Client)
+                        .ThenInclude(cl => cl.User)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Complaint>> GetByOrderIdAsync(int orderId)
@@ -37,7 +44,14 @@ namespace Harfien.Infrastructure.Repositories
 
         public async Task<IEnumerable<Complaint>> GetByReporterIdAsync(int reporterId)
         {
-            return await _context.Complaints.Where(c=>c.ReporterId==reporterId).Include(c=>c.Order).ToListAsync();  
+            return await _context.Complaints.Where(c=>c.ReporterId==reporterId)
+                .Include(c => c.Order)
+                    .ThenInclude(o => o.Client)
+                        .ThenInclude(cl => cl.User)
+                .Include(c => c.Order)
+                    .ThenInclude(o => o.Service)
+                        .ThenInclude(s => s.ServiceCategory)
+                .ToListAsync();  
         }
 
         public async Task<Complaint?> GetWithOrderAsync(int complaintId)
@@ -51,6 +65,7 @@ namespace Harfien.Infrastructure.Repositories
                             .ThenInclude(cr => cr.User)
                     .Include(c => c.Order)
                         .ThenInclude(o => o.Service)
+                            .ThenInclude(s => s.ServiceCategory)
                  .FirstOrDefaultAsync(c=>c.Id == complaintId);
         }
     }
