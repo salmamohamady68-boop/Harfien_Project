@@ -183,10 +183,10 @@ namespace Harfien.DataAccess
                 Address = "Cairo",
                 CreatedAt = fixedDate,
                 IsActive = true,
-                SecurityStamp = Guid.NewGuid().ToString()
+                SecurityStamp = "6e271328-bb5f-4c8f-a1c3-dfa7d2509048"
             };
 
-            adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin123456");
+            adminUser.PasswordHash = "AQAAAAIAAYagAAAAENPLFwt5ruzWosD/s1/gYOXYfPz076o07tzlhY05/Efj18NKKyHTBP/zSs6NB6l1gQ==";
 
             builder.Entity<ApplicationUser>().HasData(adminUser);
 

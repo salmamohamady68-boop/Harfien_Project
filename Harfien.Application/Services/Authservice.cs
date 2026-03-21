@@ -85,46 +85,55 @@ public class AuthService : IAuthService
 
     public async Task<string> RegisterCraftsmanAsync(RegisterCraftsmanDto dto)
     {
-
-        if (await _userManager.FindByEmailAsync(dto.Email) != null)
-            return "This email is already registered.";
-
-        // إنشاء المستخدم أولاً
-        var user = new ApplicationUser
+        try
         {
-            UserName = dto.Email,
-            Email = dto.Email,
-            PhoneNumber = dto.PhoneNumber,
-            FullName = dto.FullName,
-            AreaId = dto.AreaId,
+            if (await _userManager.FindByEmailAsync(dto.Email) != null)
+                return "This email is already registered.";
+
+            // إنشاء المستخدم أولاً
+            var user = new ApplicationUser
+            {
+                UserName = dto.Email,
+                Email = dto.Email,
+                PhoneNumber = dto.PhoneNumber,
+                FullName = dto.FullName,
+                AreaId = dto.AreaId,
 
 
 
-        };
+            };
 
-        // تسجيل المستخدم في Identity
-        var result = await _userManager.CreateAsync(user, dto.Password);
-        if (!result.Succeeded)
+            // تسجيل المستخدم في Identity
+            var result = await _userManager.CreateAsync(user, dto.Password);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                return $"Registration failed: {errors}";
+            }
+
+            // إضافة الدور
+            await _userManager.AddToRoleAsync(user, "Craftsman");
+
+            // إنشاء سجل الحرفي
+            var craftsman = new Craftsman
+            {
+                UserId = user.Id,
+
+                YearsOfExperience = dto.YearsOfExperience,
+                IsApproved = false
+            };
+            await _unitOfWork.Craftsmen.AddAsync(craftsman);
+            await _unitOfWork.SaveAsync();
+
+            return "Your registration is successful. Your account is pending approval by the admin.";
+        }
+        catch (Exception ex)
         {
-            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
-            return $"Registration failed: {errors}";
+            // Log the exception (not implemented here)
+            return $"An error occurred during registration: {ex.Message}";
         }
 
-        // إضافة الدور
-        await _userManager.AddToRoleAsync(user, "Craftsman");
 
-        // إنشاء سجل الحرفي
-        var craftsman = new Craftsman
-        {
-            UserId = user.Id,
-
-            YearsOfExperience = dto.YearsOfExperience,
-            IsApproved = false
-        };
-        await _unitOfWork.Craftsmen.AddAsync(craftsman);
-        await _unitOfWork.SaveAsync();
-
-        return "Your registration is successful. Your account is pending approval by the admin.";
     }
 
     public async Task<LoginResponse> LoginAsync(loginDto dto)
