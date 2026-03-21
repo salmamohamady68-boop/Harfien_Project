@@ -207,6 +207,7 @@ namespace Harfien.Application.Services
                     TransactionRef = paymentIntent.Id
                 };
 
+                order.Status = OrderStatus.Paid;
                 order.Payment = payment;
 
                 await _paymentRepo.AddAsync(payment);

@@ -13,7 +13,6 @@ using Harfien.Domain.Interface_Repository.Repositories;
 using Harfien.Domain.Shared.Repositories;
 using Harfien.Infrastructure.Repositories;
 using Harfien.Infrastructure.Services;
-using Harfien.Presentation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
@@ -23,7 +22,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Reflection.Metadata;
 using System.Security.Claims;
 using System.Text;
 
@@ -39,9 +37,7 @@ namespace Harfien.Api
             // DbContext
             // =========================
             builder.Services.AddDbContext<HarfienDbContext>(options =>
-                options.UseSqlServer(
-                    builder.Configuration.GetConnectionString("DefaultConnection")
-                ));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // =========================
             // Identity
@@ -57,38 +53,55 @@ namespace Harfien.Api
             .AddEntityFrameworkStores<HarfienDbContext>()
             .AddDefaultTokenProviders();
 
+            // =========================
+            // Repositories
+            // =========================
             builder.Services.AddScoped<IClientRepository, ClientRepository>();
             builder.Services.AddScoped<ICraftsmanRepository, CraftsmanRepository>();
-
-
-
-
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             builder.Services.AddScoped<IWalletRepository, WalletRepository>();
             builder.Services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
             builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
+            builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+            builder.Services.AddScoped<ICityRepository, CityRepository>();
+            builder.Services.AddScoped<IAreaRepository, AreaRepository>();
+            builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
-            builder.Services.AddScoped<ICraftsmanService, CraftsmanService>();
-
-            // chat 
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
             builder.Services.AddScoped<IMessageRepositry, MessageRepositry>();
+
+            // =========================
+            // Services
+            // =========================
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IEmailService, EmailSender>();
+            builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+            builder.Services.AddScoped<IServiceService, ServiceService>();
+            builder.Services.AddScoped<ICraftsmanService, CraftsmanService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
+            builder.Services.AddScoped<IWalletService, WalletService>();
+            builder.Services.AddScoped<IWalletTransactionService, WalletTransactionService>();
+            builder.Services.AddScoped<IClientService, ClientService>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddScoped<ICityService, CityService>();
+            builder.Services.AddScoped<IAreaService, AreaService>();
+            builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
+            builder.Services.AddScoped<IFileService, FileService>();
+            builder.Services.AddScoped<IComplaintService, ComplaintService>();
+            builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
             builder.Services.AddScoped<IChatService, ChatService>();
             builder.Services.AddScoped<IChatNotifier, ChatNotifier>();
+
+            // SignalR
             builder.Services.AddSignalR();
 
-
-
-
-
-            builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
-            builder.Services.AddScoped<IWalletRepository, WalletRepository>();
-            builder.Services.AddScoped<IComplaintService, ComplaintService>();
-            builder.Services.AddScoped<IClientService, ClientService>();
-
-            builder.Services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
-            builder.Services.AddScoped<IWalletTransactionService, WalletTransactionService>();
             // =========================
-            // JWT Authentication (مرة واحدة)
+            // JWT Authentication
             // =========================
             builder.Services.AddAuthentication(options =>
             {
@@ -100,46 +113,28 @@ namespace Harfien.Api
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidateAudience = false, // زي ما كان عندك
+                    ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = builder.Configuration["Jwt:Issuer"],
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
-                    )
+                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
                 };
 
-                // ✅ Add event handler to validate security stamp
                 options.Events = new JwtBearerEvents
                 {
                     OnTokenValidated = async context =>
                     {
                         var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
                         var userId = context.Principal?.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                        if (userId == null)
-                        {
-                            context.Fail("Invalid token");
-                            return;
-                        }
+                        if (userId == null) { context.Fail("Invalid token"); return; }
 
                         var user = await userManager.FindByIdAsync(userId);
-                        if (user == null)
-                        {
-                            context.Fail("User not found");
-                            return;
-                        }
+                        if (user == null) { context.Fail("User not found"); return; }
 
-                        // Get the security stamp claim from token
                         var tokenSecurityStamp = context.Principal?.FindFirstValue("SecurityStamp");
                         var userSecurityStamp = await userManager.GetSecurityStampAsync(user);
-
-                        // If security stamps don't match, token has been invalidated (user logged out)
-                        if (tokenSecurityStamp != userSecurityStamp)
-                        {
-                            context.Fail("Token has been invalidated");
-                            return;
-                        }
+                        if (tokenSecurityStamp != userSecurityStamp) { context.Fail("Token invalidated"); return; }
                     }
                 };
             });
@@ -152,86 +147,31 @@ namespace Harfien.Api
             builder.Services.AddSingleton<IAuthorizationHandler, DynamicRoleHanlder>();
 
             // =========================
-            // Repositories
+            // Misc
             // =========================
-            builder.Services.AddScoped<IWalletRepository, WalletRepository>();
-            builder.Services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
-            builder.Services.AddScoped<ISubscriptionPlanDetailsRepository, SubscriptionPlanDetailsRepository>();
-            builder.Services.AddScoped<ICraftsmanRepository, CraftsmanRepository>();
-            builder.Services.AddScoped<IClientRepository, ClientRepository>();
-            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
-            builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
-            builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
-
-            builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
-
-
-            builder.Services.AddScoped<ICityRepository, CityRepository>();
-            builder.Services.AddScoped<IAreaRepository, AreaRepository>();
-
-            builder.Services.AddScoped<IPaymentService, PaymentService>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<IWalletService, WalletService>();
-            // =========================
-            //services
-            // =========================
-
-            builder.Services.AddScoped<IAuthService, AuthService>();
-            builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-            builder.Services.AddScoped<IServiceService, ServiceService>();
-
-            builder.Services.AddScoped<IOrderService, OrderService>();
-            builder.Services.AddScoped<IReviewService, ReviewService>();
-
-            //Admin Dash
-            builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
-
-
-            builder.Services.AddScoped<INotificationService, NotificationService>();
-            builder.Services.AddScoped<ICityService, CityService>();
-            builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
-            builder.Services.AddScoped<IAreaService, AreaService>();
-            builder.Services.AddScoped<IFileService, FileService>();
+            builder.Services.AddMemoryCache();
+            builder.Services.AddAutoMapper(cfg =>
+            {
+                cfg.AllowNullCollections = true;
+                cfg.AllowNullDestinationValues = true;
+            }, typeof(Application.AssemblyReference).Assembly);
 
             builder.Services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            // =========================
-            // AutoMapper
-            // =========================
-
-
-            builder.Services.AddAutoMapper(cfg =>
-            {
-                cfg.AllowNullCollections = true;
-                cfg.AllowNullDestinationValues = true;
-            }, typeof(Application.AssemblyReference).Assembly);
-            //  builder.Services.AddAutoMapper(typeof(OrderProfile));
-
-            // =========================
-            // Forget Password
-            // =========================
             builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
                 opt.TokenLifespan = TimeSpan.FromHours(10));
 
-            builder.Services.AddScoped<IEmailService, EmailSender>();
-            builder.Services.AddMemoryCache();
-
             // =========================
-            // Controllers
+            // Controllers & Swagger
             // =========================
             builder.Services.AddControllers();
-
-            // =========================
-            // Swagger
-            // =========================
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(o =>
+            builder.Services.AddSwaggerGen(c =>
             {
-                o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey,
@@ -241,7 +181,7 @@ namespace Harfien.Api
                     Description = "Enter JWT like: Bearer {token}"
                 });
 
-                o.AddSecurityRequirement(new OpenApiSecurityRequirement
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
@@ -256,39 +196,16 @@ namespace Harfien.Api
                     }
                 });
             });
-            ///////
+
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll",
-                    policy =>
-                    {
-                        policy.AllowAnyOrigin()
-                              .AllowAnyHeader()
-                              .AllowAnyMethod();
-                    });
-            });
-            var app = builder.Build();
-
-            // =========================
-            // Initialize Roles and Seed Admin
-            // =========================
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-
-                // 1️⃣ إنشاء كل الرولز
-                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                string[] roles = { "CLIENT", "CRAFTSMAN", "ADMIN" };
-                foreach (var role in roles)
+                options.AddPolicy("AllowAll", policy =>
                 {
-                    if (!await roleManager.RoleExistsAsync(role))
-                        await roleManager.CreateAsync(new IdentityRole(role));
-                }
+                    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
 
-                // 2️⃣ إنشاء الـ Admin
-                await AdminSeedData.SeedAdminAsync(services);
-            }
-
+            var app = builder.Build();
 
             // =========================
             // Middleware
@@ -307,45 +224,26 @@ namespace Harfien.Api
                     var exception = exceptionHandlerPathFeature?.Error;
 
                     context.Response.ContentType = "application/json";
-
-                    switch (exception)
+                    context.Response.StatusCode = exception switch
                     {
-                        case NotFoundException:
-                            context.Response.StatusCode = 404;
-                            break;
-                        case BadRequestException:
-                            context.Response.StatusCode = 400;
-                            break;
-                        default:
-                            context.Response.StatusCode = 500;
-                            await context.Response.WriteAsJsonAsync(new
-                            {
-                                success = false,
-                                message = "Internal Server Error",
-                                detail = exception?.Message
-                            });
-                            break;
-                    }
-
-                    await context.Response.WriteAsJsonAsync(new
-                    {
-                        error = exception?.Message
-                    });
+                        NotFoundException => 404,
+                        BadRequestException => 400,
+                        _ => 500
+                    };
+                    await context.Response.WriteAsJsonAsync(new { error = exception?.Message });
                 });
             });
-        
+
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors("AllowAll");
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
-            app.UseSwagger();
-            app.UseSwaggerUI();
             app.MapHub<ChatHub>("/chatHub");
             app.MapHub<NotificationHub>("/notificationHub");
+
             await app.RunAsync();
-           
         }
     }
 }

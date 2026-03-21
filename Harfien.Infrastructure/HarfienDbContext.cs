@@ -27,6 +27,8 @@ namespace Harfien.DataAccess
         public DbSet<CraftsmanAvailability> CraftsmanAvailabilities { get; set; } = null!;
         public DbSet<Notification> Notifications { get; set; } = null!;
         public DbSet<Wallet> Wallet { get; set; } = null!;
+        public DbSet<WalletTransaction> WalletTransactions { get; set; } = null!;
+        public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; } = null!;
         #endregion
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -36,7 +38,6 @@ namespace Harfien.DataAccess
             builder.ApplyConfigurationsFromAssembly(typeof(HarfienDbContext).Assembly);
 
             #region User Relations
-
             builder.Entity<Client>()
                 .HasOne(c => c.User)
                 .WithOne()
@@ -60,11 +61,9 @@ namespace Harfien.DataAccess
                 .WithMany(u => u.Notifications)
                 .HasForeignKey(n => n.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
-
             #endregion
 
             #region Order Relations
-
             builder.Entity<Order>()
                 .HasOne(o => o.Client)
                 .WithMany(c => c.Orders)
@@ -92,11 +91,9 @@ namespace Harfien.DataAccess
             builder.Entity<Order>()
                 .Property(o => o.Amount)
                 .HasPrecision(18, 2);
-
             #endregion
 
             #region Service Relations
-
             builder.Entity<Service>()
                 .HasOne(s => s.ServiceCategory)
                 .WithMany(c => c.Services)
@@ -112,11 +109,9 @@ namespace Harfien.DataAccess
             builder.Entity<Service>()
                 .Property(s => s.Price)
                 .HasPrecision(18, 2);
-
             #endregion
 
-            #region Chat
-
+            #region Chat Relations
             builder.Entity<ChatMessage>(entity =>
             {
                 entity.HasKey(m => m.Id);
@@ -129,12 +124,20 @@ namespace Harfien.DataAccess
                       .IsRequired();
 
                 entity.HasIndex(m => new { m.SenderId, m.ReceiverId });
-            });
 
+                entity.HasOne(m => m.Sender)
+                      .WithMany()
+                      .HasForeignKey(m => m.SenderId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(m => m.Receiver)
+                      .WithMany()
+                      .HasForeignKey(m => m.ReceiverId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
             #endregion
 
-            #region Decimal Fixes
-
+            #region Decimal Properties
             builder.Entity<Wallet>()
                 .Property(w => w.Balance)
                 .HasPrecision(18, 2);
@@ -143,28 +146,6 @@ namespace Harfien.DataAccess
                 .Property(p => p.Amount)
                 .HasPrecision(18, 2);
 
-            builder.Entity<Wallet>()
-                .HasOne(w => w.User)
-                .WithOne(u => u.Wallet)
-                .HasForeignKey<Wallet>(w => w.UserId);
-            builder.Entity<Notification>()
-                 .HasOne(n => n.ApplicationUser)
-                 .WithMany(u => u.Notifications)
-                 .HasForeignKey(n => n.UserId);
-
-            builder.Entity<ChatMessage>()
-        .HasOne(m => m.Sender)
-        .WithMany()
-        .HasForeignKey(m => m.SenderId)
-        .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<ChatMessage>()
-                .HasOne(m => m.Receiver)
-                .WithMany()
-                .HasForeignKey(m => m.ReceiverId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-
             builder.Entity<WalletTransaction>()
                 .Property(w => w.Amount)
                 .HasPrecision(18, 2);
@@ -172,13 +153,12 @@ namespace Harfien.DataAccess
             builder.Entity<SubscriptionPlan>()
                 .Property(s => s.Price)
                 .HasPrecision(18, 2);
-
             #endregion
 
             #region Seed Data
-            /*
             var fixedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
+            // Roles
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
                 new IdentityRole { Id = "2", Name = "Craftsman", NormalizedName = "CRAFTSMAN" },
@@ -187,6 +167,7 @@ namespace Harfien.DataAccess
 
             var hasher = new PasswordHasher<ApplicationUser>();
 
+            // Admin User
             var adminUser = new ApplicationUser
             {
                 Id = "ADMIN_ID",
@@ -201,22 +182,21 @@ namespace Harfien.DataAccess
                 FullName = "Admin",
                 Address = "Cairo",
                 CreatedAt = fixedDate,
-                IsActive = true
-            };*/
+                IsActive = true,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
 
-            //adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin123456");
-            // fixed hash for "Admin123456" to ensure consistent seeding across environments
-           // adminUser.PasswordHash = "AQAAAAIAAYagAAAAEELKHz7XXrgxHF6ePvN/KLtEyAFAL6ZfTwReCMO1QcYnEpW3vjyErKz0/8G+TePs4A==";
-           //
-            //builder.Entity<ApplicationUser>().HasData(adminUser);
+            adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin123456");
 
-            /*builder.Entity<IdentityUserRole<string>>().HasData(
+            builder.Entity<ApplicationUser>().HasData(adminUser);
+
+            // Assign Admin role
+            builder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
                     RoleId = "1",
                     UserId = "ADMIN_ID"
-                });*/
-
+                });
             #endregion
         }
     }

@@ -217,9 +217,12 @@ namespace Harfien.Application.Services
                 (OrderStatus.Pending, OrderStatus.Accepted) => true,
                 (OrderStatus.Pending, OrderStatus.Rejected) => true,
                 (OrderStatus.Pending, OrderStatus.Cancelled) => true,
-                (OrderStatus.Accepted, OrderStatus.Running) => true,
+
+                (OrderStatus.Paid, OrderStatus.Running) => true,
+
                 (OrderStatus.Accepted, OrderStatus.Cancelled) => true,
                 (OrderStatus.Running, OrderStatus.Completed) => true,
+
                 _ => false
             };
         }
