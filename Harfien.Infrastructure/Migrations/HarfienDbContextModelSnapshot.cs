@@ -135,7 +135,7 @@ namespace Harfien.Infrastructure.Migrations
                             Id = "ADMIN_ID",
                             AccessFailedCount = 0,
                             Address = "Cairo",
-                            ConcurrencyStamp = "918806bf-7a6e-4422-853f-dd8e32295e4e",
+                            ConcurrencyStamp = "ee9f7895-4c3f-492c-bff4-95bb09955aac",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "Admin@gmail.com",
                             EmailConfirmed = true,
@@ -144,10 +144,10 @@ namespace Harfien.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAo5rbAWJ5Uty6VL0GBWzMe0Mj/w2LreCcO8yFLN1BE1zEzzQfAUlekAHpPtctshiQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFA9BMEbM0ZZDjDa5RYBz6LDYjc+QdAvyd1G7uS0LTc05+Mo7sGWh/MSwLOuDNmnpQ==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "61937ce6-e0de-4189-86c3-9060ef2ee941",
+                            SecurityStamp = "b7293e99-68e3-46c2-af6b-6f10bb184be9",
                             TwoFactorEnabled = false,
                             UserName = "Admin@gmail.com"
                         });
@@ -1351,7 +1351,6 @@ namespace Harfien.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ProfilePicture")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -1431,7 +1430,6 @@ namespace Harfien.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ProfilePicture")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Rating")

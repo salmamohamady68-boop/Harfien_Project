@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Harfien.Infrastructure.Migrations
 {
     [DbContext(typeof(HarfienDbContext))]
-    [Migration("20260321131207_UpdateDbContext")]
-    partial class UpdateDbContext
+    [Migration("20260321183717_FinalUpdate")]
+    partial class FinalUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -138,7 +138,7 @@ namespace Harfien.Infrastructure.Migrations
                             Id = "ADMIN_ID",
                             AccessFailedCount = 0,
                             Address = "Cairo",
-                            ConcurrencyStamp = "a657a756-9d48-4dd9-811b-996d594506bc",
+                            ConcurrencyStamp = "00348f4d-b4ef-48eb-afa3-0452c0d9e748",
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "Admin@gmail.com",
                             EmailConfirmed = true,
@@ -147,10 +147,10 @@ namespace Harfien.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEArzG7XgJVt3gKpzk/wD6KOWJtTdT4AbcClJmPfkec2cIfJfKGZsHaWZGZp08dNbIQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENPLFwt5ruzWosD/s1/gYOXYfPz076o07tzlhY05/Efj18NKKyHTBP/zSs6NB6l1gQ==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "0e567d07-491f-41b8-8774-ac335401708f",
+                            SecurityStamp = "6e271328-bb5f-4c8f-a1c3-dfa7d2509048",
                             TwoFactorEnabled = false,
                             UserName = "Admin@gmail.com"
                         });
@@ -1354,7 +1354,6 @@ namespace Harfien.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ProfilePicture")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -1434,7 +1433,6 @@ namespace Harfien.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ProfilePicture")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Rating")
