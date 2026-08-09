@@ -7,8 +7,12 @@ It demonstrates secure JWT authentication, role-based authorization, financial t
 
 ## 🔗 Live Website & Video Demo
 
-- Live Website: _Add your live website URL here (e.g. https://your-live-site.example)_
-- Video Demo: _Add your video demo URL here (e.g. https://youtu.be/your-demo-link)_
+- Live Website: https://khadamatak-gamma.vercel.app/
+- Video Demo: 
+
+https://github.com/user-attachments/assets/741fae25-832a-4f7a-ad06-3a78302c66c0
+
+
 
 Note: This repository contains the backend API for the UI shown in the live website and the video demo above.
 
