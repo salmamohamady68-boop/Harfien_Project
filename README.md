@@ -2,7 +2,15 @@
 
 Harfien is a scalable Service Marketplace Backend API built using ASP.NET Core Web API and Clean Architecture principles.
 The system connects clients with craftsmen and manages authentication, order lifecycle, wallet transactions, real-time chat, notifications, reviews, and complaints.
-It demonstrates secure JWT authentication, role-based authorization, financial transaction handling, SignalR real-time communication, and a well-structured modular backend design suitable for production-level applications.
+It demonstrates secure JWT authentication, role-based authorization, financial transaction handling, SignalR real-time communication, and a well-structured modular backend design suitable for production.
+
+
+## 🔗 Live Website & Video Demo
+
+- Live Website: _Add your live website URL here (e.g. https://your-live-site.example)_
+- Video Demo: _Add your video demo URL here (e.g. https://youtu.be/your-demo-link)_
+
+Note: This repository contains the backend API for the UI shown in the live website and the video demo above.
 
 
 Harfien connects clients with craftsmen and manages:
@@ -146,3 +154,5 @@ dotnet ef database update
 dotnet run
 Swagger will be available at:
 https://localhost:{port}/swagger
+
+```
