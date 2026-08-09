@@ -5,16 +5,16 @@ The system connects clients with craftsmen and manages authentication, order lif
 It demonstrates secure JWT authentication, role-based authorization, financial transaction handling, SignalR real-time communication, and a well-structured modular backend design suitable for production.
 
 
-## 🔗 Live Website & Video Demo
+## 🌐 Live Website & Video Demo
 
-- Live Website: https://khadamatak-gamma.vercel.app/
-- Video Demo: 
+### Live Website
+- https://khadamatak-gamma.vercel.app/
+### 🎬 Video Demo 
 
 https://github.com/user-attachments/assets/741fae25-832a-4f7a-ad06-3a78302c66c0
 
 
-
-Note: This repository contains the backend API for the UI shown in the live website and the video demo above.
+> **ℹ️ Note:** This repository contains the backend API that powers the frontend UI shown in the live website and video demo.
 
 
 Harfien connects clients with craftsmen and manages:
